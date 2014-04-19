@@ -117,15 +117,15 @@ Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 
 " Plugin configs
-
+" Configs->Airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
-
-" Plugin Keymap
-" Keymap->NERDTree
+" Configs->NERDTree
 let NERDTreeChDirMode=2
 
+" Plugin Keymaps
+" Keymap->NERDTree
 map <silent> <F3> :NERDTreeTabsToggle<CR>
 map <silent> <F4> :TagbarToggle<CR>
 map <Leader>d     :NERDTreeToggle<CR>
