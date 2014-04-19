@@ -1,78 +1,41 @@
 """
-" nod_vim version 20130223
+" nod.vimrc 20140419
 """
 
-"-- VIM then VI
-set nocompatible
-
-
-"-- highlight on
-syntax enable
-color Tomorrow-Night
-
-if has("gui_running")
-  set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline
-  set go-=R
-  set go-=L
-  set go-=r
-endif
-
-"Airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-
-let g:clang_library_path='/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
-
-"
-"-- file type detection
-filetype plugin on
-filetype plugin indent on
-filetype off
-
-"-- search highlight redraw
-nnoremap <C-L> :nohl<CR><C-L>
-nnoremap <C-K> :set list!<CR>
-
-"-- (example: NERD_COMMENT ,cc)
-let mapleader=","
-
-
-"-- sets
+" Set Configurations
 set encoding=utf-8
-set expandtab                   " Insert spaces not tabs
-set nu                          " Show line numbers
-set autoread                    " Read open files again when changed outside Vim
-set autowrite                   " Write a modified buffer on each :next , ...
-set backspace=indent,eol,start  " Backspacing over everything in insert mode
-set browsedir=current           " Which directory to use for the file browser
-set complete+=k                 " Scan the files given with the 'dictionary' option
-set history=50                  " Keep 50 lines of command line history
-set hlsearch                    " Highlight the last used search pattern
-set incsearch                   " Do incremental searching
-set listchars=tab:>.,eol:\$     " Strings to use in 'list' mode
-set nowrap                      " Do not wrap lines
-set popt=left:8pc,right:3pc     " Print options
-set ruler                       " Show the cursor position all the time
-set shiftwidth=2                " Number of spaces to use for each step of indent
-set showcmd                     " Display incomplete commands
-set tabstop=2                   " Number of spaces that a <Tab> counts for
-set visualbell                  " Visual bell instead of beeping
-set wildignore=*.bak,*.o,*.e,*~ " Wildmenu: ignore these extensions
-set wildmenu                    " Command-line completion in an enhanced mode
-"set autochdir                   " Automatically change current directory
-set pastetoggle=<F2>            " Paste mode turn on/off with F2
-set laststatus=2                " Show status line all the time
-set mouse=a                     " To Copy to clipboard easily
-set noautoread
+set expandtab
+set nu
+set backspace=indent,eol,start
+set browsedir=current
+set complete+=k
+set history=50
+set hlsearch
+set incsearch
+set listchars=tab:>.,eol:\$
+set nowrap
+set popt=left:8pc,right:3pc
+set ruler
+set showcmd
+set shiftwidth=2
+set tabstop=2
+set visualbell
+set wildignore=*.bak,*.o,*.e,*~
+set wildmenu
+set pastetoggle=<F2>
+set laststatus=2
+set mouse=a
 set updatetime=2000
+
 set directory=$HOME/.vim/tmp/
-set nobackup                    " Let's have a look
-set nowritebackup               "   How we gonna leave without backup
+set nobackup
+set nowritebackup
 set noerrorbells
+
+set noautoread
 set noautowrite
 set noautowriteall
+
 set cursorline
 set lazyredraw
 set hidden
@@ -80,93 +43,95 @@ set hidden
 set listchars=tab:▸\ ,eol:¬
 set list
 
-"
-"-- indents..
 set autoindent
 set smartindent
+set completeopt=menuone,menu,longest
 
-"--view options auto load/save
-au BufWinLeave * silent! mkview
-au BufWinEnter * silent! loadview
 
-" infect pathegon
-execute pathogen#infect()
-execute pathogen#helptags()
+" Colors and fonts
+syntax enable
+colorscheme Tomorrow-Night
 
-" --- Grep Module config
+if has("gui_running")
+  colorscheme Tomorrow
+  set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline
+  set go-=R
+  set go-=L
+  set go-=r
+endif
 
-let Grep_Skip_Dirs  = 'node_modules .git'
-let Grep_Skip_Files = '*.bak *~ tags *.flv *.pdf *.jpg *.gif *.png *.node'
+" FileType handlers
+filetype plugin on
+filetype plugin indent on
+filetype off
 
-" --- load javascript for html
-au FileType html set ft=html.javascript
-au FileType c,cpp :TagbarOpen
+" Init keymaps
+let mapleader=","
 
-" ------------
-" --- MAPS ---
-" ------------
+" Keymap->Search highlights & special chars
+nnoremap <C-L> :nohl<CR><C-L>
+nnoremap <C-K> :set list!<CR>
 
-map <silent> <F3>  :NERDTreeTabsToggle<CR>
-map <silent> <F4> :TagbarToggle<CR> 
-map <silent> <F5> :source ~/.vimrc<CR>
-
-"map <silent> <F7>  <Esc>:cprevious<CR>
-"map <silent> <F8>  <Esc>:cnext<CR>
-
-"-- NERD Tree Tabs
-map <Leader>d :NERDTreeToggle<CR>
-
-"-- NERD TREE
-let NERDTreeChDirMode=2
-"nnoremap <leader>n :NERDTree .<CR>
-
-" Load Plugins till we map things
-
-"-- indent +/- in visual/select mode(without deselecting)
+" Keymap->VisualIndent
 vnoremap > > gv
 vnoremap < < gv
 
-"-- change window width in normal mode
+" Keymap->Reload .vimrc
+map <silent> <F5> :source ~/.vimrc<CR>
+
+" Keymap->Completion
+inoremap ,, <C-X><C-O>
+
+" Keymap->Window size change normal
 nnoremap < <c-w>10<
 nnoremap > <c-w>10>
 nnoremap + <c-w>4+
 nnoremap = <c-w>4+
 nnoremap - <c-w>4-
 
-"-- navigate between windows
+" Keymap->Navigate between windows
 nmap <A-n> <C-W>w
 nmap <A-p> <C-W>W
 
-"-- remap multiple cursors
-let g:multi_cursor_use_default_mapping=0
-
-let g:multi_cursor_next_key='<C-f>'
-let g:multi_cursor_prev_key='<C-h>'
-let g:multi_cursor_skip_key='<C-j>'
-let g:multi_cursor_quit_key='<Esc>'
-
-"-- navigate between tabs
+" Keymap->Navigate between tabs
 nnoremap <C-N> gt
 nnoremap <C-P> gT
 
-"-- comment uncomment
-nmap <C-;> ,ci
-"
-"-- completion remaped
-inoremap ,, <C-X><C-O>
-
-" ------------
-" ---/MAPS ---
-" ------------
-
-" automatically open and close the popup menu/preview window
+" Autos
+" Auto->Automatically open and close the popup menu/preview window
 au CursorMovedI, InsertLeave * if pumvisible() == 0|silent! pclose|endif
-set completeopt=menuone,menu,longest
 
-" auto close options when exiting insert mode
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+" Auto->View update
+au BufWinLeave * silent! mkview
+au BufWinEnter * silent! loadview
 
-au BufWinLeave ?* mkview
-au BufWinEnter ?* silent loadview
+" Load VUNDLE
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
+" Load plugins
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'bling/vim-airline'
+Plugin 'airblade/vim-gitgutter'
+
+" Plugin configs
+
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+
+
+" Plugin Keymap
+" Keymap->NERDTree
+let NERDTreeChDirMode=2
+
+map <silent> <F3> :NERDTreeTabsToggle<CR>
+map <silent> <F4> :TagbarToggle<CR>
+map <Leader>d     :NERDTreeToggle<CR>
+
+" Keymap->NerdComment
+nmap <C-;> <Leader>ci " Uncomment
+
+" Fix plugin rewrites
 syntax on
