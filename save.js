@@ -15,13 +15,10 @@ files.forEach(function (file) {
   exec('cp -rv "' + file + '" "' + homeDir + '/"', function (error, stdout, stderr) {
     console.log('cp -rv "' + file + '" "' + homeDir + '/"');
     if (error) {
-      throw error;
+      //throw error;
     }
 
-    if (stderr) {
-      console.error(stderr);
-    } else {
-      console.log(stdout);
-    }
+    console.log(stdout);
+    console.error(stderr);
   });
 });
