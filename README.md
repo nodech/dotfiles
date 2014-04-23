@@ -1,5 +1,5 @@
 DOTFILES
 =======
 
-  Post-Commit, copy changes to environment
-  ``
+  Dependency is node.js
+Run `./save.js` in Directory to update current home dir
