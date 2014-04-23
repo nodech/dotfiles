@@ -1,3 +1,4 @@
-source .vimrc
+let g:CONFIGS = $HOME . "/.vim/configs"
 
-source .vimrc.after
+:exec "source " . CONFIGS ."/.vimrc"
+:exec "source " . CONFIGS . "/.vimrc.after"
