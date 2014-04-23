@@ -1,6 +1,4 @@
-"""
-" nod.vimrc 20140419
-"""
+" Config file for ALL
 
 " Set Configurations
 set encoding=utf-8
@@ -132,6 +130,3 @@ map <Leader>d     :NERDTreeToggle<CR>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment
-
-" Fix plugin rewrites
-syntax on
