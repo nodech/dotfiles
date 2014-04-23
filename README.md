@@ -13,5 +13,6 @@ Here are my ZShell and VIM configs
   * Configurations and Plugins I use you can see .vimrc file
 
 ##### Cloning
+
 When you clone this repo, you can install everything to system by running `./save.js`.
 Dependency for that is `node.js`
