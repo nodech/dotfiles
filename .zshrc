@@ -53,6 +53,6 @@ vim () {
       $VIMBIN $@
     fi
   else
-    echo "No args !"
+    $VIMBIN
   fi
 }
