@@ -20,8 +20,8 @@ You can have multiple environment for VIM, so if you want some plugins for CPP a
   2. Write your code just include template from ~/.vim/configs/default.vimrc
   3. start vim with that name first `vim cpp files`
   4. You're done.
-Note: Code is in .zshrc for MultiEnv VIM
 
+Note: Code is in `.zshrc` for MultiEnv VIM...
 TODO: Add mvim
 
 ##### Cloning
