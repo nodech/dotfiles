@@ -13,6 +13,17 @@ Here are my ZShell and VIM configs
   * Configurations and Plugins I use you can see .vimrc file
   * Don't forget to run `:PluginInstall`
 
+### Multi Environment for VIM
+You can have multiple environment for VIM, so if you want some plugins for CPP and others for node.js you can have it.
+
+  1. Create environment .vimrc file in ~/.vim/configs/envName.vimrc
+  2. Write your code just include template from ~/.vim/configs/default.vimrc
+  3. start vim with that name first `vim cpp files`
+  4. You're done.
+Note: Code is in .zshrc for MultiEnv VIM
+
+TODO: Add mvim
+
 ##### Cloning
 
 When you clone this repo, you can install everything to system by running `./save.js`.
