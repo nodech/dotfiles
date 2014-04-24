@@ -37,6 +37,8 @@ alias ll="ls -lsah"
 if [ "${VIMBIN}" = "" ]
 then
   VIMBIN=$(which vim)
+  MVIMBIN=$(which mvim)
+  RUNBIN=$VIMBIN
 fi
 
 vim () {
@@ -45,14 +47,20 @@ vim () {
   then
     if [[ -a $1 ]]
     then
-      $VIMBIN $@
+      $RUNBIN $@
     elif [[ -a "$VIMRC" ]]
     then
-      $VIMBIN -u "$VIMRC" ${@:2}
+      $RUNBIN -u "$VIMRC" ${@:2}
     else
-      $VIMBIN $@
+      $RUNBIN $@
     fi
   else
-    $VIMBIN
+    $RUNBIN
   fi
+}
+
+mvim () {
+  RUNBIN=$MVIMBIN
+  vim $@
+  RUNBIN=$VIMBIN
 }
