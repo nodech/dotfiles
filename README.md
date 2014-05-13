@@ -22,7 +22,6 @@ You can have multiple environment for VIM, so if you want some plugins for CPP a
   4. You're done.
 
 Note: Code is in `.zshrc` for MultiEnv VIM...
-TODO: Add mvim
 
 ##### Cloning
 
