@@ -114,6 +114,8 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/gist-vim'
 
 " Plugin configs
 " Configs->Airline
