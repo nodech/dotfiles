@@ -125,6 +125,10 @@ let g:airline#extensions#tabline#enabled = 1
 " Configs->NERDTree
 let NERDTreeChDirMode=2
 
+" Configs->Gist
+let g:gist_detect_filetype = 1
+let g:gist_open_browser_after_post = 1
+
 " Plugin Keymaps
 " Keymap->NERDTree
 map <silent> <F3> :NERDTreeTabsToggle<CR>
