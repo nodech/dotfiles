@@ -116,6 +116,8 @@ Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
+Plugin 'yegappan/grep'
+Plugin 'mattn/emmet-vim'
 
 " Plugin configs
 " Configs->Airline
@@ -124,6 +126,11 @@ let g:airline#extensions#tabline#enabled = 1
 
 " Configs->NERDTree
 let NERDTreeChDirMode=2
+
+" Configs->Emmet-vim
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+let g:user_emmet_leader_key='<C-Z>'
 
 " Configs->Gist
 let g:gist_detect_filetype = 1
