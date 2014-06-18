@@ -118,6 +118,8 @@ Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'yegappan/grep'
+Plugin 'groenewege/vim-less'
+Plugin 'digitaltoad/vim-jade'
 Plugin 'mattn/emmet-vim'
 
 " Plugin configs
