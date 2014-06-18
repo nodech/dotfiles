@@ -116,6 +116,7 @@ Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
+Plugin 'tpope/vim-fugitive'
 Plugin 'yegappan/grep'
 Plugin 'mattn/emmet-vim'
 
