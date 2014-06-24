@@ -52,7 +52,6 @@ syntax enable
 colorscheme Tomorrow-Night
 
 if has("gui_running")
-  colorscheme Tomorrow
   set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline
   set go-=R
   set go-=L
