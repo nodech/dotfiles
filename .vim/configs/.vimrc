@@ -118,6 +118,8 @@ Plugin 'mattn/gist-vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'yegappan/grep'
 Plugin 'mattn/emmet-vim'
+Plugin 'Shougo/vimproc' " Needs compilation after installation
+Plugin 'Shougo/neocomplete.vim'
 
 " Plugin configs
 " Configs->Airline
@@ -131,6 +133,9 @@ let NERDTreeChDirMode=2
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 let g:user_emmet_leader_key='<C-Z>'
+
+" Configs->NeoComplete
+let g:neocomplete#enable_at_startup = 1
 
 " Configs->Gist
 let g:gist_detect_filetype = 1
