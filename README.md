@@ -12,6 +12,7 @@ Here are my ZShell and VIM configs
   * It's included in this repo (Better if you update)
   * Configurations and Plugins I use you can see .vimrc file
   * Don't forget to run `:PluginInstall`
+  * In .vim/configs/*.vimrc files there are notes about need-to-compile plugins
 
 ### Multi Environment for VIM
 You can have multiple environment for VIM, so if you want some plugins for CPP and others for node.js you can have it.
