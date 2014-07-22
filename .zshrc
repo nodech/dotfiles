@@ -65,6 +65,9 @@ mvim () {
   RUNBIN=$VIMBIN
 }
 
+#GoPATH
+export GOPATH="$HOME/Development/Go"
+export PATH="$PATH:$GOPATH/bin"
 
 # Aliases
 alias swift='/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift'
