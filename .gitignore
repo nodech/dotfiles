@@ -1,8 +1,6 @@
 .git
 
 .vim/view
-.vim/bundle/*
 .vim/tmp/*
 
-!.vim/bundle/vundle
 !.vim/tmp/.track
