@@ -1,0 +1,10 @@
+startup_message off
+activity "%c activity -> %n%f %t"
+caption always "%{= Wk}%-w%{= Bw}%n %t%{-}%+w %-="
+vbell off
+term screen-256color
+
+
+bind 'K' kill
+bind 'W' windowlist
+bind 'V' split -v
