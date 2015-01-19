@@ -1,4 +1,6 @@
 " Load after
+call vundle#end()
 
 " Fix everything
+filetype plugin indent on
 syntax on
