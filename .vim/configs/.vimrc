@@ -59,8 +59,6 @@ if has("gui_running")
 endif
 
 " FileType handlers
-filetype plugin on
-filetype plugin indent on
 filetype off
 
 " Init keymaps
@@ -105,7 +103,7 @@ au BufWinEnter * silent! loadview
 
 " Load VUNDLE
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+call vundle#begin()
 
 " Load plugins
 Plugin 'scrooloose/nerdtree'
@@ -120,6 +118,8 @@ Plugin 'yegappan/grep'
 Plugin 'mattn/emmet-vim'
 Plugin 'Shougo/vimproc' " Needs compilation after installation
 Plugin 'Shougo/neocomplete.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'aperezdc/vim-template'
 
 " Plugin configs
 " Configs->Airline
@@ -136,6 +136,9 @@ let g:user_emmet_leader_key='<C-Z>'
 
 " Configs->NeoComplete
 let g:neocomplete#enable_at_startup = 1
+
+" Config->vim-template
+let g:templates_directory='~/.vim/templates/'
 
 " Configs->Gist
 let g:gist_detect_filetype = 1
