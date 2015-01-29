@@ -18,6 +18,4 @@ Plugin 'digitaltoad/vim-jade'
 Plugin 'pangloss/vim-javascript'
 
 
-au FileType javascript call JavaScriptFold()
-
 :exec "source " . CONFIGS . "/.vimrc.after"
