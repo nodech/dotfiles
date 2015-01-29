@@ -6,7 +6,7 @@ let g:CONFIGS = $HOME . "/.vim/configs"
 Plugin 'fatih/vim-go'
 
 " Config -> Go
-let g:go_fmt_autosave = 0
+let g:go_fmt_autosave = 1
 map <silent> <F9> :GoRun<CR>
 map <silent> <F5> :~/.vim/configs/go.vimrc<CR>
 
