@@ -15,7 +15,8 @@ Plugin 'marijnh/tern_for_vim'
 " Here should go specific configs
 Plugin 'groenewege/vim-less'
 Plugin 'digitaltoad/vim-jade'
-Plugin 'jelera/vim-javascript-syntax'
+Plugin 'pangloss/vim-javascript'
+
 
 au FileType javascript call JavaScriptFold()
 
