@@ -2,9 +2,9 @@ local ret_status="%(?:%{$fg_bold[green]%}✓ :%{$fg_bold[red]%}✗ %s)"
 
 PROMPT='%F${ret_status}%f%{$reset_color%}'
 
-#if [[ $SERVER = true ]] then
-#  PROMPT='%F{green}$(hostname)%f'$PROMPT
-#fi
+if [[ $SERVER = true ]] then
+  PROMPT='%F{green}$(hostname) %f'$PROMPT
+fi
 
 RPROMPT='$(git_prompt_info) %F{green}%2c%F{blue}%f'
 
