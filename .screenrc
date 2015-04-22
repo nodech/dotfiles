@@ -1,10 +1,18 @@
+hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "
 startup_message off
-activity "%c activity -> %n%f %t"
-caption always "%{= Wk}%-w%{= Bw}%n %t%{-}%+w %-="
+msgwait 1
+defscrollback 50000
+# bind F7  to detach screen session from this terminal
+# bind F8  to kill current screen window.
+# bind F9  to create a new screen
+# bind F10 to rename current screen window
+# bind F11 to move to previous window
+# bind F12 to move to next window
+#bindkey -k k7 detach
+#bindkey -k k8 kill
+#bindkey -k k9 screen
+#bindkey -k k; title
+bindkey -k F1 prev
+bindkey -k F2 next
+bindkey -k k; other
 vbell off
-term screen-256color
-
-
-bind 'K' kill
-bind 'W' windowlist
-bind 'V' split -v
