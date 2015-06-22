@@ -1,0 +1,22 @@
+{
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "description": "DOTFILES =======",
+  "main": "save.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodar-chkuaselidze/dotfiles.git"
+  },
+  "author": "Nodari Chkuaselidze",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nodar-chkuaselidze/dotfiles/issues"
+  },
+  "homepage": "https://github.com/nodar-chkuaselidze/dotfiles#readme",
+  "dependencies": {
+    "async": "^1.2.1"
+  }
+}
