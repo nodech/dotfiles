@@ -2,5 +2,6 @@
 
 .vim/view
 .vim/tmp/*
+node_modules/
 
 !.vim/tmp/.track
