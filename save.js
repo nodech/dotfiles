@@ -4,6 +4,7 @@ var path = require('path'),
     fs = require('fs'),
     exec = require('child_process').exec,
     files = fs.readdirSync(__dirname),
+    async = require('async'),
     exclude = [ 'save.js', '.git', 'README.md', '.gitignore' ],
     homeDir = path.resolve(process.env['HOME']);
 
