@@ -29,11 +29,31 @@ async.series([
       installTmuxPackageManager,
       installTmuxPackages
     ], function (error) {
+      if (error) {
+        console.error(error);
+      }
       message('FINISHED TMUX STUFF');
-      done(error);
+      done();
+    });
+  },
+  function (done) {
+    message('VIM STUFF');
+    async.series([
+      installVimPackages,
+      installTernForVim
+    ], function (error) {
+      if (error) {
+        console.error(error);
+      }
+      message('END OF VIM STUFF');
+      done();
     });
   }
 ], function (error, done) {
+  if (error) {
+    console.error(error);
+  }
+  message('DONE');
 });
 
 function installTmuxPackageManager(done) {
@@ -58,8 +78,35 @@ function installTmuxPackages(done) {
 
     LOG(stdout, stderr);
     message('INSTALLED TMUX PACKAGES');
+    done();
   });
 };
+
+function installVimPackages(done) {
+  exec('vim +PluginInstall +qall', function (error, stdout, stderr) {
+    if (error) {
+      done(error);
+      return;
+    }
+
+    LOG(stdout, stderr);
+    message('INSTALLED VUNDLE PACKAGES');
+    done();
+  });
+}
+
+function installTernForVim(done) {
+  exec('cd ~/.vim/bundle/tern_for_vim && npm install', function (error, stdout, stderr) {
+    if (error) {
+      done(error);
+      return;
+    }
+
+    LOG(stdout, stderr);
+    message('INSTALLED TERN_FOR_VIM npm modules');
+    done();
+  });
+}
 
 function COPY_FILES(file, done) {
   exec('cp -rv "' + file + '" "' + homeDir + '/"', function (error, stdout, stderr) {
