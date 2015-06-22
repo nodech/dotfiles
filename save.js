@@ -18,18 +18,10 @@ files = files.filter(function (file) {
 async.series([
   function (done) {
     message('START COPYING');
-    async.each(files, function (file, callback) {
-      exec('cp -rv "' + file + '" "' + homeDir + '/"', function (error, stdout, stderr) {
-        console.log('cp -rv "' + file + '" "' + homeDir + '/"');
-        if (error) {
-          callback(error);
-          return
-        }
-
-        LOG(stdout, stderr);
-        callback();
-      });
-    }, done);
+    async.each(files, COPY_FILES, function (error) {
+      message('END COPYING');
+      done(error);
+    });
   },
   function (done) {
     message('TMUX STUFF');
@@ -66,6 +58,18 @@ function installTmuxPackages(done) {
 
     LOG(stdout, stderr);
     message('INSTALLED TMUX PACKAGES');
+  });
+};
+
+function COPY_FILES(file, done) {
+  exec('cp -rv "' + file + '" "' + homeDir + '/"', function (error, stdout, stderr) {
+    if (error) {
+      done(error);
+      return;
+    }
+
+    LOG(stdout, stderr);
+    done();
   });
 };
 
