@@ -83,6 +83,7 @@ function installTmuxPackages(done) {
 };
 
 function installVimPackages(done) {
+  message('INSTALLING VUNDLE PACKAGES');
   exec('vim +PluginInstall +qall', function (error, stdout, stderr) {
     if (error) {
       done(error);
@@ -96,6 +97,7 @@ function installVimPackages(done) {
 }
 
 function installTernForVim(done) {
+  message('INSTALLING TERN DEPENDENCIES');
   exec('cd ~/.vim/bundle/tern_for_vim && npm install', function (error, stdout, stderr) {
     if (error) {
       done(error);
