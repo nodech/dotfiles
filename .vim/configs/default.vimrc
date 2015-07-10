@@ -13,9 +13,6 @@ Plugin 'marijnh/tern_for_vim'
 "Plugin 'Valloric/YouCompleteMe'
 
 " Here should go specific configs
-Plugin 'groenewege/vim-less'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'pangloss/vim-javascript'
 
 
 :exec "source " . CONFIGS . "/.vimrc.after"

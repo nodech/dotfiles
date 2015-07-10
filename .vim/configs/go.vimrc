@@ -4,6 +4,7 @@ let g:CONFIGS = $HOME . "/.vim/configs"
 
 " Here should go specific configs
 Plugin 'fatih/vim-go'
+Plugin 'peterhoeg/vim-qml'
 
 " Config -> Go
 let g:go_fmt_autosave = 1

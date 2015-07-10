@@ -64,6 +64,10 @@ filetype off
 " Init keymaps
 let mapleader=","
 
+" Clipboard Switches
+map <C-c> :set clipboard=unnamed<CR>
+map <C-x> :set clipboard=<CR>
+
 " Keymap->Search highlights & special chars
 nnoremap <C-L> :nohl<CR><C-L>
 nnoremap <C-K> :set list!<CR>
@@ -109,7 +113,6 @@ call vundle#begin()
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
@@ -118,16 +121,27 @@ Plugin 'yegappan/grep'
 Plugin 'mattn/emmet-vim'
 Plugin 'Shougo/vimproc' " Needs compilation after installation
 Plugin 'Shougo/neocomplete.vim'
+"Plugin 'Shougo/unite.vim'
+"Plugin 'Shougo/vimfiler.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'aperezdc/vim-template'
+Plugin 'kien/ctrlp.vim'
+Plugin 'isRuslan/vim-es6'
+Plugin 'groenewege/vim-less'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
+Plugin 'benmills/vimux'
+Plugin 'tpope/vim-obsession'
+
 
 " Plugin configs
-" Configs->Airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
+"" Configs->NERDTree
+"let NERDTreeChDirMode=2
+let g:nerdtree_tabs_open_on_gui_startup=0
 
-" Configs->NERDTree
-let NERDTreeChDirMode=2
+" Config->VimFiler
+let g:vimfiler_as_default_explorer = 1
 
 " Configs->Emmet-vim
 let g:user_emmet_install_global = 0
@@ -145,11 +159,23 @@ let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 let g:gist_clip_command = 'pbcopy'
 
+" Config->CtrlP
+let g:ctrlp_map = '<c-j>'
+let g:ctrlp_cmd = 'CtrlP'
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|png|pem|p12))$'
+
 " Plugin Keymaps
 " Keymap->NERDTree
 map <silent> <F3> :NERDTreeTabsToggle<CR>
 map <silent> <F4> :TagbarToggle<CR>
 map <Leader>d     :NERDTreeToggle<CR>
+
+" Keymap->CtrlP
+map <silent> <C-b> :CtrlPBuffer<CR>
+map <silent> <C-a> :CtrlPMixed<CR>
+
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment
