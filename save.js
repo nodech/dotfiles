@@ -6,7 +6,7 @@ var path = require('path'),
     files = fs.readdirSync(__dirname),
     async = require('async'),
     util = require('util'),
-    exclude = [ 'save.js', '.git', 'README.md', '.gitignore', 'package.json', 'node_modules', 'save.sh', 'npm-debug.log' ],
+    exclude = [ 'save.js', '.git', 'README.md', '.gitignore', 'package.json', 'node_modules', 'save.sh', 'npm-debug.log', 'vim.sh' ],
     homeDir = path.resolve(process.env['HOME']),
     message = console.log.bind(null, '======= %s =======');
 
