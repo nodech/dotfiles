@@ -8,6 +8,9 @@ Plugin 'peterhoeg/vim-qml'
 
 " Config -> Go
 let g:go_fmt_autosave = 1
+set number
+let g:go_disable_autoinstall = 0
+
 map <silent> <F9> :GoRun<CR>
 map <silent> <F5> :~/.vim/configs/go.vimrc<CR>
 
