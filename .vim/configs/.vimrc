@@ -49,7 +49,7 @@ set completeopt=menuone,menu,longest
 
 " Colors and fonts
 syntax enable
-colorscheme Tomorrow-Night
+colorscheme Tomorrow-Night-Bright
 
 if has("gui_running")
   set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline
@@ -126,6 +126,7 @@ Plugin 'Shougo/neocomplete.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'aperezdc/vim-template'
 Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/syntastic'
 Plugin 'isRuslan/vim-es6'
 Plugin 'groenewege/vim-less'
 Plugin 'digitaltoad/vim-jade'
@@ -133,6 +134,9 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'benmills/vimux'
 Plugin 'tpope/vim-obsession'
+Plugin 'DavidEGx/ctrlp-smarttabs'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
 
 
 " Plugin configs
@@ -148,11 +152,19 @@ let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 let g:user_emmet_leader_key='<C-Z>'
 
+" Configs->syntastic
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_javascript_checkers = ['eslint']
+
 " Configs->NeoComplete
 let g:neocomplete#enable_at_startup = 1
 
 " Config->vim-template
-let g:templates_directory='~/.vim/templates/'
+"let g:templates_directory='~/.vim/templates/'
 
 " Configs->Gist
 let g:gist_detect_filetype = 1
@@ -163,18 +175,20 @@ let g:gist_clip_command = 'pbcopy'
 let g:ctrlp_map = '<c-j>'
 let g:ctrlp_cmd = 'CtrlP'
 
+let g:ctrlp_switch_buffer='Et'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|png|pem|p12))$'
+let g:ctrlp_extensions = ['smarttabs']
 
 " Plugin Keymaps
 " Keymap->NERDTree
 map <silent> <F3> :NERDTreeTabsToggle<CR>
 map <silent> <F4> :TagbarToggle<CR>
-map <Leader>d     :NERDTreeToggle<CR>
 
 " Keymap->CtrlP
 map <silent> <C-b> :CtrlPBuffer<CR>
 map <silent> <C-a> :CtrlPMixed<CR>
+map <silent> <Leader>s :CtrlPSmartTabs<CR>
 
 
 " Keymap->NerdComment
