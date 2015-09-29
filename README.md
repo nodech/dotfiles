@@ -1,7 +1,7 @@
 DOTFILES
 =======
 
-Here are my ZShell and VIM configs
+Here are my `zshell`, `tmux` and `vim` configs
 
 #### Zshell
   * I use [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
@@ -26,5 +26,6 @@ Note: Code is in `.zshrc` for MultiEnv VIM...
 
 ##### Cloning
 
-When you clone this repo, you can install everything to system by running `./save.js`.
+To clone the repo run `git clone --recursive git@github.com:nodar-chkuaselidze/dotfiles.git`
+When you clone this repo, you can install everything to system by running `./save.sh`.
 Dependency for that is `node.js`
