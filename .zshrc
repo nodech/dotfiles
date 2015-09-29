@@ -74,7 +74,7 @@ startDocker() {
   $(boot2docker shellinit)
 }
 
-source ~/.awsHosts
+source ~/.awsHosts.sh
 
 export JAVA_HOME="/usr/libexec/java_home"
 
@@ -83,12 +83,12 @@ export GOPATH="$HOME/Development/Go"
 export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
 
 #OpenVPN Path
-export PATH="$PATH:/Applications/Tunnelblick.app/Contents/Resources/openvpn/openvpn-2.3.6/"
+export PATH="$PATH:/Applications/Tunnelblick.app/Contents/Resources/openvpn/openvpn-2.3.6"
 
 # Aliases
 alias swift='/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift'
 
-#load stuff
+#Ruby Env load stuff
 eval "$(rbenv init -)"
 
 #NVM configs
