@@ -72,6 +72,9 @@ map <C-x> :set clipboard=<CR>
 nnoremap <C-L> :nohl<CR><C-L>
 nnoremap <C-K> :set list!<CR>
 
+" Activate `.` in vnoremap
+vnoremap . :norm.<CR>
+
 " Keymap->VisualIndent
 vnoremap > > gv
 vnoremap < < gv
