@@ -100,6 +100,10 @@ nmap <A-p> <C-W>W
 nnoremap <C-N> gt
 nnoremap <C-P> gT
 
+" Switch colors in vim
+map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
+map <leader>gw :colorscheme Tomorrow<CR>
+
 " Autos
 " Auto->Automatically open and close the popup menu/preview window
 au CursorMovedI, InsertLeave * if pumvisible() == 0|silent! pclose|endif
