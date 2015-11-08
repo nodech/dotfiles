@@ -175,7 +175,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint']
 
 " Config->vim-template
-"let g:templates_directory='~/.vim/templates/'
+let g:templates_directory='~/.config/nvim/templates/'
 
 " Configs->Gist
 let g:gist_detect_filetype = 1
