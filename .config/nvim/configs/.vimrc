@@ -1,6 +1,6 @@
 " Config file for ALL
 
-set runtimepath=~/.config/nvim/
+"set runtimepath=$HOME/.config/nvim/
 
 " Set Configurations
 set nocompatible
@@ -82,7 +82,7 @@ vnoremap > > gv
 vnoremap < < gv
 
 " Keymap->Reload .vimrc
-map <silent> <F5> :source ~/.vimrc<CR>
+map <silent> <F5> :source $HOME/.config/nvim/.vimrc<CR>
 
 " Keymap->Completion
 inoremap ,, <C-X><C-O>
@@ -115,8 +115,8 @@ au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
 " Load VUNDLE
-set rtp+=~/.config/nvim/bundle/vundle/
-call vundle#begin(".config/nvim/configs/bundle")
+set rtp+=$HOME/.config/nvim/bundle/vundle/
+call vundle#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
 Plugin 'scrooloose/nerdtree'
