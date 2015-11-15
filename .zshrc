@@ -33,36 +33,11 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X
 alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
 alias ll="ls -lsah"
 
-# multiconfig VIM
-if [ "${VIMBIN}" = "" ]
-then
-  VIMBIN=$(which vim)
-  MVIMBIN=$(which mvim)
-  RUNBIN=$VIMBIN
-fi
-
+# multiconfig NVIM
 if [ "${NVIMBIN}" = "" ]
 then
   NVIMBIN=$(which nvim)
 fi
-
-vim () {
-  VIMRC="$HOME/.vim/configs/${1}.vimrc"
-  if [ $# -gt 0 ]
-  then
-    if [[ -a $1 ]]
-    then
-      $RUNBIN $@
-    elif [[ -a "$VIMRC" ]]
-    then
-      $RUNBIN -u "$VIMRC" ${@:2}
-    else
-      $RUNBIN $@
-    fi
-  else
-    $RUNBIN
-  fi
-}
 
 nvim () {
   VIMRC="$HOME/.config/nvim/configs/${1}.vimrc"
@@ -80,12 +55,6 @@ nvim () {
   else
     $NVIMBIN
   fi
-}
-
-mvim () {
-  RUNBIN=$MVIMBIN
-  vim $@
-  RUNBIN=$VIMBIN
 }
 
 download() {
