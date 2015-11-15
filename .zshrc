@@ -41,6 +41,11 @@ then
   RUNBIN=$VIMBIN
 fi
 
+if [ "${NVIMBIN}" = "" ]
+then
+  NVIMBIN=$(which nvim)
+fi
+
 vim () {
   VIMRC="$HOME/.vim/configs/${1}.vimrc"
   if [ $# -gt 0 ]
@@ -56,6 +61,24 @@ vim () {
     fi
   else
     $RUNBIN
+  fi
+}
+
+nvim () {
+  VIMRC="$HOME/.config/nvim/configs/${1}.vimrc"
+  if [ $# -gt 0 ]
+  then
+    if [[ -a $1 ]]
+    then
+      $NVIMBIN $@
+    elif [[ -a "$VIMRC" ]]
+    then
+      $NVIMBIN -u "$VIMRC" ${@:2}
+    else
+      $NVIMBIN $@
+    fi
+  else
+    $NVIMBIN
   fi
 }
 
