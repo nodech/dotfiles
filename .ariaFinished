@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+echo $@
+terminal-notifier -message "${3:20}" -subtitle "Download Finished" -title "Aria2" -sound GLUMP
