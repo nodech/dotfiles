@@ -77,6 +77,10 @@ style -name tab chrome://* <<EOM
   display: none; /* */
   /* visibility: hidden; /* */
 }
+#TabsToolbar .tabbrowser-tab[visuallyselected="true"] .tab-background {
+  margin-inline-end: 0px!important;
+  margin-inline-start: 0px!important;
+}
 
 #TabsToolbar .tabbrowser-tab[visuallyselected="true"] .tab-background-middle {
   /*-moz-box-flex: 0!important;*/
