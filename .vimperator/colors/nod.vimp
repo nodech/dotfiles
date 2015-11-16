@@ -50,9 +50,49 @@ hi PromptText background: #5566bb; color: #dddded;
 " === Firefox styles ===
 
 style -name tab chrome://* <<EOM
+#titlebar {
+  margin-bottom: -28px!important;
+}
+
 #tab-view-deck {
   margin-top: -9px;
 }
+
+#tabbrowser-tabs {
+  min-height: 23px!important;
+  height: 23px;
+}
+
+#main-window[tabsintitlebar] > #titlebar > #titlebar-content > #titlebar-buttonbox-container, #main-window[tabsintitlebar] > #titlebar > #titlebar-content > #titlebar-secondary-buttonbox > #titlebar-fullscreen-button {
+  margin-top: 5px!important;
+}
+
+#TabToolbar .scrollbox-innerbox {
+  min-height: 23px!important;
+  margin-top: -5px;
+}
+
+#TabsToolbar .tab-stack .tab-background .tab-background-start,
+#TabsToolbar .tab-stack .tab-background .tab-background-end {
+  display: none; /* */
+  /* visibility: hidden; /* */
+}
+
+#TabsToolbar .tabbrowser-tab[visuallyselected="true"] .tab-background-middle {
+  /*-moz-box-flex: 0!important;*/
+  margin-top: -15px!important;
+  margin-right: -15px!important; 
+  border-color: #aaa;
+  border-width: 0px 1px 2px 1px;
+  border-bottom: 1px solid black;
+}
+
+/*
+.tabbrowser-tabs[selected="true"] {
+  border: 1px solid black!important;
+  border-top: 0px;
+}*/
+
 EOM
 
 style -name statusbar chrome://* <<EOM
@@ -61,4 +101,4 @@ statusbarpanel > * { margin: 0 !important; padding: 0 !important; }
 EOM
 
 
-" vim: ft=vimperator
+" vim: ft=vim
