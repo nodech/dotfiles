@@ -57,6 +57,8 @@ nvim () {
   fi
 }
 
+alias vim='nvim'
+
 download() {
   aria2c --on-bt-download-complete="/Users/nod/.ariaFinished" --on-download-complete="/Users/nod/.ariaFinished" $@
 }
