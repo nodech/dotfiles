@@ -67,6 +67,12 @@ style -name tab chrome://* <<EOM
   margin-top: 5px!important;
 }
 
+#TabsToolbar {
+  background: #222;
+  color: white!important;
+  text-shadow: none!important;
+}
+
 #TabToolbar .scrollbox-innerbox {
   min-height: 23px!important;
   margin-top: -5px;
@@ -85,10 +91,20 @@ style -name tab chrome://* <<EOM
 #TabsToolbar .tabbrowser-tab[visuallyselected="true"] .tab-background-middle {
   /*-moz-box-flex: 0!important;*/
   margin-top: -15px!important;
-  margin-right: -15px!important; 
+  margin-right: -15px!important;
+  margin-left: 0px!important;
+  background: #555!important;
+
   border-color: #aaa;
+  border-left: 0px!important;
+  border-right: 0px!important;
   border-width: 0px 1px 2px 1px;
   border-bottom: 1px solid black;
+}
+
+
+#TabsToolbar .tabbrowser-tab[visuallyselected="true"] .tab-content {
+  padding-inline-end: 0px!important;
 }
 
 /*
