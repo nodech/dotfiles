@@ -4,4 +4,7 @@
 .vim/tmp/*
 node_modules/
 
+.config/nvim/bundle
+.config/nvim/tmp/*
+
 !.vim/tmp/.track
