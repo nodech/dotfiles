@@ -8,20 +8,19 @@ ZSH_THEME="nod"
 
 plugins=(
   git
-  git-flow
+  #git-flow
   git-extras
   brew
-  extract
-  heroku
+  #extract
+  #heroku
   npm
   redis
-  brew
-  gem
+  #gem
   osx
   web-search
   autojump
   zsh-syntax-highlighting
-  rand-quote
+  #rand-quote
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -60,7 +59,12 @@ nvim () {
 alias vim='nvim'
 
 download() {
-  aria2c --on-bt-download-complete="/Users/nod/.ariaFinished" --on-download-complete="/Users/nod/.ariaFinished" $@
+  progressDir='/Users/nod/.ariaDn'
+  aria2c \
+    --summary-interval=5 \
+    --download-result=full \
+    --on-bt-download-complete="/Users/nod/.ariaFinished" \
+    --on-download-complete="/Users/nod/.ariaFinished" $@ | tee "$progressDir/$(uuidgen)"
 }
 
 startDocker() {
@@ -68,13 +72,12 @@ startDocker() {
   $(boot2docker shellinit)
 }
 
+# SOME ZSH Configs
+DISABLE_AUTO_TITLE=true
+
 source ~/.awsHosts.sh
 
-export JAVA_HOME="/usr/libexec/java_home"
-
-#GoPATH
-export GOPATH="$HOME/Development/Go"
-export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
+export JAVA_HOME=$(/usr/libexec/java_home)
 
 #OpenVPN Path
 export PATH="$PATH:/Applications/Tunnelblick.app/Contents/Resources/openvpn/openvpn-2.3.6"
@@ -83,8 +86,27 @@ export PATH="$PATH:/Applications/Tunnelblick.app/Contents/Resources/openvpn/open
 alias swift='/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift'
 
 #Ruby Env load stuff
-eval "$(rbenv init -)"
+irbenv() {
+  eval "$(rbenv init -)"
+}
 
 #NVM configs
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
+invm() {
+  export NVM_DIR=~/.nvm
+  source $(brew --prefix nvm)/nvm.sh
+}
+
+#GVM
+#igvm() {
+source ~/.gvm/scripts/gvm
+
+#GoPATH
+export GOPATH="$HOME/Development/Go"
+export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
+#}
+
+#ifzf() {
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#}
+
+skip_global_compinit=1
