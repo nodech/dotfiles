@@ -3,7 +3,6 @@
 "set runtimepath=$HOME/.config/nvim/
 
 " Set Configurations
-set nocompatible
 set encoding=utf-8
 set expandtab
 set number
@@ -21,7 +20,6 @@ set showcmd
 set shiftwidth=2
 set tabstop=2
 set visualbell
-set wildignore=*.bak,*.o,*.e,*~
 set wildmenu
 set pastetoggle=<F2>
 set laststatus=2
@@ -48,17 +46,16 @@ set autoindent
 set smartindent
 set completeopt=menuone,menu,longest
 
+"Ignore files
+set wildignore+=tags               " Ignore tags when globbing.
+set wildignore+=tmp/**             " ...Also tmp files.
+set wildignore+=public/uploads/**  " ...Also uploads.
+set wildignore+=public/images/**   " ...Also images.
+set wildignore+=node_modules       " ...Also node_modules
 
 " Colors and fonts
 syntax enable
 colorscheme Tomorrow-Night-Bright
-
-if has("gui_running")
-  set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline
-  set go-=R
-  set go-=L
-  set go-=r
-endif
 
 " FileType handlers
 filetype off
@@ -115,42 +112,47 @@ au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
 " Load VUNDLE
-set rtp+=$HOME/.config/nvim/bundle/vundle/
-call vundle#begin("$HOME/.config/nvim/bundle")
+source $HOME/.config/nvim/bundle/vim-plug/plug.vim
+call plug#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/gist-vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'mileszs/ack.vim'
-Plugin 'mattn/emmet-vim'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
-Plugin 'majutsushi/tagbar'
-Plugin 'aperezdc/vim-template'
-Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'isRuslan/vim-es6'
-Plugin 'groenewege/vim-less'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'pangloss/vim-javascript'
-Plugin 'mxw/vim-jsx'
-Plugin 'benmills/vimux'
-Plugin 'tpope/vim-obsession'
-Plugin 'DavidEGx/ctrlp-smarttabs'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'Valloric/YouCompleteMe'
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'scrooloose/nerdcommenter'
+Plug 'airblade/vim-gitgutter'
+Plug 'mattn/webapi-vim'
+Plug 'mattn/gist-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'mileszs/ack.vim'
+Plug 'mattn/emmet-vim'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-easytags'
+Plug 'majutsushi/tagbar'
+Plug 'aperezdc/vim-template'
+Plug 'scrooloose/syntastic'
+Plug 'groenewege/vim-less'
+Plug 'digitaltoad/vim-jade'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'isRuslan/vim-es6'
+Plug 'benmills/vimux'
+Plug 'tpope/vim-obsession'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'Valloric/YouCompleteMe'
+Plug 'mbbill/undotree'
+Plug 'unblevable/quick-scope'
 
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " Plugin configs
 "" Configs->NERDTree
 "let NERDTreeChDirMode=2
 let g:nerdtree_tabs_open_on_gui_startup=0
+
+" Configs->quick-scope
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " Configs->Ack.vim
 " Use ag as searcher
@@ -182,25 +184,22 @@ let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 let g:gist_clip_command = 'pbcopy'
 
-" Config->CtrlP
-let g:ctrlp_map = '<c-j>'
-let g:ctrlp_cmd = 'CtrlP'
+" Configs->FZF
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
-let g:ctrlp_switch_buffer='Et'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|png|pem|p12))$'
-let g:ctrlp_extensions = ['smarttabs']
 
 " Plugin Keymaps
 " Keymap->NERDTree
 map <silent> <F3> :NERDTreeTabsToggle<CR>
 map <silent> <F4> :TagbarToggle<CR>
 
-" Keymap->CtrlP
-map <silent> <C-b> :CtrlPBuffer<CR>
-map <silent> <C-a> :CtrlPMixed<CR>
-map <silent> <Leader>s :CtrlPSmartTabs<CR>
-
+" Keymap->FZF
+map <silent> <C-B> :Buffers<CR>
+map <silent> <C-J> :Files<CR>
+nmap <silent> <C-T> :Windows<CR>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment

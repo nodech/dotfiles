@@ -1,5 +1,5 @@
 " Load after
-call vundle#end()
+call plug#end()
 
 " Fix everything
 filetype plugin indent on

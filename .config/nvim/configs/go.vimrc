@@ -4,8 +4,8 @@ let g:CONFIGS = $HOME . "/.config/nvim/configs"
 :exec "source " . CONFIGS ."/.vimrc"
 
 " Here should go specific configs
-Plugin 'fatih/vim-go'
-Plugin 'peterhoeg/vim-qml'
+Plug 'fatih/vim-go'
+Plug 'peterhoeg/vim-qml'
 
 " Config -> Go
 let g:go_fmt_autosave = 1
@@ -14,6 +14,13 @@ let g:go_disable_autoinstall = 0
 
 map <silent> <F9> :GoRun<CR>
 map <silent> <F5> :~/.vim/configs/go.vimrc<CR>
+
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_interfaces = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
 
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
@@ -44,3 +51,7 @@ let g:tagbar_type_go = {
 \ }
 
 :exec "source " . CONFIGS . "/.vimrc.after"
+
+" Keymap->GoLang
+noremap <leader>gi :GoImport 
+noremap <leader>gg :GoImports<CR>
