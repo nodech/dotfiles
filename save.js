@@ -129,29 +129,53 @@ function *copyFiles(tasks) {
   let copy = files.map((file) => {
     let cmd = 'cp -rv "' + file + '" "' + HOME_DIR + '"';
     log(cmd);
-    return exec('cp -rv "' + file + '" "' + HOME_DIR + '"');
+    return exec(cmd);
   })
 
   let results = yield copy;
   results.forEach((result) => log(...result))
 }
 
+
+function *brewAll(task, file) {
+  let install = task === 'brew' ? brewInstaller : brewCaskInstaller;
+  let packages = fs.readFileSync(file).toString().split("\n");
+  packages = packages.map((p) => p.trim()).filter((p) => p != '');
+  let choose = yield inquirer.prompt({
+    name : 'brew',
+    type : 'checkbox',
+    message : 'which packages to brew',
+    choices : packages,
+    default : packages
+  });
+
+  choose.brew.forEach((package) => {
+    package = package.trim();
+    msg(task + ' install ' + package);
+
+    install(package)
+  });
+}
+
+function brewCaskInstaller(package) {
+  spawnSync('brew', [ 'cask', 'install', package ], {
+    stdio : 'inherit'
+  });
+}
+
+function *brewInstaller(package) {
+  spawnSync('brew', [ 'install', package ], {
+    stdio : 'inherit'
+  });
+}
+
 function *brew(tasks) {
   //brew: Install BREW_PACKAGES(requires brew)
   msg('installing brew packages');
 
-  let packages = fs.readFileSync('./BREW_PACKAGES').toString().split("\n");
-  packages.forEach((package) => {
-    package = package.trim();
-    msg('brew install ' + package);
-
-    spawnSync('brew', [ 'install', package ], {
-      stdio : 'inherit'
-    });
-  });
+  yield brewAll('brew', './BREW_PACKAGES');
 
   msg('brew packages done');
-
   return 'brew installed';
 }
 
@@ -159,15 +183,7 @@ function *brewCask(tasks) {
   //brew-cask: Install BRAW_CASK_LIST(requires brew-cask)
   msg('installing brew cask apps');
 
-  let packages = fs.readFileSync('./BREW_CASK_LIST').toString().split("\n");
-  packages.forEach((package) => {
-    package = package.trim();
-    msg('brew cask install' + package);
-
-    spawnSync('brew', [ 'cask', 'install', package ], {
-      stdio : 'inherit'
-    })
-  });
+  yield brewAll('brew cask', './BREW_CASK_LIST');
 
   msg('brew cask apps done')
 
