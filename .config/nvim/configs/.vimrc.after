@@ -1,6 +1,10 @@
 " Load after
 call plug#end()
 
+" Colors and fonts
+colorscheme hybrid_material
+
 " Fix everything
 filetype plugin indent on
 syntax on
+
