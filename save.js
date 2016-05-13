@@ -1,128 +1,159 @@
 #!/usr/bin/env node
 
-var path = require('path'),
-    fs = require('fs'),
-    exec = require('child_process').exec,
-    files = fs.readdirSync(__dirname),
-    async = require('async'),
-    util = require('util'),
-    exclude = [ 'save.js', '.git', 'README.md', '.gitignore', 'package.json', 'node_modules', 'save.sh', 'npm-debug.log', 'vim.sh' ],
-    homeDir = path.resolve(process.env['HOME']),
-    message = console.log.bind(null, '======= %s =======');
+let path = require('path');
+let util = require('util');
+
+let exec = require('mz/child_process').exec;
+let fs = require('mz/fs');
+
+let co  = require('co');
+
+let inquirer = require('inquirer');
+
+let HOME_DIR = path.resolve(process.env['HOME']);
+let FILES = fs.readdirSync(__dirname);
 
 
-files = files.filter(function (file) {
-  return exclude.indexOf(file) < 0;
+var HEAD = ' ======== ';
+var head = ' ----- ';
+var MSG = (str, ...args) => console.log(HEAD + str.toUpperCase() + HEAD, ...args)
+var msg = (str, ...args) => console.log(head + str + head, ...args)
+let log = console.log;
+
+var exclude = [
+ '.git',
+ '.gitignore',
+ '.gitmodules',
+ 'README.md',
+
+ 'node_modules',
+ 'package.json',
+ 'npm-debug.log',
+
+ 'save.sh',
+  'save.js',
+ 'vim.sh',
+
+ 'BREW_CASK_LIST',
+ 'BREW_PACKAGES'
+];
+
+FILES = FILES.filter((file) => exclude.indexOf(file) < 0)
+
+
+let TASKS = [
+  copyFiles,
+  brew,
+  brewCask,
+  tmuxPlugInstall,
+];
+
+let TASKS_NAMES = TASKS.map(getTaskObject);
+
+let promptConfigs = [{
+  name : 'tasks',
+  type : 'checkbox',
+  message : 'Choose Tasks to run',
+  choices : TASKS_NAMES
+}];
+
+co(function *() {
+  MSG('Starting setup');
+
+  let prompt = yield inquirer.prompt(promptConfigs);
+  let tasks = prompt.tasks;
+
+  for (let i = 0, task; i < tasks.length; i++) {
+    task = tasks[i];
+
+    MSG('Starting:' + task.name);
+
+    yield co(task.task);
+
+    MSG('Ended:' + task.name)
+    log('');
+  }
+
+}).catch((err) => {
+  MSG('error');
+  msg(err);
 });
 
-async.series([
-  function (done) {
-    message('START COPYING');
-    async.each(files, COPY_FILES, function (error) {
-      message('END COPYING');
-      done(error);
-    });
-  },
-  function (done) {
-    message('TMUX STUFF');
-    async.series([
-      installTmuxPackageManager,
-      installTmuxPackages
-    ], function (error) {
-      if (error) {
-        console.error(error);
-      }
-      message('FINISHED TMUX STUFF');
-      done();
-    });
-  },
-  function (done) {
-    message('VIM STUFF');
-    async.series([
-      installVimPackages,
-      installTernForVim
-    ], function (error) {
-      if (error) {
-        console.error(error);
-      }
-      message('END OF VIM STUFF');
-      done();
-    });
-  }
-], function (error, done) {
-  if (error) {
-    console.error(error);
-  }
-  message('DONE');
-});
+function getTaskName(taskGen) {
+  let fn = taskGen.toString().split("\n");
+  let name = fn[1].match(/^\s+\/\/(.*)/);
 
-function installTmuxPackageManager(done) {
-  exec('git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm', function (error, stdout, stderr) {
-    if (error) {
-      done(error);
-      return;
-    }
-
-    LOG(stdout, stderr);
-    message('INSTALLED TMUX PACKAGE MANAGER');
-    done();
-  });
+  return name[1];
 }
 
-function installTmuxPackages(done) {
-  exec('~/.tmux/plugins/tpm/scripts/install_plugins.sh', function (error, stdout, stderr) {
-    if (error) {
-      done(error);
-      return;
-    }
+function getTaskObject(taskGen) {
+  let name = getTaskName(taskGen);
+  let id = name.split(':')[0].trim();
 
-    LOG(stdout, stderr);
-    message('INSTALLED TMUX PACKAGES');
-    done();
-  });
-};
-
-function installVimPackages(done) {
-  message('INSTALLING VUNDLE PACKAGES');
-  exec('nvim +PluginInstall +qall', function (error, stdout, stderr) {
-    if (error) {
-      done(error);
-      return;
-    }
-
-    LOG(stdout, stderr);
-    message('INSTALLED VUNDLE PACKAGES');
-    done();
-  });
+  return {
+    name : name,
+    value : {
+      id : id,
+      name : name,
+      task : taskGen
+    },
+    checked : true
+  };
 }
 
-function installTernForVim(done) {
-  message('INSTALLING TERN DEPENDENCIES');
-  exec('cd ~/.config/nvim/bundle/tern_for_vim && npm install', function (error, stdout, stderr) {
-    if (error) {
-      done(error);
-      return;
-    }
+function promiseFn() {
+  var promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve(), 1000);
+  })
 
-    LOG(stdout, stderr);
-    message('INSTALLED TERN_FOR_VIM npm modules');
-    done();
-  });
+  return promise;
 }
 
-function COPY_FILES(file, done) {
-  exec('cp -rv "' + file + '" "' + homeDir + '/"', function (error, stdout, stderr) {
-    if (error) {
-      done(error);
-      return;
-    }
+function *copyFiles(tasks) {
+  //copy-files: Copy Files
+ 
+  msg('starting copying');
 
-    LOG(stdout, stderr);
-    done();
+  let prompt = yield inquirer.prompt({
+    name : 'files',
+    type : 'checkbox',
+    message : 'Choose files to copy(recursively)',
+    choices : FILES,
+    default : FILES
   });
-};
 
-function LOG(out, err) {
-  console.log(out);
-  console.error(err);
+  let files = prompt.files;
+  let copy = files.map((file) => {
+    let cmd = 'cp -rv "' + file + '" "' + HOME_DIR + '"';
+    log(cmd);
+    return exec('cp -rv "' + file + '" "' + HOME_DIR + '"');
+  })
+
+  let results = yield copy;
+  results.forEach((result) => log(...result))
+}
+
+function *brew(tasks) {
+  //brew: Install BREW_PACKAGES(requires brew)
+  msg('starting brew packages');
+  yield promiseFn();
+  msg('brew packages end');
+
+  return 'brew installed';
+}
+
+function *brewCask(tasks) {
+  //brew-cask: Install BRAW_CASK_LIST(requires brew-cask)
+  msg('brew cask')
+  yield promiseFn();
+
+  return 'bla';
+}
+
+function *tmuxPlugInstall(tasks) {
+  //tmux-plug: Install TMUX Plugins
+
+  MSG('starting tmux plugin install');
+  yield promiseFn();
+  MSG('finished tmux plugin install')
 }
