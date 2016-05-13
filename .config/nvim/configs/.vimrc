@@ -20,7 +20,6 @@ set showcmd
 set shiftwidth=2
 set tabstop=2
 set visualbell
-set wildmenu
 set pastetoggle=<F2>
 set laststatus=2
 set mouse=a
@@ -34,6 +33,9 @@ set noerrorbells
 set noautoread
 set noautowrite
 set noautowriteall
+
+set wildmenu
+set wildmode=list:longest,full
 
 set cursorline
 set lazyredraw
@@ -53,9 +55,8 @@ set wildignore+=public/uploads/**  " ...Also uploads.
 set wildignore+=public/images/**   " ...Also images.
 set wildignore+=node_modules       " ...Also node_modules
 
-" Colors and fonts
-syntax enable
-colorscheme Tomorrow-Night-Bright
+" TrueColor
+"set termguicolors
 
 " FileType handlers
 filetype off
@@ -81,20 +82,6 @@ vnoremap < < gv
 " Keymap->Reload .vimrc
 map <silent> <F5> :source $HOME/.config/nvim/.vimrc<CR>
 
-" Keymap->Completion
-inoremap ,, <C-X><C-O>
-
-" Keymap->Window size change normal
-nnoremap < <c-w>10<
-nnoremap > <c-w>10>
-nnoremap + <c-w>4+
-nnoremap = <c-w>4+
-nnoremap - <c-w>4-
-
-" Keymap->Navigate between windows
-nmap <A-n> <C-W>w
-nmap <A-p> <C-W>W
-
 " Keymap->Navigate between tabs
 nnoremap <C-N> gt
 nnoremap <C-P> gT
@@ -104,8 +91,8 @@ map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
 
 " Autos
-" Auto->Automatically open and close the popup menu/preview window
-au CursorMovedI, InsertLeave * if pumvisible() == 0|silent! pclose|endif
+"" Auto->Automatically open and close the popup menu/preview window
+"au CursorMovedI, InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
 " Auto->View update
 au BufWinLeave * silent! mkview
@@ -116,11 +103,13 @@ source $HOME/.config/nvim/bundle/vim-plug/plug.vim
 call plug#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
+"Plug 'scrooloose/nerdtree'
+"Plug 'jistr/vim-nerdtree-tabs'
+"Plug 'mattn/webapi-vim'
+"Plug 'benmills/vimux'
+
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
-Plug 'mattn/webapi-vim'
 Plug 'mattn/gist-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mileszs/ack.vim'
@@ -135,21 +124,40 @@ Plug 'digitaltoad/vim-jade'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'isRuslan/vim-es6'
-Plug 'benmills/vimux'
 Plug 'tpope/vim-obsession'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'Valloric/YouCompleteMe'
 Plug 'mbbill/undotree'
 Plug 'unblevable/quick-scope'
+Plug 't9md/vim-choosewin'
+Plug 'simeji/winresizer'
+Plug 'tikhomirov/vim-glsl'
+Plug 'cohama/agit.vim'
+Plug 'Raimondi/delimitMate'
+
+"try colorschemes
+Plug 'flazz/vim-colorschemes'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
+function! SL(function)
+  if exists('*'.a:function)
+    return call(a:function,[])
+  else
+    return ''
+  endif
+endfunction
 
 " Plugin configs
 "" Configs->NERDTree
 "let NERDTreeChDirMode=2
 let g:nerdtree_tabs_open_on_gui_startup=0
+
+" Configs->vim-fugitive
+set statusline+=[%n]\ %<%.99f\ %h%w%m%r%{SL('CapsLockStatusline')}%y%{SL('fugitive#statusline')}%#ErrorMsg#%{SL('SyntasticStatuslineFlag')}%*%=%-14.(%l,%c%V%)\ %P
+
 
 " Configs->quick-scope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -159,9 +167,6 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
-
-" Config->VimFiler
-let g:vimfiler_as_default_explorer = 1
 
 " Configs->Emmet-vim
 let g:user_emmet_install_global = 0
@@ -190,11 +195,22 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
+" Configs->YCM
+"  Buggy
+"set completeopt+=preview
+let g:ycm_add_preview_to_completeopt = 0
+"let g:ycm_autoclose_preview_window_after_completion = 0
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
 
 " Plugin Keymaps
 " Keymap->NERDTree
 map <silent> <F3> :NERDTreeTabsToggle<CR>
 map <silent> <F4> :TagbarToggle<CR>
+
+" Keymap->vim-choosewin
+nmap  -  <Plug>(choosewin)
+let g:choosewin_overlay_enable = 1
 
 " Keymap->FZF
 map <silent> <C-B> :Buffers<CR>
@@ -203,3 +219,5 @@ nmap <silent> <C-T> :Windows<CR>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
