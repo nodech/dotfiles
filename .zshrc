@@ -104,6 +104,17 @@ DISABLE_AUTO_TITLE=true
 
 source ~/.awsHosts.sh
 
+# Setup TMUXINATOR
+export EDITOR='nvim'
+export SHELL=$(which zsh)
+
+muxRefresh() {
+  tmux kill-session -t $1
+  mux start $1
+}
+
+source ~/.bin/tmuxinator.zsh
+
 export JAVA_HOME=$(/usr/libexec/java_home)
 
 #OpenVPN Path
@@ -131,6 +142,10 @@ source ~/.gvm/scripts/gvm
 export GOPATH="$HOME/Development/Go"
 export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
 #}
+
+#Cargo PATH
+export RUST_SRC_PATH="/usr/local/rust/rust-1.8.0/src"
+export PATH="$PATH:/Users/nod/.cargo/bin"
 
 #ifzf() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
