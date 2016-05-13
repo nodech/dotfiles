@@ -176,7 +176,20 @@ function *brewCask(tasks) {
 function *tmuxPlugInstall(tasks) {
   //tmux-plug: Install TMUX Plugins
 
-  MSG('starting tmux plugin install');
-  yield promiseFn();
-  MSG('finished tmux plugin install')
+  let dest = HOME_DIR + '/.tmux/plugins/tpm';
+
+  var exists = yield fs.exists(dest)
+  if (!exists) {
+    msg('get tmux tpm')
+    let got = yield exec('git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm');
+    log(got.join("\n"));
+  } else {
+    msg(dest + ' already exists');
+  }
+
+
+  msg('install plugins');
+  spawnSync('bash', [HOME_DIR + '/.tmux/plugins/tpm/scripts/install_plugins.sh'], {
+    stdio : 'inherit'
+  });
 }
