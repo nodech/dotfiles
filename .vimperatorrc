@@ -4,3 +4,5 @@ colorscheme nod
 
 noremap <C-S-p> :tabmove -1<CR>
 noremap <C-S-n> :tabmove +1<CR>
+
+noremap <C-L> :nohl<CR>
