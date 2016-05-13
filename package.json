@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/nodar-chkuaselidze/dotfiles#readme",
   "dependencies": {
-    "co": "^4.6.0"
+    "co": "^4.6.0",
+    "inquirer": "^1.0.2"
   }
 }
