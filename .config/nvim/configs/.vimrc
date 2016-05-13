@@ -99,7 +99,6 @@ au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
 " Load VUNDLE
-source $HOME/.config/nvim/bundle/vim-plug/plug.vim
 call plug#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
