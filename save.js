@@ -3,6 +3,8 @@
 let path = require('path');
 let util = require('util');
 
+let spawnSync = require('child_process').spawnSync;
+let spawn = require('child_process').spawn;
 let exec = require('mz/child_process').exec;
 let fs = require('mz/fs');
 
@@ -135,19 +137,40 @@ function *copyFiles(tasks) {
 
 function *brew(tasks) {
   //brew: Install BREW_PACKAGES(requires brew)
-  msg('starting brew packages');
-  yield promiseFn();
-  msg('brew packages end');
+  msg('installing brew packages');
+
+  let packages = fs.readFileSync('./BREW_PACKAGES').toString().split("\n");
+  packages.forEach((package) => {
+    package = package.trim();
+    msg('brew install ' + package);
+
+    spawnSync('brew', [ 'install', package ], {
+      stdio : 'inherit'
+    });
+  });
+
+  msg('brew packages done');
 
   return 'brew installed';
 }
 
 function *brewCask(tasks) {
   //brew-cask: Install BRAW_CASK_LIST(requires brew-cask)
-  msg('brew cask')
-  yield promiseFn();
+  msg('installing brew cask apps');
 
-  return 'bla';
+  let packages = fs.readFileSync('./BREW_CASK_LIST').toString().split("\n");
+  packages.forEach((package) => {
+    package = package.trim();
+    msg('brew cask install' + package);
+
+    spawnSync('brew', [ 'cask', 'install', package ], {
+      stdio : 'inherit'
+    })
+  });
+
+  msg('brew cask apps done')
+
+  return 'brew cask installed';
 }
 
 function *tmuxPlugInstall(tasks) {
