@@ -48,6 +48,7 @@ let TASKS = [
   brew,
   brewCask,
   tmuxPlugInstall,
+  vimPlugInstall,
 ];
 
 let TASKS_NAMES = TASKS.map(getTaskObject);
@@ -192,4 +193,108 @@ function *tmuxPlugInstall(tasks) {
   spawnSync('bash', [HOME_DIR + '/.tmux/plugins/tpm/scripts/install_plugins.sh'], {
     stdio : 'inherit'
   });
+}
+
+function *vimPlugInstall(tasks) {
+  //vim-plug: Install Neovim Plugins
+
+  MSG('Install NEOVIM Stuff');
+
+  msg('installing neovim plugins')
+  spawnSync('nvim', [ '+PlugInstall', '+qall' ], {
+    stdio : 'inherit'
+  });
+
+  let installYCM = yield inquirer.prompt({
+    type : 'confirm',
+    name : 'YCM',
+    message : 'Do you want to compile YCM?'
+  });
+
+  if (installYCM.YCM) {
+    yield co(vimYCMStuff)
+  }
+
+  let langs = yield fs.readdir('./.config/nvim/configs');
+  langs = langs.filter((lang) => /^[a-z]+\..*$/i.test(lang));
+  langs = langs.filter((lang) => lang != 'default.vimrc');
+  langs = langs.map((lang) => lang.split('.')[0])
+
+  let langsPrompt = yield inquirer.prompt({
+    name : 'langs',
+    type : 'checkbox',
+    message : 'Choose languages to plug-install',
+    choices : langs
+  });
+
+  langs = langsPrompt.langs;
+
+  for (var i = 0; i < langs.length; i++) {
+    installLanguage(langs[i]);
+  }
+
+  if (langs.indexOf('go') > -1) {
+    let promptGo = yield inquirer.prompt({
+      type : 'confirm',
+      name : 'gobin',
+      message : 'Do you want to install GoCode binaries?'
+    });
+
+    let install = promptGo.gobin;
+
+    if (install) {
+      vimGoCodeStuff();
+    }
+  }
+
+  MSG('NEOVIM Stuff done')
+}
+
+function installLanguage(lang) {
+  spawnSync('nvim', [
+    '-u',
+    '~/.config/nvim/configs/' + lang + '.vimrc',
+    '+PlugInstall',
+    '+qall'
+  ], {
+    stdio : 'inherit'
+  });
+}
+
+function *vimYCMStuff() {
+  msg('YCM related stuff')
+  let completers = [
+    'clang-completer',
+    'tern-completer',
+    'gocode-completer',
+    'racer-completer'
+  ];
+
+  let prompt = yield inquirer.prompt({
+    type : 'checkbox',
+    name : 'completers',
+    message : 'Choose completers',
+    choices : completers,
+    default : completers.slice(0, 3)
+  });
+
+  let chosenCompleters = prompt.completers
+  let args = chosenCompleters.map((c) => '--' + c);
+
+  msg('compile YCM')
+  spawnSync('bash', [ HOME_DIR + '/.config/nvim/bundle/YouCompleteMe/install.sh', ].concat(args), {
+    stdio : 'inherit'
+  })
+
+  msg('YCM done')
+}
+
+function vimGoCodeStuff() {
+  msg('Gocode binaries');
+  
+  spawnSync('vim', [ '+GoInstallBinaries', '+qall' ], {
+    stdio : 'inherit'
+  });
+
+  msg('GoCode binaries done')
 }
