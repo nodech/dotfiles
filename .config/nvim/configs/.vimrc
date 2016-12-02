@@ -87,7 +87,8 @@ nnoremap <C-N> gt
 nnoremap <C-P> gT
 
 " Switch colors in vim
-map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
+"map <leader>gd :colorscheme hybrid_reverse<CR>
+map <leader>gd :colorscheme hybrid<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
 
 " Autos
@@ -102,11 +103,6 @@ au BufWinEnter * silent! loadview
 call plug#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
-"Plug 'scrooloose/nerdtree'
-"Plug 'jistr/vim-nerdtree-tabs'
-"Plug 'mattn/webapi-vim'
-"Plug 'benmills/vimux'
-
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
 Plug 'mattn/webapi-vim' | Plug 'mattn/gist-vim'
@@ -114,19 +110,21 @@ Plug 'tpope/vim-fugitive'
 Plug 'mileszs/ack.vim'
 Plug 'mattn/emmet-vim'
 Plug 'xolox/vim-misc'
-Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-easytags'
 Plug 'majutsushi/tagbar'
 Plug 'aperezdc/vim-template'
 Plug 'scrooloose/syntastic'
 Plug 'groenewege/vim-less'
 Plug 'digitaltoad/vim-jade'
 Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
 Plug 'mxw/vim-jsx'
 Plug 'isRuslan/vim-es6'
 Plug 'tpope/vim-obsession'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'Valloric/YouCompleteMe'
+Plug 'Mizuchi/vim-ranger'
 Plug 'mbbill/undotree'
 Plug 'unblevable/quick-scope'
 Plug 't9md/vim-choosewin'
@@ -134,6 +132,9 @@ Plug 'simeji/winresizer'
 Plug 'tikhomirov/vim-glsl'
 Plug 'cohama/agit.vim'
 Plug 'Raimondi/delimitMate'
+Plug 'tomlion/vim-solidity'
+"Chose colors
+Plug 'vim-scripts/ScrollColors'
 
 "try colorschemes
 Plug 'flazz/vim-colorschemes'
@@ -150,10 +151,6 @@ function! SL(function)
 endfunction
 
 " Plugin configs
-"" Configs->NERDTree
-"let NERDTreeChDirMode=2
-let g:nerdtree_tabs_open_on_gui_startup=0
-
 " Configs->vim-fugitive
 set statusline+=[%n]\ %<%.99f\ %h%w%m%r%{SL('CapsLockStatusline')}%y%{SL('fugitive#statusline')}%#ErrorMsg#%{SL('SyntasticStatuslineFlag')}%*%=%-14.(%l,%c%V%)\ %P
 
@@ -203,18 +200,21 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 
 
 " Plugin Keymaps
-" Keymap->NERDTree
-map <silent> <F3> :NERDTreeTabsToggle<CR>
-map <silent> <F4> :TagbarToggle<CR>
+" Keymap->vim-ranger
+noremap <leader>f :tabe %:p:h<CR>
 
 " Keymap->vim-choosewin
 nmap  -  <Plug>(choosewin)
 let g:choosewin_overlay_enable = 1
 
+" Keymap->Tabmoves
+map <silent> <leader>tn :tabmove +1<CR>
+map <silent> <leader>tp :tabmove -1<CR>
+
 " Keymap->FZF
-map <silent> <C-B> :Buffers<CR>
-map <silent> <C-J> :Files<CR>
-nmap <silent> <C-T> :Windows<CR>
+map <silent> <leader>lb :Buffers<CR>
+map <silent> <leader>lf :Files<CR>
+nmap <silent> <leader>lw :Windows<CR>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment

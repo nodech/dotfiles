@@ -6,6 +6,7 @@ let g:CONFIGS = $HOME . "/.config/nvim/configs"
 " Here should go specific configs
 Plug 'wting/rust.vim'
 Plug 'racer-rust/vim-racer'
+Plug 'timonv/vim-cargo'
 
 let g:racer_cmd = "/Users/nod/.cargo/bin/racer"
 let $RUST_SRC_PATH='/usr/local/rust/rust-1.8.0/src'

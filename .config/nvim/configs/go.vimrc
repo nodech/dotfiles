@@ -63,3 +63,6 @@ set completeopt=menu,preview
 " Keymap->GoLang
 noremap <leader>gi :GoImport 
 noremap <leader>gg :GoImports<CR>
+
+" Fix C-T
+nmap <silent> <C-T> :Windows<CR>
