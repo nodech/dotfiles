@@ -1,3 +1,5 @@
+zmodload zsh/zprof
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -23,10 +25,14 @@ plugins=(
   #rand-quote
 )
 
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/.rbenv/bin"
+
+#gpgbin
+export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 
 #nod
 alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
@@ -40,23 +46,6 @@ psa() {
     if ($1>=x) { printf ("%-6.2f %s ", $1/x, hr[x]); break } \
     } } { printf ("%-6s %-10s ", $2, $3) } \
     { for ( x=4 ; x<=NF ; x++ ) { printf ("%s ",$x) } print ("") }'
-}
-
-transfer() {
-  if [ $# -eq 0 ];then
-    echo "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"
-    return 1
-  fi
-  tmpfile=$( mktemp -t transferXXX )
-  if tty -s;then
-    basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g')
-    curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile
-  else
-    curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile
-  fi
-
-  cat $tmpfile
-  rm -f $tmpfile
 }
 
 # multiconfig NVIM
@@ -94,11 +83,6 @@ download() {
     --on-download-complete="/Users/nod/.ariaFinished" $@ | tee "$progressDir/$(uuidgen)"
 }
 
-startDocker() {
-  boot2docker start
-  $(boot2docker shellinit)
-}
-
 # SOME ZSH Configs
 DISABLE_AUTO_TITLE=true
 
@@ -113,12 +97,13 @@ muxRefresh() {
   mux start $1
 }
 
-source ~/.bin/tmuxinator.zsh
+imux() {
+  source ~/.bin/tmuxinator.zsh
+}
+
 
 export JAVA_HOME=$(/usr/libexec/java_home)
-
-#OpenVPN Path
-export PATH="$PATH:/Applications/Tunnelblick.app/Contents/Resources/openvpn/openvpn-2.3.6"
+export ANDROID_HOME=~/Library/Android/sdk
 
 # Aliases
 alias swift='/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift'
@@ -143,15 +128,42 @@ export GOPATH="$HOME/Development/Go"
 export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
 #}
 
-#Cargo PATH
-export RUST_SRC_PATH="/usr/local/rust/rust-1.8.0/src"
-export PATH="$PATH:/Users/nod/.cargo/bin"
+#Cargo PATH - Update
+#export RUST_SRC_PATH="/usr/local/rust/rust-1.8.0/src"
+#export PATH="$PATH:/Users/nod/.cargo/bin"
 
 #ifzf() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #}
 
+
+#Custom bins
+export PATH=~/.bin:$PATH
+
+#Cuda PATHS
+export PATH=/usr/local/cuda/bin:$PATH
+export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
+
+#LLVM - Update
+llvm() {
+  PATH="/usr/local/Cellar/llvm/3.9.0/bin:$PATH"
+}
+
+
+
 bindkey "^k" up-line-or-beginning-search
 bindkey "^j" down-line-or-beginning-search
+#bindkey "^l" vi-forward-word
+#bindkey "^h" vi-backward-word
+#bindkey "^[" clear-screen
 
-skip_global_compinit=1
+skip_global_compinit=0
+
+alert() {
+  < /dev/urandom gtr -dc 01 | head -c 10000 | lolcat
+}
+
+# Turn off KQUEUE in tmux 2.2
+export EVENT_NOKQUEUE=1 
+
+source ~/.env
