@@ -2,7 +2,8 @@
 
 BATTERY=""
 
-HOSTNAME=$(whoami)@$(hostname)
+ip=$(ifconfig en0  | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*')
+HOSTNAME=$(whoami)@$ip
 DATE=$(date +%H:%M:%S\ %b\ %d)
 
 if [[ -x $(which "system_profiler") ]]
