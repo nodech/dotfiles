@@ -1,4 +1,4 @@
-zmodload zsh/zprof
+#zmodload zsh/zprof
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -10,26 +10,26 @@ ZSH_THEME="nod"
 
 plugins=(
   git
-  #git-flow
   git-extras
   brew
-  #extract
-  #heroku
+  docker
   npm
+  kubectl
   redis
-  #gem
   osx
   web-search
   autojump
-  zsh-syntax-highlighting
-  #rand-quote
+  zsh-autosuggestions
 )
 
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/.rbenv/bin"
+# OSX Paths
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+
+# Rbenv
+export PATH="$PATH:$HOME/.rbenv/bin"
 
 #gpgbin
 export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
@@ -38,6 +38,10 @@ export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
 alias psm="ps -eo rss,pid,user,command | awk '{ hr=\$1/1024 ; printf(\"%13.6f Mb \",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf(\"%s \",\$x) } print "" }' | sort"
 alias ll="ls -lsah"
+
+# GPG_TTY Fix
+GPG_TTY=$(tty)
+export GPG_TTY
 
 psa() {
   ps -eo rss,pid,user,command | sort -n | awk '{ \
@@ -75,18 +79,16 @@ nvim () {
 alias vim='nvim'
 
 download() {
-  progressDir='/Users/nod/.ariaDn'
+  progressDir="$HOME/.ariaDn"
   aria2c \
     --summary-interval=5 \
     --download-result=full \
-    --on-bt-download-complete="/Users/nod/.ariaFinished" \
-    --on-download-complete="/Users/nod/.ariaFinished" $@ | tee "$progressDir/$(uuidgen)"
+    --on-bt-download-complete="$HOME/.ariaFinished" \
+    --on-download-complete="$HOME/.ariaFinished" $@ | tee "$progressDir/$(uuidgen)"
 }
 
 # SOME ZSH Configs
 DISABLE_AUTO_TITLE=true
-
-source ~/.awsHosts.sh
 
 # Setup TMUXINATOR
 export EDITOR='nvim'
@@ -94,16 +96,17 @@ export SHELL=$(which zsh)
 
 muxRefresh() {
   tmux kill-session -t $1
-  mux start $1
+  tmuxinator start $1
 }
 
 imux() {
+  irbenv
   source ~/.bin/tmuxinator.zsh
 }
 
 
 export JAVA_HOME=$(/usr/libexec/java_home)
-export ANDROID_HOME=~/Library/Android/sdk
+#export ANDROID_HOME=~/Library/Android/sdk
 
 # Aliases
 alias swift='/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift'
@@ -119,14 +122,15 @@ invm() {
   source $(brew --prefix nvm)/nvm.sh
 }
 
+iaws() {
+  source /usr/local/bin/aws_zsh_completer.sh
+}
+
 #GVM
-#igvm() {
-source ~/.gvm/scripts/gvm
 
 #GoPATH
 export GOPATH="$HOME/Development/Go"
 export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
-#}
 
 #Cargo PATH - Update
 #export RUST_SRC_PATH="/usr/local/rust/rust-1.8.0/src"
@@ -166,4 +170,17 @@ alert() {
 # Turn off KQUEUE in tmux 2.2
 export EVENT_NOKQUEUE=1 
 
-source ~/.env
+# Load Rust
+source $HOME/.cargo/env
+
+#source ~/.env
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$HOME/.sdk/google-cloud-sdk/path.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/path.zsh.inc"; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc"; fi
+
