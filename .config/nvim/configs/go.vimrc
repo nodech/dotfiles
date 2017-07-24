@@ -11,19 +11,24 @@ Plug 'fatih/vim-go'
 let g:go_fmt_autosave = 1
 let g:go_disable_autoinstall = 0
 
-set number
+set nu
+set rnu
 
 map <silent> <F9> :GoRun<CR>
 map <silent> <F5> :~/.configs/nvim/configs/go.vimrc<CR>
 map <silent> <F3> :SyntasticCheck<CR>
 
 let g:go_highlight_functions = 1
+let g:go_highlight_extra_types = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_interfaces = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_cgo = 1
+
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
 
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }

@@ -3,9 +3,10 @@
 "set runtimepath=$HOME/.config/nvim/
 
 " Set Configurations
+set number
+set rnu
 set encoding=utf-8
 set expandtab
-set number
 set backspace=indent,eol,start
 set browsedir=current
 set complete+=k
@@ -88,7 +89,7 @@ nnoremap <C-P> gT
 
 " Switch colors in vim
 "map <leader>gd :colorscheme hybrid_reverse<CR>
-map <leader>gd :colorscheme hybrid<CR>
+map <leader>gd :colorscheme Tomorrow-Night<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
 
 " Autos
@@ -114,6 +115,7 @@ Plug 'xolox/vim-misc'
 Plug 'majutsushi/tagbar'
 Plug 'aperezdc/vim-template'
 Plug 'scrooloose/syntastic'
+"Plug 'neomake/neomake'
 Plug 'groenewege/vim-less'
 Plug 'digitaltoad/vim-jade'
 Plug 'pangloss/vim-javascript'
@@ -136,6 +138,9 @@ Plug 'tomlion/vim-solidity'
 "Chose colors
 Plug 'vim-scripts/ScrollColors'
 
+"Test localize WAKATIME
+Plug 'wakatime/vim-wakatime'
+
 "try colorschemes
 Plug 'flazz/vim-colorschemes'
 
@@ -149,6 +154,24 @@ function! SL(function)
     return ''
   endif
 endfunction
+
+" Custom Configs on filetypes
+" Markdown
+au FileType markdown set nofoldenable
+au FileType markdown set wrap
+"au FileType markdown highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"au FileType markdown match OverLength /\%101v.\+/
+
+" AutoRelative Numbers
+au FocusLost * :set rnu!
+au FocusGained * :set rnu
+
+autocmd InsertEnter * :set rnu!
+autocmd InsertLeave * :set rnu
+
+" Formatter
+"autocmd FileType javascript.jsx,javascript setlocal formatprg=prettier-standard\ --stdin
+"noremap <leader>p gggqG
 
 " Plugin configs
 " Configs->vim-fugitive
@@ -174,8 +197,12 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+ 
+let g:syntastic_javascript_checkers = [ 'eslint' ]
+"let g:syntastic_javascript_checkers = [ 'eslint', 'standard' ]
 
-let g:syntastic_javascript_checkers = ['eslint']
+" Configs->maker
+"let g:neomake_javascript_enabled_makers = ['eslint', 'standard']
 
 " Config->vim-template
 let g:templates_directory='~/.config/nvim/templates/'
@@ -197,7 +224,6 @@ let g:fzf_action = {
 let g:ycm_add_preview_to_completeopt = 0
 "let g:ycm_autoclose_preview_window_after_completion = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
-
 
 " Plugin Keymaps
 " Keymap->vim-ranger

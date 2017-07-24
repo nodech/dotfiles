@@ -2,8 +2,9 @@
 call plug#end()
 
 " Colors and fonts
-colorscheme hybrid_reverse
-colorscheme hybrid
+"colorscheme hybrid_reverse
+"colorscheme hybrid
+colorscheme Tomorrow-Night
 
 " Fix everything
 filetype plugin indent on
