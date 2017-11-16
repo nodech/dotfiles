@@ -57,7 +57,7 @@ set wildignore+=public/images/**   " ...Also images.
 set wildignore+=node_modules       " ...Also node_modules
 
 " TrueColor
-"set termguicolors
+set termguicolors
 
 " FileType handlers
 filetype off
@@ -104,34 +104,44 @@ au BufWinEnter * silent! loadview
 call plug#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
-Plug 'scrooloose/nerdcommenter'
-Plug 'airblade/vim-gitgutter'
-Plug 'mattn/webapi-vim' | Plug 'mattn/gist-vim'
-Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdcommenter' " autocomment
+
+Plug 'airblade/vim-gitgutter' " git modification status (on numbers)
+Plug 'tpope/vim-fugitive' " Git command wrappers
+
+"Plug 'Valloric/YouCompleteMe' " Advanced Autocompletion for multiple langs
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Dark Powered neo-completion
+
+Plug 'mattn/webapi-vim' | Plug 'mattn/gist-vim' " Gist posting
 Plug 'mileszs/ack.vim'
 Plug 'mattn/emmet-vim'
-Plug 'xolox/vim-misc'
-"Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-misc' | Plug 'xolox/vim-easytags'
+
+Plug 'Mizuchi/vim-ranger' " Opens file explorer in ranger cli tool
 Plug 'majutsushi/tagbar'
-Plug 'aperezdc/vim-template'
-Plug 'scrooloose/syntastic'
+Plug 'aperezdc/vim-template' " Custom templates for languages
+"Plug 'scrooloose/syntastic' " Syntax check with lots of validators
+Plug 'w0rp/ale' " Syntax check with lots of validators
 "Plug 'neomake/neomake'
+
+" Default Languages
 Plug 'groenewege/vim-less'
 Plug 'digitaltoad/vim-jade'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'mxw/vim-jsx'
 Plug 'isRuslan/vim-es6'
-Plug 'tpope/vim-obsession'
-Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'Valloric/YouCompleteMe'
-Plug 'Mizuchi/vim-ranger'
-Plug 'mbbill/undotree'
-Plug 'unblevable/quick-scope'
+Plug 'tikhomirov/vim-glsl'
+
+" Tools
+Plug 'godlygeek/tabular' " Tabularize
+"Plug 'tpope/vim-obsession' " Should be used by ressurect.. Not using right now
+Plug 'mbbill/undotree' " Shows Undo Tree (rarely used)
+Plug 'unblevable/quick-scope' " Works when truecolor is on
+Plug 'tpope/vim-surround' " Auto Surrounding some stuff
 Plug 't9md/vim-choosewin'
 Plug 'simeji/winresizer'
-Plug 'tikhomirov/vim-glsl'
 Plug 'cohama/agit.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tomlion/vim-solidity'
@@ -187,22 +197,20 @@ if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
+" Configs->vim-javascript
+let g:javascript_plugin_jsdoc = 1
+
 " Configs->Emmet-vim
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 let g:user_emmet_leader_key='<C-Z>'
 
-" Configs->syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
- 
-let g:syntastic_javascript_checkers = [ 'eslint' ]
-"let g:syntastic_javascript_checkers = [ 'eslint', 'standard' ]
+" Configs->ALE
+let g:ale_lint_on_text_changed = 'normal'
 
-" Configs->maker
-"let g:neomake_javascript_enabled_makers = ['eslint', 'standard']
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
 
 " Config->vim-template
 let g:templates_directory='~/.config/nvim/templates/'
@@ -218,12 +226,8 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-" Configs->YCM
-"  Buggy
-"set completeopt+=preview
-let g:ycm_add_preview_to_completeopt = 0
-"let g:ycm_autoclose_preview_window_after_completion = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
+" Configs->Deoplete
+let g:deoplete#enable_at_startup = 1
 
 " Plugin Keymaps
 " Keymap->vim-ranger
@@ -241,6 +245,9 @@ map <silent> <leader>tp :tabmove -1<CR>
 map <silent> <leader>lb :Buffers<CR>
 map <silent> <leader>lf :Files<CR>
 nmap <silent> <leader>lw :Windows<CR>
+
+" Keymap->Terminal
+tnoremap <c-a> <c-\><c-n>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment
