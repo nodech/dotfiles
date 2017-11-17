@@ -105,7 +105,7 @@ imux() {
 }
 
 
-export JAVA_HOME=$(/usr/libexec/java_home)
+export JAVA_HOME=$(/usr/libexec/java_home 2> /dev/null)
 #export ANDROID_HOME=~/Library/Android/sdk
 
 # Aliases
@@ -171,7 +171,7 @@ alert() {
 export EVENT_NOKQUEUE=1 
 
 # Load Rust
-source $HOME/.cargo/env
+if [ -f "$HOME/.cargo/env" ]; then source $HOME/.cargo/env; fi
 
 #source ~/.env
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
