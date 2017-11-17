@@ -31,6 +31,7 @@ var exclude = [
  'node_modules',
  'package.json',
  'npm-debug.log',
+ 'package-lock.json',
 
  'save.sh',
   'save.js',
@@ -163,7 +164,7 @@ function brewCaskInstaller(package) {
   });
 }
 
-function *brewInstaller(package) {
+function brewInstaller(package) {
   spawnSync('brew', [ 'install', package ], {
     stdio : 'inherit'
   });
@@ -221,15 +222,15 @@ function *vimPlugInstall(tasks) {
     stdio : 'inherit'
   });
 
-  let installYCM = yield inquirer.prompt({
-    type : 'confirm',
-    name : 'YCM',
-    message : 'Do you want to compile YCM?'
-  });
+  // let installYCM = yield inquirer.prompt({
+  //   type : 'confirm',
+  //   name : 'YCM',
+  //   message : 'Do you want to compile YCM?'
+  // });
 
-  if (installYCM.YCM) {
-    yield co(vimYCMStuff)
-  }
+  // if (installYCM.YCM) {
+  //   yield co(vimYCMStuff)
+  // }
 
   let langs = yield fs.readdir('./.config/nvim/configs');
   langs = langs.filter((lang) => /^[a-z]+\..*$/i.test(lang));
