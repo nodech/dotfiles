@@ -1,6 +1,7 @@
 aria2
 autojump
 curl
+entr
 ffmpeg
 fzf
 go
