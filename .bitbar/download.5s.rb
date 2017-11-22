@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-DOWNLOAD_FOLDER = "/Users/nod/.ariaDn"
+DOWNLOAD_FOLDER = ENV["HOME"] + "/.ariaDn"
 
 Dir.chdir(DOWNLOAD_FOLDER)
 
