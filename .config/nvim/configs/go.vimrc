@@ -6,17 +6,26 @@ let g:CONFIGS = $HOME . "/.config/nvim/configs"
 " Here should go specific configs
 Plug 'peterhoeg/vim-qml'
 Plug 'fatih/vim-go'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+
+
 
 " Config -> Go
 let g:go_fmt_autosave = 1
 let g:go_disable_autoinstall = 0
+
+" Config -> Go -> deoplete-go
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources#go#use_cache = 1
+
+" Config->go -> Linters
+" let g:ale_completion_enabled = 0 " Make sure it's not on
 
 set nu
 set rnu
 
 map <silent> <F9> :GoRun<CR>
 map <silent> <F5> :~/.configs/nvim/configs/go.vimrc<CR>
-map <silent> <F3> :SyntasticCheck<CR>
 
 let g:go_highlight_functions = 1
 let g:go_highlight_extra_types = 1
@@ -29,9 +38,6 @@ let g:go_highlight_cgo = 1
 
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
-
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
@@ -63,7 +69,7 @@ let g:tagbar_type_go = {
 
 :exec "source " . CONFIGS . "/.vimrc.after"
 
-set completeopt=menu,preview
+"set completeopt=menu,preview
 
 " Keymap->GoLang
 noremap <leader>gi :GoImport 

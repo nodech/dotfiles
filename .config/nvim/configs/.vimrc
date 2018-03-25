@@ -88,8 +88,8 @@ nnoremap <C-N> gt
 nnoremap <C-P> gT
 
 " Switch colors in vim
-"map <leader>gd :colorscheme hybrid_reverse<CR>
-map <leader>gd :colorscheme Tomorrow-Night<CR>
+map <leader>gd :colorscheme hybrid_reverse<CR>
+"map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
 
 " Autos
@@ -136,7 +136,7 @@ Plug 'tikhomirov/vim-glsl'
 
 " Tools
 Plug 'godlygeek/tabular' " Tabularize
-"Plug 'tpope/vim-obsession' " Should be used by ressurect.. Not using right now
+Plug 'tpope/vim-obsession' " Should be used by ressurect.. Not using right now
 Plug 'mbbill/undotree' " Shows Undo Tree (rarely used)
 Plug 'unblevable/quick-scope' " Works when truecolor is on
 Plug 'tpope/vim-surround' " Auto Surrounding some stuff
@@ -210,6 +210,7 @@ let g:ale_lint_on_text_changed = 'normal'
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ]
 \}
 
 " Config->vim-template
@@ -247,7 +248,7 @@ map <silent> <leader>lf :Files<CR>
 nmap <silent> <leader>lw :Windows<CR>
 
 " Keymap->Terminal
-tnoremap <c-a> <c-\><c-n>
+tnoremap <C-]> <c-\><c-n>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment

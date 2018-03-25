@@ -4,11 +4,12 @@ let g:CONFIGS = $HOME . "/.config/nvim/configs"
 :exec "source " . CONFIGS ."/.vimrc"
 
 " Here should go specific configs
-Plug 'wting/rust.vim'
-Plug 'racer-rust/vim-racer'
+Plug 'sebastianmarkow/deoplete-rust'
+Plug 'rust-lang/rust.vim'
 Plug 'timonv/vim-cargo'
 
-let g:racer_cmd = "/Users/nod/.cargo/bin/racer"
-let $RUST_SRC_PATH='/usr/local/rust/rust-1.8.0/src'
+let g:deoplete#sources#rust#racer_binary=$HOME . "/.cargo/bin/racer"
+let g:deoplete#sources#rust#rust_source_path=$HOME . "/.rust/rust-1.22.1/src"
+let g:deoplete#sources#rust#show_duplicates=1
 
 :exec "source " . CONFIGS . "/.vimrc.after"

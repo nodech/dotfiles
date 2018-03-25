@@ -132,9 +132,9 @@ iaws() {
 export GOPATH="$HOME/Development/Go"
 export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
 
-#Cargo PATH - Update
-#export RUST_SRC_PATH="/usr/local/rust/rust-1.8.0/src"
-#export PATH="$PATH:/Users/nod/.cargo/bin"
+#Cargo PATH
+export RUST_SRC_PATH="$HOME/.rust/rust-1.22.1/src"
+[ -f ~/.zfunc/_rustup ] && fpath+=~/.zfunc
 
 #ifzf() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -155,12 +155,27 @@ llvm() {
 
 
 
+## Bindings
+
 bindkey "^k" up-line-or-beginning-search
 bindkey "^j" down-line-or-beginning-search
 #bindkey "^l" vi-forward-word
 #bindkey "^h" vi-backward-word
 #bindkey "^[" clear-screen
 
+alias ta='tmux attach -t'
+alias tad='tmux attach -d -t'
+alias ts='tmux new-session -s'
+alias tl='tmux list-sessions'
+alias tksv='tmux kill-server'
+alias tkss='tmux kill-session -t'
+alias rm='echo use rmtrash'
+
+# alacrity changes
+alias cgd='cp ~/.alacritty.dark.yml ~/.alacritty.yml'
+alias cgw='cp ~/.alacritty.white.yml ~/.alacritty.yml'
+
+# zsh ac
 skip_global_compinit=0
 
 alert() {
