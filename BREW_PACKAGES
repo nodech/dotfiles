@@ -17,6 +17,7 @@ rar
 rbenv
 readline
 reattach-to-user-namespace
+rmtrash
 speedtest_cli
 terminal-notifier
 the_silver_searcher
