@@ -11,7 +11,6 @@ ZSH_THEME="nod"
 plugins=(
   git
   git-extras
-  brew
   docker
   npm
   kubectl
