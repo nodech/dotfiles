@@ -6,7 +6,7 @@
 set number
 set rnu
 set encoding=utf-8
-set expandtab
+set expandtab                           " Convert tabs to spaces
 set backspace=indent,eol,start
 set browsedir=current
 set complete+=k
@@ -81,15 +81,16 @@ vnoremap > > gv
 vnoremap < < gv
 
 " Keymap->Reload .vimrc
-map <silent> <F5> :source $HOME/.config/nvim/.vimrc<CR>
+map <silent> <F5> :source $HOME/.config/nvim/configs/.vimrc<CR>
 
 " Keymap->Navigate between tabs
 nnoremap <C-N> gt
 nnoremap <C-P> gT
 
 " Switch colors in vim
-map <leader>gd :colorscheme hybrid_reverse<CR>
+"map <leader>gd :colorscheme Tomorrow-Night<CR>
 "map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
+map <leader>gd :colorscheme codedark<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
 
 " Autos
@@ -108,6 +109,7 @@ Plug 'scrooloose/nerdcommenter' " autocomment
 
 Plug 'airblade/vim-gitgutter' " git modification status (on numbers)
 Plug 'tpope/vim-fugitive' " Git command wrappers
+
 
 "Plug 'Valloric/YouCompleteMe' " Advanced Autocompletion for multiple langs
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Dark Powered neo-completion
@@ -133,6 +135,7 @@ Plug 'mxw/vim-jsx'
 Plug 'isRuslan/vim-es6'
 Plug 'plasticboy/vim-markdown'
 Plug 'tikhomirov/vim-glsl'
+Plug 'mhinz/vim-rfc'
 
 " Tools
 Plug 'godlygeek/tabular' " Tabularize
@@ -145,17 +148,18 @@ Plug 'simeji/winresizer'
 Plug 'cohama/agit.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tomlion/vim-solidity'
-"Chose colors
-Plug 'vim-scripts/ScrollColors'
+Plug 'editorconfig/editorconfig-vim'
 
-"Test localize WAKATIME
-Plug 'wakatime/vim-wakatime'
 
 "try colorschemes
 Plug 'flazz/vim-colorschemes'
+"Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'connorholyday/vim-snazzy'
+Plug 'tomasiser/vim-code-dark'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
 
 function! SL(function)
   if exists('*'.a:function)
@@ -169,8 +173,8 @@ endfunction
 " Markdown
 au FileType markdown set nofoldenable
 au FileType markdown set wrap
-"au FileType markdown highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"au FileType markdown match OverLength /\%101v.\+/
+au FileType markdown highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+au FileType markdown match OverLength /\%101v.\+/
 
 " AutoRelative Numbers
 au FocusLost * :set rnu!
@@ -180,8 +184,14 @@ autocmd InsertEnter * :set rnu!
 autocmd InsertLeave * :set rnu
 
 " Formatter
-"autocmd FileType javascript.jsx,javascript setlocal formatprg=prettier-standard\ --stdin
+"autocmd FileType javascript.jsx,javascript setlocal formatprg=prettier\ --stdin
 "noremap <leader>p gggqG
+
+" Remap Paste
+xnoremap <leader>p "_dP
+
+" Ruby config
+let g:ruby_host_prog="$HOME/.gem/ruby/2.5.0/bin/neovim-ruby-host"
 
 " Plugin configs
 " Configs->vim-fugitive
@@ -205,12 +215,20 @@ let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 let g:user_emmet_leader_key='<C-Z>'
 
+" Config->GitGutter
+let g:gitgutter_sign_added='┃'
+let g:gitgutter_sign_modified='┃'
+let g:gitgutter_sign_removed='◢'
+let g:gitgutter_sign_removed_first_line='◥'
+let g:gitgutter_sign_modified_removed='◢'
+
 " Configs->ALE
 let g:ale_lint_on_text_changed = 'normal'
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
-\   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ]
+\   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ],
+\   'c': [ 'clang', 'gcc', 'clang-format', 'cpplint']
 \}
 
 " Config->vim-template
@@ -219,7 +237,7 @@ let g:templates_directory='~/.config/nvim/templates/'
 " Configs->Gist
 let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
-let g:gist_clip_command = 'pbcopy'
+let g:gist_clip_command = 'xsel -i --clipboard'
 
 " Configs->FZF
 let g:fzf_action = {
@@ -233,6 +251,10 @@ let g:deoplete#enable_at_startup = 1
 " Plugin Keymaps
 " Keymap->vim-ranger
 noremap <leader>f :tabe %:p:h<CR>
+
+" Keymap->winresizer
+let g:winresizer_start_key = "<leader>e"
+let g:winresizer_vert_size = 5
 
 " Keymap->vim-choosewin
 nmap  -  <Plug>(choosewin)

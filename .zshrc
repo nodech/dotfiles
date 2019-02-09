@@ -22,19 +22,38 @@ plugins=(
 )
 
 
+local rm=$(which rm);
+alias rmunsafe="$rm"
+
 source $ZSH/oh-my-zsh.sh
 
 # OSX Paths
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
+# Linux User pip
+export PATH="$PATH:$HOME/.local/bin"
+
+# linuxbrew
+export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
+
 # Rbenv
 export PATH="$PATH:$HOME/.rbenv/bin"
+
 
 #gpgbin
 export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 
 #nod
-alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
+gfwd() {
+  git checkout $(git rev-list --topo-order HEAD.."$*" | tail -1)
+}
+alias gback="git checkout HEAD~"
+
+function cpv() {
+  rsync -a --no-i-r --info=progress2 $@
+}
+
+
 alias psm="ps -eo rss,pid,user,command | awk '{ hr=\$1/1024 ; printf(\"%13.6f Mb \",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf(\"%s \",\$x) } print "" }' | sort"
 alias ll="ls -lsah"
 
@@ -89,19 +108,8 @@ download() {
 # SOME ZSH Configs
 DISABLE_AUTO_TITLE=true
 
-# Setup TMUXINATOR
 export EDITOR='nvim'
 export SHELL=$(which zsh)
-
-muxRefresh() {
-  tmux kill-session -t $1
-  tmuxinator start $1
-}
-
-imux() {
-  irbenv
-  source ~/.bin/tmuxinator.zsh
-}
 
 
 export JAVA_HOME=$(/usr/libexec/java_home 2> /dev/null)
@@ -121,6 +129,10 @@ invm() {
   source $(brew --prefix nvm)/nvm.sh
 }
 
+icpan() {
+  cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+}
+
 iaws() {
   source /usr/local/bin/aws_zsh_completer.sh
 }
@@ -132,30 +144,29 @@ export GOPATH="$HOME/Development/Go"
 export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
 
 #Cargo PATH
-export RUST_SRC_PATH="$HOME/.rust/rust-1.22.1/src"
+export RUST_SRC_PATH="$HOME/.rust/rust-1.30/src"
 [ -f ~/.zfunc/_rustup ] && fpath+=~/.zfunc
 
-#ifzf() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#}
 
 
 #Custom bins
-export PATH=~/.bin:$PATH
+export PATH=$HOME/.bin:$PATH
 
 #Cuda PATHS
 export PATH=/usr/local/cuda/bin:$PATH
 export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 
-#LLVM - Update
-llvm() {
-  PATH="/usr/local/Cellar/llvm/3.9.0/bin:$PATH"
+# LLVM - Update (MacOS)
+illvm() {
+  PATH="/usr/local/Cellar/llvm/6.0.0/bin:$PATH"
+  export LDFLAGS=-L/usr/local/opt/llvm/lib
+  export CPPFLAGS=-I/usr/local/opt/llvm/include
 }
 
 
 
 ## Bindings
-
 bindkey "^k" up-line-or-beginning-search
 bindkey "^j" down-line-or-beginning-search
 #bindkey "^l" vi-forward-word
@@ -168,6 +179,13 @@ alias ts='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
+
+# Linux
+function rmtrash() {
+	 mv $@ $HOME/.TRASH
+}
+
+alias rrm=$(which rm)
 alias rm='echo use rmtrash'
 
 # alacrity changes
@@ -177,18 +195,11 @@ alias cgw='cp ~/.alacritty.white.yml ~/.alacritty.yml'
 # zsh ac
 skip_global_compinit=0
 
-alert() {
-  < /dev/urandom gtr -dc 01 | head -c 10000 | lolcat
-}
-
-# Turn off KQUEUE in tmux 2.2
-export EVENT_NOKQUEUE=1 
-
 # Load Rust
 if [ -f "$HOME/.cargo/env" ]; then source $HOME/.cargo/env; fi
 
 #source ~/.env
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export PATH="/usr/local/opt/openssl/bin:$PATH"
 
 
@@ -198,3 +209,61 @@ if [ -f "$HOME/.sdk/google-cloud-sdk/path.zsh.inc" ]; then source "$HOME/.sdk/go
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc"; fi
 
+# include global libraries
+if [ -d '/usr/local/lib/node_modules' ]; then export NODE_PATH=/usr/local/lib/node_modules; fi
+
+
+ulimit -n 2048
+
+# Bcoin related
+function btcreg() {
+  cd ~/.bcoin/regtest/
+  source env.sh
+  invm
+}
+
+function hsdreg() {
+  cd ~/.hsd/regtest
+  source env.sh
+  invm
+}
+
+function get_bnet() {
+  if [[ "$BCOIN_NETWORK" != "" ]] then
+    echo -n "b["$BCOIN_NETWORK"@"${BCOIN_PREFIX/$HOME/"~"}"]"
+  fi
+
+  if [[ "$NVM_DIR" != "" ]] then
+    echo -n "-g"
+  fi
+
+  return ""
+}
+
+function bwatch() {
+  find . -iname '*.js' \
+  | grep -v 'node_modules' \
+  | entr -rc $(which bmocha) $@
+}
+
+# linux
+function cltrash() {
+  $rm -rIv $HOME/.TRASH/*
+  $rm -rIv $HOME/.TRASH/.*
+}
+
+# linux
+cltrashf() {
+  $rm -rvf $HOME/.TRASH/*
+  $rm -rvf $HOME/.TRASH/.*
+}
+
+# Linux?
+export XDG_CONFIG_HOME=$HOME/.config
+export RTV_EDITOR=vim
+export RTV_BROWSER=firefox
+
+
+## PERL 
+source $HOME/perl5/perlbrew/etc/bashrc
+export PATH="$PATH:/usr/bin/vendor_perl/"

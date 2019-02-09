@@ -1,4 +1,16 @@
 #!/bin/zsh
 
 echo $@
-terminal-notifier -message "${3:20}" -subtitle "Download Finished" -title "Aria2" -sound GLUMP
+
+length=${#3}
+last=15
+from=$((length - last))
+
+terminal_notifier=$(which terminal-notifier)
+notify_send=$(which notify-send)
+
+[[ -x $terminal_notifier ]] && \
+  $terminal_notifier -message "${3:$from}" -subtitle "Download Finished" -title "Aria2" -sound GLUMP
+
+[[ -x $notify_send ]] && \
+  $notify_send -u normal -i emblem-downloads "Aria2 Download Finished" "...${3:$from}"

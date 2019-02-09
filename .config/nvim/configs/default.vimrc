@@ -6,15 +6,24 @@ let g:CONFIGS = $HOME . "/.config/nvim/configs"
 :exec "source " . CONFIGS ."/.vimrc"
 
 " -- OMNI SETUP for Javascript
+Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx', 'jsx'] }
 
+" -- Typescript
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete'
+  \ 'tern#Complete',
+  \ 'jspc#omni'
 \]
 
 " Set bin if you have many instalations
-let g:deoplete#sources#ternjs#tern_bin = '/usr/local/bin/tern'
+let g:deoplete#sources#ternjs#tern_bin = '/usr/bin/tern'
 let g:deoplete#sources#ternjs#timeout = 1
 
 " If completions should be returned when inside a literal. Default: 1
