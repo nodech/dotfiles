@@ -30,8 +30,8 @@ alert = #bd2c40
 ################################################################################
 
 [bar/node]
-;monitor = ${env:MONITOR:HDMI-1}
-bottom=true
+monitor = ${env:MONITOR:eDP1}
+bottom=false
 width = 100%
 height = 25
 offset-x = 1%
@@ -63,15 +63,15 @@ font-3 = "DejaVu Sans:style=Bold Oblique:size=10;4"
 font-4 = "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid"
 
 modules-left = i3
-modules-center = xwindow
+modules-center = downloads
 modules-right = filesystem xbacklight alsa xkeyboard wlan eth battery memory cpu temperature date
 # pulseaudio
 
 tray-position = right
-tray-padding = 5
+tray-padding = 2
 tray-detached = false
-tray-offset-x = -15
-tray-offset-y = 13
+tray-offset-x = -20
+tray-offset-y = -15
 ;tray-reparent = true
 tray-background = ${colors.background}
 tray-scale=1.0
@@ -91,6 +91,23 @@ tray-scale=1.0
 
 ################################################################################
 
+[module/downloads]
+type = custom/script
+
+; Available tokens:
+;   %counter%
+; Command to be executed (using "/usr/bin/env sh -c [command]")
+exec = ~/.bin/ariaprogress.rb
+
+; Will the script output continous content?
+; Default: false
+tail = false
+
+; Seconds to sleep between updates
+; Default: 5 (0 if `tail = true`)
+interval = 20
+
+################################################################################
 
 [module/xwindow]
 type = internal/xwindow
@@ -344,7 +361,7 @@ format-charging-underline = #ffb52a
 format-discharging = <ramp-capacity> <label-discharging>
 format-discharging-underline = ${colors.background-alt}
 
-format-full-prefix = <ramp-capacity>
+format-full = <ramp-capacity> 100%
 ;format-full-prefix-foreground = ${colors.foreground-alt}
 format-full-underline = ${colors.foreground}
 
