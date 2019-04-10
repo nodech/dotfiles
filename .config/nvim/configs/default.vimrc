@@ -1,46 +1,45 @@
-" Default is WEB Development
-"   for me
+" Default configuration
 
 let g:CONFIGS = $HOME . "/.config/nvim/configs"
 
 :exec "source " . CONFIGS ."/.vimrc"
 
-" -- OMNI SETUP for Javascript
-Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx', 'jsx'] }
+let g:deoplete#enable_at_startup = 0
 
-" -- Typescript
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#functions.javascript = [
-  \ 'tern#Complete',
-  \ 'jspc#omni'
-\]
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
-" Set bin if you have many instalations
-let g:deoplete#sources#ternjs#tern_bin = '/usr/bin/tern'
-let g:deoplete#sources#ternjs#timeout = 1
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
-" If completions should be returned when inside a literal. Default: 1
-" let g:deoplete#sources#ternjs#in_literal = 0
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" let g:deoplete#sources#ternjs#guess = 0
-" let g:deoplete#sources#ternjs#sort = 0
-" let g:deoplete#sources#ternjs#expand_word_forward = 0
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
-let g:deoplete#sources#ternjs#types = 1
-let g:deoplete#sources#ternjs#depths = 1
-let g:deoplete#sources#ternjs#docs = 1
-let g:deoplete#sources#ternjs#filter = 0
-let g:deoplete#sources#ternjs#case_insensitive = 1
-let g:deoplete#sources#ternjs#include_keywords = 1
-let g:deoplete#sources#ternjs#filetypes = [ 'jsx',  'javascript.jsx' ]
-" let g:deoplete#sources#ternjs#omit_object_prototype = 0
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+" CoList
+nnoremap <silent> <leader>lc :<C-u>CocList<CR>
 
 :exec "source " . CONFIGS . "/.vimrc.after"

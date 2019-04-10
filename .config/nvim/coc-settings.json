@@ -1,0 +1,12 @@
+{
+  "suggest.triggerAfterInsertEnter": true,
+  "suggest.timeout": 500,
+  "suggest.acceptSuggestionOnCommitCharacter": true,
+  "suggest.noselect": true,
+  "suggest.enablePreview": true,
+  "suggest.minTriggerInputLength": 1,
+  "suggest.snippetIndicator": " ►",
+  "signature.enable": true,
+  "signature.preferShownAbove": true,
+  "coc.preferences.hoverTarget": "preview"
+}
