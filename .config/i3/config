@@ -1,3 +1,4 @@
+
 # Define some params
 # We use WinKey/CMD as main key
 set $mod Mod4 
@@ -16,16 +17,21 @@ bindsym $mod+Return exec alacritty
 bindsym $alt+q kill
 
 # MacOs Alfred compatibility (options + space)
-bindsym $alt+space exec dmenu_run
+bindsym $alt+space exec "rofi -combi-modi window,drun,run -show combi -modi combi"
 
 # Taking pictures
 bindsym $alt+control+Shift+4 exec imgur-screenshot.sh
 bindsym $alt+control+Shift+2 exec imgur-screenshot.sh --full
 bindsym $alt+control+Shift+3 exec imgur-screenshot.sh --window
 
-# Change monitor brightness
+# Control monitor brightness
 bindsym XF86MonBrightnessUp exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
+# Control sound
+bindsym XF86AudioMute exec amixer set Master toggle
+bindsym XF86AudioLowerVolume exec amixer sset Master 2.5dB-
+bindsym XF86AudioRaiseVolume exec amixer sset Master 2.5dB+
 
 # Change language (us, ge)
 bindsym $mod+space exec "kbd.sh"
@@ -37,6 +43,9 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Should I hug off ?' -B 'Yes, exit i3' 'i3-msg exit'"
+
+## Lock
+bindsym $mod+Escape exec "xsecurelock"
 
 
 ##
@@ -151,6 +160,7 @@ mode "resize" {
 
 # Status bar configs
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id $HOME/.config/dunst/launch.sh
 
 #bar {
 ##        # status_command status.sh
