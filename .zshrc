@@ -14,11 +14,8 @@ plugins=(
   docker
   npm
   kubectl
-  redis
   osx
-  web-search
   autojump
-  zsh-autosuggestions
 )
 
 
@@ -42,6 +39,9 @@ export PATH="$PATH:$HOME/.rbenv/bin"
 
 #gpgbin
 export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
+
+#Custom bins
+export PATH=~/.bin:$PATH
 
 #nod
 gfwd() {
@@ -97,19 +97,38 @@ nvim () {
 alias vim='nvim'
 
 download() {
-  progressDir="$HOME/.ariaDn"
+  local dir=$HOME/.ariaDn
+
+  if [[ ! -d "$dir" ]]; then
+    echo "No folder $dir, creating.."
+    mkdir $dir
+
+    [ $? ] && echo "Could not create folder $dir" || exit 1
+  fi
+
   aria2c \
     --summary-interval=5 \
     --download-result=full \
     --on-bt-download-complete="$HOME/.ariaFinished" \
-    --on-download-complete="$HOME/.ariaFinished" $@ | tee "$progressDir/$(uuidgen)"
+    --on-download-complete="$HOME/.ariaFinished" $@ | tee "$dir/$(uuidgen)"
 }
 
 # SOME ZSH Configs
 DISABLE_AUTO_TITLE=true
 
+# Setup TMUXINATOR
 export EDITOR='nvim'
 export SHELL=$(which zsh)
+
+muxRefresh() {
+  tmux kill-session -t $1
+  tmuxinator start $1
+}
+
+imux() {
+  irbenv
+  source ~/.bin/tmuxinator.zsh
+}
 
 
 export JAVA_HOME=$(/usr/libexec/java_home 2> /dev/null)
@@ -147,17 +166,17 @@ export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
 export RUST_SRC_PATH="$HOME/.rust/rust-1.30/src"
 [ -f ~/.zfunc/_rustup ] && fpath+=~/.zfunc
 
+#ifzf() {
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#}
 
 
-#Custom bins
-export PATH=$HOME/.bin:$PATH
 
 #Cuda PATHS
 export PATH=/usr/local/cuda/bin:$PATH
 export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 
-# LLVM - Update (MacOS)
+# LLVM - Update
 illvm() {
   PATH="/usr/local/Cellar/llvm/6.0.0/bin:$PATH"
   export LDFLAGS=-L/usr/local/opt/llvm/lib
@@ -167,6 +186,7 @@ illvm() {
 
 
 ## Bindings
+
 bindkey "^k" up-line-or-beginning-search
 bindkey "^j" down-line-or-beginning-search
 #bindkey "^l" vi-forward-word
@@ -180,11 +200,12 @@ alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
 
-# Linux
 function rmtrash() {
 	 mv $@ $HOME/.TRASH
 }
 
+
+# Disable `rm`.
 alias rrm=$(which rm)
 alias rm='echo use rmtrash'
 
@@ -194,6 +215,13 @@ alias cgw='cp ~/.alacritty.white.yml ~/.alacritty.yml'
 
 # zsh ac
 skip_global_compinit=0
+
+alert() {
+  < /dev/urandom gtr -dc 01 | head -c 10000 | lolcat
+}
+
+# Turn off KQUEUE in tmux 2.2
+export EVENT_NOKQUEUE=1 
 
 # Load Rust
 if [ -f "$HOME/.cargo/env" ]; then source $HOME/.cargo/env; fi
@@ -213,9 +241,34 @@ if [ -f "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc" ]; then source "$HOME/.
 if [ -d '/usr/local/lib/node_modules' ]; then export NODE_PATH=/usr/local/lib/node_modules; fi
 
 
+### Experiment
+function prc() {
+    local coin
+    local base
+    coin=$(echo $1 | cut -d '/' -f 1)
+    base=$(echo $1 | grep '/' | cut -d '/' -f 2)
+    base=${base:=usd}
+    curl "$base.rate.sx/$coin"
+}
+
+function watchprc() {
+  while
+  do
+    clear;
+    curl "rate.sx/$1"
+    sleep 60;
+  done
+}
+
 ulimit -n 2048
 
 # Bcoin related
+function bchreg() {
+  cd ~/.bcash/regtest/
+  source env.sh
+  invm
+}
+
 function btcreg() {
   cd ~/.bcoin/regtest/
   source env.sh
@@ -246,13 +299,13 @@ function bwatch() {
   | entr -rc $(which bmocha) $@
 }
 
-# linux
+## Bcoin related
+
 function cltrash() {
   $rm -rIv $HOME/.TRASH/*
   $rm -rIv $HOME/.TRASH/.*
 }
 
-# linux
 cltrashf() {
   $rm -rvf $HOME/.TRASH/*
   $rm -rvf $HOME/.TRASH/.*
@@ -265,5 +318,8 @@ export RTV_BROWSER=firefox
 
 
 ## PERL 
-source $HOME/perl5/perlbrew/etc/bashrc
+source ~/perl5/perlbrew/etc/bashrc
 export PATH="$PATH:/usr/bin/vendor_perl/"
+
+# Cross platform open
+which open 2 > /dev/null || alias open=xdg-open;
