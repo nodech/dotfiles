@@ -1,7 +1,5 @@
 " Config file for ALL
 
-"set runtimepath=$HOME/.config/nvim/
-
 " Set Configurations
 set number
 set rnu
@@ -26,6 +24,13 @@ set laststatus=2
 set mouse=a
 set updatetime=2000
 
+" Config->folds
+set foldenable
+set foldmethod=syntax
+set foldnestmax=5
+set foldlevelstart=100
+
+" Config->temp files.
 set directory=$HOME/.config/nvim/tmp/
 set nobackup
 set nowritebackup
@@ -47,7 +52,7 @@ set list
 
 set autoindent
 set smartindent
-set completeopt=menuone,menu,longest
+set completeopt=menuone,menu,longest,preview
 
 "Ignore files
 set wildignore+=tags               " Ignore tags when globbing.
@@ -66,12 +71,18 @@ filetype off
 let mapleader=","
 
 " Clipboard Switches
-map <C-c> :set clipboard=unnamed<CR>
+map <C-c> :set clipboard=unnamedplus<CR>
+"map <C-S-c> :set clipboard=unnamed<CR>
 map <C-x> :set clipboard=<CR>
 
 " Keymap->Search highlights & special chars
 nnoremap <C-L> :nohl<CR><C-L>
 nnoremap <C-K> :set list!<CR>
+
+" Keymap->Fold controls
+nnoremap <leader>zc :set foldlevel=1<CR>
+nnoremap <leader>zo :set foldlevel=99<CR>
+nnoremap <leader>zf :set foldlevel=
 
 " Activate `.` in vnoremap
 vnoremap . :norm.<CR>
@@ -80,8 +91,12 @@ vnoremap . :norm.<CR>
 vnoremap > > gv
 vnoremap < < gv
 
+" Keymap->move lines
+vnoremap K  :m -2<CR> gv
+vnoremap J  :m +1<CR> gv
+
 " Keymap->Reload .vimrc
-map <silent> <F5> :source $HOME/.config/nvim/configs/.vimrc<CR>
+"map <silent> <F5> :source $HOME/.config/nvim/configs/.vimrc<CR>
 
 " Keymap->Navigate between tabs
 nnoremap <C-N> gt
@@ -90,7 +105,8 @@ nnoremap <C-P> gT
 " Switch colors in vim
 "map <leader>gd :colorscheme Tomorrow-Night<CR>
 "map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
-map <leader>gd :colorscheme codedark<CR>
+"map <leader>gd :colorscheme codedark<CR>
+map <leader>gd :colorscheme hybrid<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
 
 " Autos
@@ -101,7 +117,6 @@ map <leader>gw :colorscheme Tomorrow<CR>
 au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
-" Load VUNDLE
 call plug#begin("$HOME/.config/nvim/bundle")
 
 " Load plugins
@@ -130,12 +145,14 @@ Plug 'w0rp/ale' " Syntax check with lots of validators
 Plug 'groenewege/vim-less'
 Plug 'digitaltoad/vim-jade'
 Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
+"Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
 Plug 'mxw/vim-jsx'
 Plug 'isRuslan/vim-es6'
 Plug 'plasticboy/vim-markdown'
 Plug 'tikhomirov/vim-glsl'
 Plug 'mhinz/vim-rfc'
+Plug 'GutenYe/json5.vim'
 
 " Tools
 Plug 'godlygeek/tabular' " Tabularize
@@ -149,6 +166,7 @@ Plug 'cohama/agit.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tomlion/vim-solidity'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'wakatime/vim-wakatime'
 
 
 "try colorschemes
@@ -176,6 +194,7 @@ au FileType markdown set wrap
 au FileType markdown highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 au FileType markdown match OverLength /\%101v.\+/
 
+
 " AutoRelative Numbers
 au FocusLost * :set rnu!
 au FocusGained * :set rnu
@@ -189,6 +208,9 @@ autocmd InsertLeave * :set rnu
 
 " Remap Paste
 xnoremap <leader>p "_dP
+
+" Custom fold control
+
 
 " Ruby config
 let g:ruby_host_prog="$HOME/.gem/ruby/2.5.0/bin/neovim-ruby-host"
@@ -221,14 +243,19 @@ let g:gitgutter_sign_modified='┃'
 let g:gitgutter_sign_removed='◢'
 let g:gitgutter_sign_removed_first_line='◥'
 let g:gitgutter_sign_modified_removed='◢'
+"let g:gitgutter_highlight_lines = 1
 
 " Configs->ALE
 let g:ale_lint_on_text_changed = 'normal'
-
 let g:ale_linters = {
-\   'javascript': ['eslint'],
+\   'typescript': ['tslint'],
+\   'javascript': ['eslint', 'tsserver'],
 \   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ],
 \   'c': [ 'clang', 'gcc', 'clang-format', 'cpplint']
+\}
+
+let g:ale_fixers = {
+\   'typescript': ['tslint']
 \}
 
 " Config->vim-template
@@ -274,5 +301,8 @@ tnoremap <C-]> <c-\><c-n>
 
 " Keymap->NerdComment
 nmap <C-;> <Leader>ci " Uncomment
+
+" Custom commands
+command JSrun execute '!node '.shellescape(@%, 1)<CR>
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
