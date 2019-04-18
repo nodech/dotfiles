@@ -1,10 +1,14 @@
-" Config file for ALL
+""
+"" Node vimrc.
+""
 
-" Set Configurations
+"""
+""" VIM Configs
+"""
 set number
 set rnu
 set encoding=utf-8
-set expandtab                           " Convert tabs to spaces
+set expandtab                  " Convert tabs to spaces
 set backspace=indent,eol,start
 set browsedir=current
 set complete+=k
@@ -103,81 +107,74 @@ nnoremap <C-N> gt
 nnoremap <C-P> gT
 
 " Switch colors in vim
-"map <leader>gd :colorscheme Tomorrow-Night<CR>
-"map <leader>gd :colorscheme Tomorrow-Night-Bright<CR>
-"map <leader>gd :colorscheme codedark<CR>
 map <leader>gd :colorscheme hybrid<CR>
 map <leader>gw :colorscheme Tomorrow<CR>
-
-" Autos
-"" Auto->Automatically open and close the popup menu/preview window
-"au CursorMovedI, InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
 " Auto->View update
 au BufWinLeave * silent! mkview
 au BufWinEnter * silent! loadview
 
+"""
+""" /VIM.Configs
+"""
+
+"""
+""" Plugin.Configs
+"""
+
 call plug#begin("$HOME/.config/nvim/bundle")
 
-" Load plugins
+" Quick comment/uncomment
 Plug 'scrooloose/nerdcommenter' " autocomment
 
+" Git related
 Plug 'airblade/vim-gitgutter' " git modification status (on numbers)
-Plug 'tpope/vim-fugitive' " Git command wrappers
+Plug 'tpope/vim-fugitive'     " Git command wrappers
+Plug 'cohama/agit.vim'
 
+" Auto Completion
+"Plug 'Valloric/YouCompleteMe'                                 " Advanced Autocompletion for multiple langs
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Dark Powered neo-completion
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 
-"Plug 'Valloric/YouCompleteMe' " Advanced Autocompletion for multiple langs
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Dark Powered neo-completion
-
-Plug 'mattn/webapi-vim' | Plug 'mattn/gist-vim' " Gist posting
-Plug 'mileszs/ack.vim'
-Plug 'mattn/emmet-vim'
-"Plug 'xolox/vim-misc' | Plug 'xolox/vim-easytags'
-
-Plug 'Mizuchi/vim-ranger' " Opens file explorer in ranger cli tool
-Plug 'majutsushi/tagbar'
-Plug 'aperezdc/vim-template' " Custom templates for languages
+" Linter
 "Plug 'scrooloose/syntastic' " Syntax check with lots of validators
-Plug 'w0rp/ale' " Syntax check with lots of validators
-"Plug 'neomake/neomake'
+Plug 'w0rp/ale'             " Syntax check with lots of validators
 
-" Default Languages
-Plug 'groenewege/vim-less'
-Plug 'digitaltoad/vim-jade'
-Plug 'pangloss/vim-javascript'
-"Plug 'leafgarland/typescript-vim'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mxw/vim-jsx'
-Plug 'isRuslan/vim-es6'
+" Highlights
+Plug 'groenewege/vim-less'          " less syntax
+Plug 'digitaltoad/vim-jade'         " jade syntax
+Plug 'pangloss/vim-javascript'      " javascript syntax
+Plug 'HerringtonDarkholme/yats.vim' " typescript syntax
+Plug 'mxw/vim-jsx'                  " JSX Syntax
+Plug 'isRuslan/vim-es6'             " es6 syntax
 Plug 'plasticboy/vim-markdown'
-Plug 'tikhomirov/vim-glsl'
-Plug 'mhinz/vim-rfc'
-Plug 'GutenYe/json5.vim'
+Plug 'tikhomirov/vim-glsl'          " Shaders
+Plug 'GutenYe/json5.vim'            " JSON with comments highlight
+Plug 'tomlion/vim-solidity'         " Wanna eth?
 
 " Tools
-Plug 'godlygeek/tabular' " Tabularize
-Plug 'tpope/vim-obsession' " Should be used by ressurect.. Not using right now
-Plug 'mbbill/undotree' " Shows Undo Tree (rarely used)
-Plug 'unblevable/quick-scope' " Works when truecolor is on
-Plug 'tpope/vim-surround' " Auto Surrounding some stuff
-Plug 't9md/vim-choosewin'
-Plug 'simeji/winresizer'
-Plug 'cohama/agit.vim'
-Plug 'Raimondi/delimitMate'
-Plug 'tomlion/vim-solidity'
+Plug 'godlygeek/tabular'             " Helps with alignments (E.g. this comments)
+Plug 'tpope/vim-obsession'           " Should be used by ressurect.. Not using right now
+Plug 'mbbill/undotree'               " Shows Undo Tree (rarely used)
+Plug 'unblevable/quick-scope'        " Highlight characters when pressing `f, F, t`
+Plug 'tpope/vim-surround'            " Auto Surrounding some stuff
+Plug 'simeji/winresizer'             " Resize windows quickly <leader>e
+Plug 'Raimondi/delimitMate'          " automatic closing of quotes, parenthesis etc.
 Plug 'editorconfig/editorconfig-vim'
 Plug 'wakatime/vim-wakatime'
-
-
-"try colorschemes
-Plug 'flazz/vim-colorschemes'
-"Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'connorholyday/vim-snazzy'
-Plug 'tomasiser/vim-code-dark'
+Plug 'terryma/vim-multiple-cursors'  " multiple cursors, rarely used
+Plug 'mileszs/ack.vim'
+Plug 'Mizuchi/vim-ranger'            " Opens file explorer in ranger cli tool
+Plug 'majutsushi/tagbar'
+Plug 'aperezdc/vim-template'         " Custom templates for languages (on empty files.)
+Plug 'mhinz/vim-rfc'                 " RFC Database query
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+" Colorschemes
+Plug 'flazz/vim-colorschemes' " Catalogue of colors
 
 function! SL(function)
   if exists('*'.a:function)
@@ -198,44 +195,28 @@ au FileType markdown match OverLength /\%101v.\+/
 " AutoRelative Numbers
 au FocusLost * :set rnu!
 au FocusGained * :set rnu
-
 autocmd InsertEnter * :set rnu!
 autocmd InsertLeave * :set rnu
 
-" Formatter
-"autocmd FileType javascript.jsx,javascript setlocal formatprg=prettier\ --stdin
-"noremap <leader>p gggqG
-
-" Remap Paste
+" Remap Paste, keeps the clipboard/yank
 xnoremap <leader>p "_dP
-
-" Custom fold control
-
-
-" Ruby config
-let g:ruby_host_prog="$HOME/.gem/ruby/2.5.0/bin/neovim-ruby-host"
 
 " Plugin configs
 " Configs->vim-fugitive
 set statusline+=[%n]\ %<%.99f\ %h%w%m%r%{SL('CapsLockStatusline')}%y%{SL('fugitive#statusline')}%#ErrorMsg#%{SL('SyntasticStatuslineFlag')}%*%=%-14.(%l,%c%V%)\ %P
 
-
 " Configs->quick-scope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " Configs->Ack.vim
-" Use ag as searcher
+" Use silver_seracher as search engine
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
+""" /Ack.vim
 
 " Configs->vim-javascript
 let g:javascript_plugin_jsdoc = 1
-
-" Configs->Emmet-vim
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-let g:user_emmet_leader_key='<C-Z>'
 
 " Config->GitGutter
 let g:gitgutter_sign_added='┃'
@@ -251,7 +232,7 @@ let g:ale_linters = {
 \   'typescript': ['tslint'],
 \   'javascript': ['eslint', 'tsserver'],
 \   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ],
-\   'c': [ 'clang', 'gcc', 'clang-format', 'cpplint']
+\   'c': [ 'clangcheck' ]
 \}
 
 let g:ale_fixers = {
@@ -261,27 +242,85 @@ let g:ale_fixers = {
 " Config->vim-template
 let g:templates_directory='~/.config/nvim/templates/'
 
-" Configs->Gist
-let g:gist_detect_filetype = 1
-let g:gist_open_browser_after_post = 1
-let g:gist_clip_command = 'xsel -i --clipboard'
-
-" Configs->FZF
+""" Configs.FZF
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-" Configs->Deoplete
-let g:deoplete#enable_at_startup = 1
+map <silent> <leader>lb :Buffers<CR>
+map <silent> <leader>lf :Files<CR>
+nmap <silent> <leader>lw :Windows<CR>
+nmap <silent> <leader>lg :GFiles?<CR>
+""" /Configs.FZF
 
-" Plugin Keymaps
-" Keymap->vim-ranger
-noremap <leader>f :tabe %:p:h<CR>
+""
+"" Autocompletion configurations
+""
+
+" COC Configurations
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+nnoremap <silent> <leader>lc :<C-u>CocList<CR> " List commands
+"
+" /Coc configurations
+
+" Configs->Deoplete
+"let g:deoplete#enable_at_startup = 1
+
+""
+"" / Autocompletion configurations
+""
 
 " Keymap->winresizer
 let g:winresizer_start_key = "<leader>e"
 let g:winresizer_vert_size = 5
+
+" Config and Keymap->MultiCursor
+let g:multi_cursor_use_default_mapping   = 0
+let g:multi_cursor_exit_from_visual_mode = 0
+let g:multi_cursor_exit_from_insert_mode = 0
+
+" Defaults
+"let g:multi_cursor_use_default_mapping = 1
+"let g:multi_cursor_start_word_key      = '<C-n>'
+"let g:multi_cursor_select_all_word_key = '<A-n>'
+"let g:multi_cursor_start_key           = 'g<C-n>'
+"let g:multi_cursor_select_all_key      = 'g<A-n>'
+"
+let g:multi_cursor_start_word_key      = '<leader>mw'
+let g:multi_cursor_select_all_word_key = '<leader>ma'
+let g:multi_cursor_start_key           = 'g<leader>mw'
+let g:multi_cursor_select_all_key      = 'g<leader>ma'
+let g:multi_cursor_next_key            = '<C-n>'
+let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
 
 " Keymap->vim-choosewin
 nmap  -  <Plug>(choosewin)
@@ -290,11 +329,6 @@ let g:choosewin_overlay_enable = 1
 " Keymap->Tabmoves
 map <silent> <leader>tn :tabmove +1<CR>
 map <silent> <leader>tp :tabmove -1<CR>
-
-" Keymap->FZF
-map <silent> <leader>lb :Buffers<CR>
-map <silent> <leader>lf :Files<CR>
-nmap <silent> <leader>lw :Windows<CR>
 
 " Keymap->Terminal
 tnoremap <C-]> <c-\><c-n>
@@ -305,4 +339,5 @@ nmap <C-;> <Leader>ci " Uncomment
 " Custom commands
 command JSrun execute '!node '.shellescape(@%, 1)<CR>
 
+" Use true color in terminal.
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
