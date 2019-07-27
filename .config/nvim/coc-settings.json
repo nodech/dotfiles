@@ -8,5 +8,12 @@
   "suggest.snippetIndicator": " ►",
   "signature.enable": true,
   "signature.preferShownAbove": true,
-  "coc.preferences.hoverTarget": "preview"
+  "coc.preferences.hoverTarget": "preview",
+  "languageserver": {
+    "clangd": {
+      "command": "clangd",
+      "rootPatterns": ["compile_commands.json", "compile_flags.txt", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["c", "cc", "cpp"]
+    }
+  }
 }

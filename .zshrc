@@ -55,7 +55,7 @@ function cpv() {
 
 
 alias psm="ps -eo rss,pid,user,command | awk '{ hr=\$1/1024 ; printf(\"%13.6f Mb \",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf(\"%s \",\$x) } print "" }' | sort"
-alias ll="ls -lsah"
+#alias ll="ls -lsah"
 
 # GPG_TTY Fix
 GPG_TTY=$(tty)
@@ -200,12 +200,16 @@ alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
 
+# TODO: undotrash
 function rmtrash() {
-	 mv $@ $HOME/.TRASH
+  name=$(date +%Y-%m-%d/%H:%M:%S)
+  dir="$HOME/.TRASH/$name"
+
+  mkdir -p $dir
+  mv $@ $dir
 }
 
 
-# Disable `rm`.
 alias rrm=$(which rm)
 alias rm='echo use rmtrash'
 
@@ -240,45 +244,59 @@ if [ -f "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc" ]; then source "$HOME/.
 # include global libraries
 if [ -d '/usr/local/lib/node_modules' ]; then export NODE_PATH=/usr/local/lib/node_modules; fi
 
-
-### Experiment
-function prc() {
-    local coin
-    local base
-    coin=$(echo $1 | cut -d '/' -f 1)
-    base=$(echo $1 | grep '/' | cut -d '/' -f 2)
-    base=${base:=usd}
-    curl "$base.rate.sx/$coin"
-}
-
-function watchprc() {
-  while
-  do
-    clear;
-    curl "rate.sx/$1"
-    sleep 60;
-  done
-}
-
 ulimit -n 2048
 
-# Bcoin related
-function bchreg() {
-  cd ~/.bcash/regtest/
-  source env.sh
-  invm
+### Experiment
+function findUpHome() {
+  local dir=$1
+  local name=$2
+
+
+  if [[ -f "$dir/$name" ]];then
+    echo "$dir/$name"
+    exit 0
+  fi
+
+  # Not Found
+  if [[ "$dir" == "/" ]];then
+    exit 1
+  fi
+
+  # Not found.
+  if [[ "$dir" == "$HOME" ]];then
+    exit 1
+  fi
+
+  findUpHome $(dirname $dir) $name
+  exit $?
 }
 
+function printPkg() {
+  local res=$(findUpHome `pwd` "package.json")
+
+  if [[ "$res" != "" ]]; then
+    cat $res | jq -r '.name+"@"+.version' 2> /dev/null
+  fi
+}
+
+function get_prompt() {
+  local bnet=$(get_bnet)
+  local pkg=$(printPkg)
+
+  echo -n $pkg $bnet
+}
+
+# Bcoin related
 function btcreg() {
   cd ~/.bcoin/regtest/
   source env.sh
-  invm
+  #invm
 }
 
 function hsdreg() {
   cd ~/.hsd/regtest
   source env.sh
-  invm
+  #invm
 }
 
 function get_bnet() {
@@ -286,17 +304,19 @@ function get_bnet() {
     echo -n "b["$BCOIN_NETWORK"@"${BCOIN_PREFIX/$HOME/"~"}"]"
   fi
 
-  if [[ "$NVM_DIR" != "" ]] then
-    echo -n "-g"
-  fi
-
   return ""
+}
+
+function bmwatch() {
+  find . -iname '*.js' \
+  | grep -v 'node_modules' \
+  | entr -rc $(which bmocha) $@
 }
 
 function bwatch() {
   find . -iname '*.js' \
   | grep -v 'node_modules' \
-  | entr -rc $(which bmocha) $@
+  | entr -rc $@
 }
 
 ## Bcoin related
@@ -306,7 +326,7 @@ function cltrash() {
   $rm -rIv $HOME/.TRASH/.*
 }
 
-cltrashf() {
+function cltrashf() {
   $rm -rvf $HOME/.TRASH/*
   $rm -rvf $HOME/.TRASH/.*
 }
@@ -323,3 +343,21 @@ export PATH="$PATH:/usr/bin/vendor_perl/"
 
 # Cross platform open
 which open 2 > /dev/null || alias open=xdg-open;
+
+# LSD Wrappers for ls if they are available.
+if [[ -x `which lsd` ]]; then
+  alias l="lsd -l"
+  alias la="lsd -la"
+  alias ll="lsd -lah"
+  alias lt="lsd --tree"
+  alias ls="lsd"
+else
+  echo "no lsd.."
+  alias ll="ls -lsah"
+fi
+
+
+
+## ASDF version manager..
+source $HOME/.asdf/asdf.sh
+source $HOME/.asdf/completions/asdf.bash
