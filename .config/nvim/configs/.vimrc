@@ -107,8 +107,10 @@ nnoremap <C-N> gt
 nnoremap <C-P> gT
 
 " Switch colors in vim
-map <leader>gd :colorscheme hybrid<CR>
-map <leader>gw :colorscheme Tomorrow<CR>
+"map <leader>gd :colorscheme hybrid<CR>
+map <leader>gd :set background=dark<CR>
+"map <leader>gw :colorscheme Tomorrow<CR>
+map <leader>gw :set background=light<CR>
 
 " Auto->View update
 au BufWinLeave * silent! mkview
@@ -130,7 +132,8 @@ Plug 'scrooloose/nerdcommenter' " autocomment
 " Git related
 Plug 'airblade/vim-gitgutter' " git modification status (on numbers)
 Plug 'tpope/vim-fugitive'     " Git command wrappers
-Plug 'cohama/agit.vim'
+"Plug 'cohama/agit.vim'
+Plug 'junegunn/gv.vim'
 
 " Auto Completion
 "Plug 'Valloric/YouCompleteMe'                                 " Advanced Autocompletion for multiple langs
@@ -158,23 +161,28 @@ Plug 'godlygeek/tabular'             " Helps with alignments (E.g. this comments
 Plug 'tpope/vim-obsession'           " Should be used by ressurect.. Not using right now
 Plug 'mbbill/undotree'               " Shows Undo Tree (rarely used)
 Plug 'unblevable/quick-scope'        " Highlight characters when pressing `f, F, t`
-Plug 'tpope/vim-surround'            " Auto Surrounding some stuff
 Plug 'simeji/winresizer'             " Resize windows quickly <leader>e
+Plug 'tpope/vim-surround'            " Auto Surrounding some stuff
 Plug 'Raimondi/delimitMate'          " automatic closing of quotes, parenthesis etc.
-Plug 'editorconfig/editorconfig-vim'
-Plug 'wakatime/vim-wakatime'
 Plug 'terryma/vim-multiple-cursors'  " multiple cursors, rarely used
 Plug 'mileszs/ack.vim'
 Plug 'Mizuchi/vim-ranger'            " Opens file explorer in ranger cli tool
 Plug 'majutsushi/tagbar'
 Plug 'aperezdc/vim-template'         " Custom templates for languages (on empty files.)
 Plug 'mhinz/vim-rfc'                 " RFC Database query
+Plug 'editorconfig/editorconfig-vim'
+Plug 't9md/vim-choosewin'
 
+" Some 
+Plug 'wakatime/vim-wakatime'
+
+" FZF !!
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Colorschemes
-Plug 'flazz/vim-colorschemes' " Catalogue of colors
+"Plug 'flazz/vim-colorschemes' " Catalogue of colors
+Plug 'morhetz/gruvbox' " Dark/Light gruvbox
 
 function! SL(function)
   if exists('*'.a:function)
@@ -189,7 +197,7 @@ endfunction
 au FileType markdown set nofoldenable
 au FileType markdown set wrap
 au FileType markdown highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-au FileType markdown match OverLength /\%101v.\+/
+au FileType markdown match OverLength /\%81v.\+/
 
 
 " AutoRelative Numbers
