@@ -19,6 +19,9 @@ Plug 'arakashic/chromatica.nvim'
 
 let g:chromatica#enable_at_startup=1
 
+" MacOS config
+let g:chromatica#libclang_path='/usr/local/opt/llvm/lib'
+
 "Plug 'Shougo/neoinclude.vim'
 "Plug 'Shougo/deoplete-clangx'
 "Plug 'zchee/deoplete-clang'
