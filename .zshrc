@@ -39,6 +39,9 @@ export PATH="$PATH:$HOME/.rbenv/bin"
 # gpgbin
 export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 
+# GEM
+export PATH="$PATH:$HOME/.gem/ruby/2.7.0/bin"
+
 # Cargo bins
 export PATH="$PATH:$HOME/.cargo/bin"
 
