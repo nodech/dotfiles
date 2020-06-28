@@ -2,12 +2,12 @@
 
 BATTERY=""
 
-ip=$(ifconfig en0  | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*')
-HOSTNAME=$(whoami)@$ip
-DATE=$(date +%H:%M:%S\ %b\ %d)
-
 if [[ -x $(which "system_profiler") ]]
 then
+  ip=$(ifconfig en0  | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*')
+  HOSTNAME=$(whoami)@$ip
+  DATE=$(date +%H:%M:%S\ %b\ %d)
+
   BATTERY=$(system_profiler SPPowerDataType | grep 'mAh' | awk '{print $NF}' | tr '\n' ' ' | awk '{printf("%.2f%%", $1/$2 * 100)}')
   BATTERY=${BATTERY/%%/}
   COLOR="#[fg=green]"
@@ -26,6 +26,10 @@ then
   fi
 
   BATTERY="$COLOR$BATTERY%"
+  echo "#[fg=white]$BATTERY#[fg=green]#[bg=#333333] $HOSTNAME $DATE  "
 fi
 
-echo "#[fg=white]$BATTERY#[fg=green]#[bg=#333333] $HOSTNAME $DATE  "
+if [[ -x $(which "i3status") ]]
+then
+  i3status -c ~/.config/i3status/tmux.config
+fi

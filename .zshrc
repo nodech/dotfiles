@@ -36,12 +36,20 @@ export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 # Rbenv
 export PATH="$PATH:$HOME/.rbenv/bin"
 
-
-#gpgbin
+# gpgbin
 export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 
-#Custom bins
-export PATH=~/.bin:$PATH
+# GEM
+export PATH="$PATH:$HOME/.gem/ruby/2.7.0/bin"
+
+# Cargo bins
+export PATH="$PATH:$HOME/.cargo/bin"
+
+# Custom bins
+export PATH="$PATH:$HOME/.bin"
+
+# ASDF bins
+export PATH="$PATH:$HOME/.asdf/shims"
 
 #nod
 gfwd() {
@@ -159,8 +167,10 @@ iaws() {
 #GVM
 
 #GoPATH
-export GOPATH="$HOME/Development/Go"
-export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
+if [[ -x $(which go) ]]; then
+  export GOPATH="$HOME/Development/Go"
+  export PATH="$PATH:$GOPATH/bin:`go env GOROOT`/bin"
+fi
 
 #Cargo PATH
 export RUST_SRC_PATH="$HOME/.rust/rust-1.30/src"
@@ -338,7 +348,7 @@ export RTV_BROWSER=firefox
 
 
 ## PERL 
-source ~/perl5/perlbrew/etc/bashrc
+[[ -f ~/perl5/perlbrew/etc/bashrc ]] && source ~/perl5/perlbrew/etc/bashrc
 export PATH="$PATH:/usr/bin/vendor_perl/"
 
 # Cross platform open
