@@ -28,9 +28,6 @@ window:
     x: 1
     y: 1
 
-# Display tabs using this many cells (changes require restart)
-tabspaces: 4
-
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
 
@@ -38,24 +35,30 @@ draw_bold_text_with_bright_colors: true
 font:
   # The normal (roman) font face to use.
   normal:
-    family: Meslo LG S DZ for Powerline
+    #family: Meslo LG S DZ for Powerline
     #family: SFMono for Powerline
+    #family: Source Code Pro for Powerline
+    family: SauceCodePro Nerd Font Mono
     # Style can be specified to pick a specific face.
-    style: Light
+    style: Regular
 
   # The bold font face
   bold:
-    family: Meslo LG S DZ for Powerline
+    #family: Meslo LG S DZ for Powerline
     #family: SFMono for Powerline
+    #family: Source Code Pro for Powerline
+    family: SauceCodePro Nerd Font Mono
     # Style can be specified to pick a specific face.
     style: Bold
 
   # The italic font face
   italic:
-    family: Meslo LG S DZ for Powerline
+    #family: Meslo LG S DZ for Powerline
     #family: SFMono for Powerline
+    #family: Source Code Pro for Powerline
+    family: SauceCodePro Nerd Font Mono
     # Style can be specified to pick a specific face.
-    style: Light Italic
+    style: Italic
 
   # Point size of the font
   size: 6
@@ -77,9 +80,6 @@ font:
   # for retina displays, but for non-retina you probably want this set to
   # false.
   use_thin_strokes: true
-
-# Should display the render timer
-render_timer: false
 
 # Use custom cursor colors. If true, display the cursor in the cursor.foreground
 # and cursor.background colors, otherwise invert the colors of the cursor.
