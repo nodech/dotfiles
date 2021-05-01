@@ -209,12 +209,12 @@ colors:
     white:   '0x3c3836'
 
 
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 50
 
 # Background opacity
-background_opacity: 1.0
+background_opacity: 0.99
 
 # Mouse bindings
 #
