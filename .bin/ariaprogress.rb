@@ -5,7 +5,7 @@ DOWNLOAD_FOLDER = ENV["HOME"] + "/.ariaDn"
 Dir.chdir(DOWNLOAD_FOLDER)
 
 entries = Dir.entries(".")
-entries.shift(2)
+entries.filter!{|file| file != '.' && file != '..' }
 
 class DownloadFile
   attr_reader :percent, :speed, :eta, :downloading
