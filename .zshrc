@@ -13,7 +13,7 @@ plugins=(
   git-extras
   docker
   npm
-  kubectl
+  #kubectl
   osx
   autojump
 )
