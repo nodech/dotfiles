@@ -1,0 +1,1 @@
+alacritty --config-file $HOME/.alacritty.hdmi.yml

@@ -86,7 +86,7 @@ font-4 = "Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid"
 modules-left = i3
 modules-center = downloads
 ;modules-right = filesystem xbacklight alsa xkeyboard wlan eth battery memory cpu temperature date
-modules-right = filesystem xbacklight alsa xkeyboard battery memory cpu temperature date
+modules-right = filesystem xbacklight alsa xkeyboard wlan eth battery memory cpu temperature date
 # pulseaudio
 
 tray-position = right
