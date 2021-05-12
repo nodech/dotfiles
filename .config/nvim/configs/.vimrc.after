@@ -4,7 +4,9 @@ call plug#end()
 " Colors and fonts
 "colorscheme hybrid_reverse
 "colorscheme hybrid
-colorscheme gruvbox
+"colorscheme gruvbox
+colorscheme onedark
+"colorscheme nord
 "colorscheme Tomorrow-Night-Bright
 "colorscheme Tomorrow-Night
 
@@ -26,3 +28,7 @@ colorscheme gruvbox
 " Fix everything
 filetype plugin indent on
 syntax on
+
+hi Normal guibg=NONE ctermbg=NONE
+" Hack C/H files to be C instead of CPP.
+autocmd! BufRead,BufNewFile *.h,*.c set filetype=c

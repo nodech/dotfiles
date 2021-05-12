@@ -205,7 +205,9 @@ Plug 'junegunn/gv.vim'
 """ }}}
 
 "" {{{ Conquer of Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
@@ -237,6 +239,12 @@ nmap <leader>f  <Plug>(coc-format-selected)
 nnoremap <silent> <leader>lc :<C-u>CocList<CR> " List commands
 "" }}}
 
+"" {{{
+" coc-clangd + vim-lsp-cxx-highligh will give
+" better semantic Highlightings for C & C++.
+Plug 'jackguo380/vim-lsp-cxx-highlight'
+"" }}}
+
 " -- Linter
 "" {{{ Syntax validation Syntactic. (Disabled in favor of ALE)
 "Plug 'scrooloose/syntastic' " Syntax check with lots of validators
@@ -261,6 +269,8 @@ let g:ale_fixers = {
 
 " -- Syntax highlighting.
 Plug 'morhetz/gruvbox' " Dark/Light gruvbox
+"Plug 'arcticicestudio/nord-vim'
+Plug 'joshdick/onedark.vim'
 
 "" {{{ Javascript
 Plug 'pangloss/vim-javascript'
@@ -345,8 +355,8 @@ endif
 "" }}}
 
 "" {{{ vim-template - Custom template for languages (on empty file)
-Plug 'aperezdc/vim-template'         " Custom templates for languages (on empty files.)
-let g:templates_directory='~/.config/nvim/templates/'
+"Plug 'aperezdc/vim-template'         " Custom templates for languages (on empty files.)
+"let g:templates_directory='~/.config/nvim/templates/'
 "" }}}
 
 "" {{{ wim-choosewin - Select window across tabs
@@ -360,8 +370,8 @@ let g:choosewin_overlay_enable = 1
 Plug 'tpope/vim-surround'            " Auto Surrounding some stuff
 Plug 'Mizuchi/vim-ranger'            " Opens file explorer in ranger cli tool
 Plug 'majutsushi/tagbar'
-Plug 'mhinz/vim-rfc'                 " RFC Database query
 Plug 'editorconfig/editorconfig-vim'
+Plug 'vim-scripts/rfc-syntax'
 "" }}}
 
 "" {{{ FZF
@@ -392,6 +402,18 @@ endfunction
 " Uses Fugitive and Syntastic
 " TODO: Remove syntastic.
 set statusline+=[%n]\ %<%.99f\ %h%w%m%r%{SL('CapsLockStatusline')}%y%{SL('fugitive#statusline')}%#ErrorMsg#%{SL('SyntasticStatuslineFlag')}%*%=%-14.(%l,%c%V%)\ %P
+"" }}}
+
+"" {{{ Vimwiki
+Plug 'vimwiki/vimwiki'
+
+let default_wiki = {}
+let default_wiki.path = '~/dev/workspace/wiki-notes'
+let default_wiki.path_html = '~/.tmp/nodwiki'
+let default_wiki.syntax = 'markdown'
+let default_wiki.ext = '.md'
+
+let g:vimwiki_list = [default_wiki]
 "" }}}
 
 " -- Some
