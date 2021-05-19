@@ -404,6 +404,19 @@ endfunction
 set statusline+=[%n]\ %<%.99f\ %h%w%m%r%{SL('CapsLockStatusline')}%y%{SL('fugitive#statusline')}%#ErrorMsg#%{SL('SyntasticStatuslineFlag')}%*%=%-14.(%l,%c%V%)\ %P
 "" }}}
 
+"" {{{
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
+"let g:pandoc#folding#fold_yaml = 1
+"let g:pandoc#folding#fold_fenced_codeblocks = 1
+"let g:pandoc#filetypes#handled = ['markdown']
+"let g:pandoc#filetypes#pandoc_markdown = 0
+let g:pandoc#folding#mode = 'stacked'
+let g:pandoc#modules#enabled = ['folding', 'command']
+"let g:pandoc#formatting#mode = 'h'
+"" }}}
+
 "" {{{ Vimwiki
 Plug 'vimwiki/vimwiki'
 
@@ -412,8 +425,16 @@ let default_wiki.path = '~/dev/workspace/wiki-notes'
 let default_wiki.path_html = '~/.tmp/nodwiki'
 let default_wiki.syntax = 'markdown'
 let default_wiki.ext = '.md'
+let default_wiki.custom_wiki2html = 'pandoc'
 
 let g:vimwiki_list = [default_wiki]
+let g:vimwiki_filetypes = ['markdown']
+let g:vimwiki_folding = 'custom'
+
+"let g:vimwiki_ext2syntax = {'.md': 'markdown'}
+"let g:vimwiki_global_ext = 0
+
+au FileType vimwiki set filetype=markdown.pandoc
 "" }}}
 
 " -- Some
