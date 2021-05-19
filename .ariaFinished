@@ -3,14 +3,17 @@
 echo $@
 
 length=${#3}
-last=15
+last=55
 from=$((length - last))
+#filename=${3:$from}
+filename=$(basename $3)
 
+dunstify=$(which dunstify)
 terminal_notifier=$(which terminal-notifier)
 notify_send=$(which notify-send)
 
 [[ -x $terminal_notifier ]] && \
-  $terminal_notifier -message "${3:$from}" -subtitle "Download Finished" -title "Aria2" -sound GLUMP
+  $terminal_notifier -message "$filename" -subtitle "Download Finished" -title "Aria2" -sound GLUMP
 
 [[ -x $notify_send ]] && \
-  $notify_send -u normal -i emblem-downloads "Aria2 Download Finished" "...${3:$from}"
+  $notify_send -u normal -i emblem-downloads "Aria2 Download Finished" "$filename"
