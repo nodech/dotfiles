@@ -1,0 +1,9 @@
+[Unit]
+Description=Checks battery and alert.
+Wants=battery-check.timer
+
+[Service]
+ExecStart=/usr/bin/env %h/.bin/battery-alert.sh
+
+[Install]
+WantedBy=battery-check.target
