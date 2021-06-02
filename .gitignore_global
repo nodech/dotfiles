@@ -4,3 +4,7 @@
 .vscode
 jsconfig.json
 .ycm_extra_conf.py
+compile_commands.json
+.clangd/
+*.bak
+.cache
