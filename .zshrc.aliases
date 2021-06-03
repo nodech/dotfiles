@@ -1,0 +1,116 @@
+# Git move in the history tree.
+gfwd() {
+  git checkout $(git rev-list --topo-order HEAD.."$*" | tail -1)
+}
+alias gback="git checkout HEAD~"
+
+# Copy with progress
+function cpv() {
+  rsync -a --no-i-r --info=progress2 $@
+}
+
+# Show processes with memory.
+alias psm="ps -eo rss,pid,user,command | awk '{ hr=\$1/1024 ; printf(\"%13.6f Mb \",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf(\"%s \",\$x) } print "" }' | sort"
+
+# Sort processes by memory usage
+psa() {
+  ps -eo rss,pid,user,command | sort -n | awk '{ \
+    hr[1024**2]="GB"; hr[1024]="MB"; \
+    for (x=1024**3; x>=1024; x/=1024) { \
+    if ($1>=x) { printf ("%-6.2f %s ", $1/x, hr[x]); break } \
+    } } { printf ("%-6s %-10s ", $2, $3) } \
+    { for ( x=4 ; x<=NF ; x++ ) { printf ("%s ",$x) } print ("") }'
+}
+
+# multiconfig NVIM
+if [ "${NVIMBIN}" = "" ]
+then
+  NVIMBIN=$(which nvim)
+fi
+
+nvim () {
+  VIMRC="$HOME/.config/nvim/configs/${1}.vimrc"
+  if [ $# -gt 0 ]
+  then
+    if [[ -a $1 ]]
+    then
+      $NVIMBIN $@
+    elif [[ -a "$VIMRC" ]]
+    then
+      $NVIMBIN -u "$VIMRC" ${@:2}
+    else
+      $NVIMBIN $@
+    fi
+  else
+    $NVIMBIN
+  fi
+}
+
+alias vim='nvim'
+
+
+# Download torrents and links using aria and progress..
+download() {
+  local dir=$HOME/.ariaDn
+
+  if [[ ! -d "$dir" ]]; then
+    echo "No folder $dir, creating.."
+    mkdir $dir
+
+    [ $? ] && echo "Could not create folder $dir" || exit 1
+  fi
+
+  aria2c \
+    --summary-interval=5 \
+    --download-result=full \
+    --on-bt-download-complete="$HOME/.ariaFinished" \
+    --on-download-complete="$HOME/.ariaFinished" $@ | tee "$dir/$(uuidgen)"
+}
+
+alias ta='tmux attach -t'
+alias tad='tmux attach -d -t'
+alias ts='tmux new-session -s'
+alias tl='tmux list-sessions'
+alias tksv='tmux kill-server'
+alias tkss='tmux kill-session -t'
+
+# TODO: undotrash
+function rmtrash() {
+  name=$(date +%Y-%m-%d/%H:%M:%S)
+  dir="$HOME/.TRASH/$name"
+
+  mkdir -p $dir
+  mv $@ $dir
+}
+
+function cltrash() {
+  $rm -rIv $HOME/.TRASH/*
+  $rm -rIv $HOME/.TRASH/.*
+}
+
+function cltrashf() {
+  $rm -rvf $HOME/.TRASH/*
+  $rm -rvf $HOME/.TRASH/.*
+}
+
+alias rrm=$(which rm)
+alias rm='echo use rmtrash'
+
+# alacrity changes
+alias cgd='cp ~/.alacritty.dark.yml ~/.alacritty.yml'
+alias cgw='cp ~/.alacritty.white.yml ~/.alacritty.yml'
+
+# Cross platform open
+which open 2 > /dev/null || alias open=xdg-open;
+
+# LSD Wrappers for ls if they are available.
+if [[ -x `which lsd` ]]; then
+  alias l="lsd -l"
+  alias la="lsd -la"
+  alias ll="lsd -lah"
+  alias lt="lsd --tree"
+  alias ls="lsd"
+else
+  echo "no lsd.."
+  alias ll="ls -lsah"
+fi
