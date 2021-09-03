@@ -24,17 +24,15 @@ alias rmunsafe="$rm"
 
 source $ZSH/oh-my-zsh.sh
 
+export EDITOR='nvim'
+export SHELL=`which zsh`
+
 # GPG_TTY Fix
 GPG_TTY=$(tty)
 export GPG_TTY
 
 # SOME ZSH Configs
 DISABLE_AUTO_TITLE=true
-
-# Setup TMUXINATOR
-export EDITOR='nvim'
-export SHELL=$(which zsh)
-
 
 # Include system and bin paths
 source ~/.zshrc.paths
@@ -86,12 +84,20 @@ skip_global_compinit=0
 # Turn off KQUEUE in tmux 2.2
 export EVENT_NOKQUEUE=1 
 
+tmn() {
+  arg=$1
+  name=`echo "$1" | cut -d '-' -f1`
+  id=`echo "$1" | cut -d '-' -f2`
+
+  if [[ "$name" == "" ]] || ! [[ "$id" =~ '^[0-9]+$' ]]; then
+    echo "Format is name-id. Where name is a string and id is a number."
+  else
+    tmux new -A -t "$name" -s "$name-$id" ${@:2}
+  fi
+}
+
 # Linux?
 export XDG_CONFIG_HOME=$HOME/.config
-
-# RTV Configs
-export RTV_EDITOR=vim
-export RTV_BROWSER=firefox
 
 # Linux version
 
