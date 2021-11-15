@@ -1,4 +1,3 @@
-
 # Configuration for Alacritty, the GPU enhanced terminal emulator
 
 # Any items in the `env` entry below will be added as
@@ -61,7 +60,7 @@ font:
     style: Italic
 
   # Point size of the font
-  size: 6
+  size: 5.5
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
@@ -85,129 +84,38 @@ font:
 # and cursor.background colors, otherwise invert the colors of the cursor.
 # custom_cursor_colors: false
 
-## Colors (Nord)
-#colors:
-#   # Default colors
-#   primary:
-#     background: '0x2E3440'
-#     foreground: '0xD8DEE9'
-
-#   # Normal colors
-#   normal:
-#     black:   '0x3B4252'
-#     red:     '0xBF616A'
-#     green:   '0xA3BE8C'
-#     yellow:  '0xEBCB8B'
-#     blue:    '0x81A1C1'
-#     magenta: '0xB48EAD'
-#     cyan:    '0x88C0D0'
-#     white:   '0xE5E9F0'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x4C566A'
-#     red:     '0xBF616A'
-#     green:   '0xA3BE8C'
-#     yellow:  '0xEBCB8B'
-#     blue:    '0x81A1C1'
-#     magenta: '0xB48EAD'
-#     cyan:    '0x8FBCBB'
-#     white:   '0xECEFF4'
-
-## Colors (Snazzy)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x282a36'
-#    foreground: '0xeff0eb'
-
-#  # Normal colors
-#  normal:
-#    black:   '0x282a36'
-#    red:     '0xff5c57'
-#    green:   '0x5af78e'
-#    yellow:  '0xf3f99d'
-#    blue:    '0x57c7ff'
-#    magenta: '0xff6ac1'
-#    cyan:    '0x9aedfe'
-#    white:   '0xf1f1f0'
-
-#  # Bright colors
-#  bright:
-#    black:   '0x686868'
-#    red:     '0xff5c57'
-#    green:   '0x5af78e'
-#    yellow:  '0xf3f99d'
-#    blue:    '0x57c7ff'
-#    magenta: '0xff6ac1'
-#    cyan:    '0x9aedfe'
-#    white:   '0xf1f1f0'
-
-# Colors (Oceanic Next)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x1b2b34'
-#    foreground: '0xd8dee9'
-
-#  # Colors the cursor will use if `custom_cursor_colors` is true
-#  cursor:
-#    text: '0x1b2b34'
-#    cursor: '0xffffff'
-
-#  # Normal colors
-#  normal:
-#    black:   '0x343d46'
-#    red:     '0xEC5f67'
-#    green:   '0x99C794'
-#    yellow:  '0xFAC863'
-#    blue:    '0x6699cc'
-#    magenta: '0xc594c5'
-#    cyan:    '0x5fb3b3'
-#    white:   '0xd8dee9'
-
-#  # Bright colors
-#  bright:
-#    black:   '0x343d46'
-#    red:     '0xEC5f67'
-#    green:   '0x99C794'
-#    yellow:  '0xFAC863'
-#    blue:    '0x6699cc'
-#    magenta: '0xc594c5'
-#    cyan:    '0x5fb3b3'
-#    white:   '0xd8dee9'
-
-# Colors (Gruvbox light)
+# TokyoNight Alacritty Colors
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '0xf9f5d7'
-    background: '0xfbf1c7'
-    # soft contrast: background = '0xf2e5bc'
-    foreground: '0x3c3836'
+    background: '0xe1e2e7'
+    foreground: '0x3760bf'
 
   # Normal colors
   normal:
-    black:   '0xfbf1c7'
-    red:     '0xcc241d'
-    green:   '0x98971a'
-    yellow:  '0xd79921'
-    blue:    '0x458588'
-    magenta: '0xb16286'
-    cyan:    '0x689d6a'
-    white:   '0x7c6f64'
+    black:   '0xe9e9ed'
+    red:     '0xf52a65'
+    green:   '0x587539'
+    yellow:  '0x8c6c3e'
+    blue:    '0x2e7de9'
+    magenta: '0x9854f1'
+    cyan:    '0x007197'
+    white:   '0x6172b0'
 
   # Bright colors
   bright:
-    black:   '0x928374'
-    red:     '0x9d0006'
-    green:   '0x79740e'
-    yellow:  '0xb57614'
-    blue:    '0x076678'
-    magenta: '0x8f3f71'
-    cyan:    '0x427b58'
-    white:   '0x3c3836'
+    black:   '0xa1a6c5'
+    red:     '0xf52a65'
+    green:   '0x587539'
+    yellow:  '0x8c6c3e'
+    blue:    '0x2e7de9'
+    magenta: '0x9854f1'
+    cyan:    '0x007197'
+    white:   '0x3760bf'
 
+  indexed_colors:
+    - { index: 16, color: '0xb15c00' }
+    - { index: 17, color: '0xc64343' }
 
 bell:
   animation: EaseOutExpo

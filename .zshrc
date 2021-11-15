@@ -100,7 +100,6 @@ tmn() {
 export XDG_CONFIG_HOME=$HOME/.config
 
 # Linux version
-
 if [[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]];
 then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -160,28 +159,6 @@ function hsdreg() {
   source env.sh
   #invm
 }
-
-function get_bnet() {
-  if [[ "$BCOIN_NETWORK" != "" ]] then
-    echo -n "b["$BCOIN_NETWORK"@"${BCOIN_PREFIX/$HOME/"~"}"]"
-  fi
-
-  return ""
-}
-
-function bmwatch() {
-  find . -iname '*.js' \
-  | grep -v 'node_modules' \
-  | entr -rc $(which bmocha) $@
-}
-
-function bwatch() {
-  find . -iname '*.js' \
-  | grep -v 'node_modules' \
-  | entr -rc $@
-}
-
-## Bcoin related
 
 ## ASDF version manager..
 source $HOME/.asdf/asdf.sh
