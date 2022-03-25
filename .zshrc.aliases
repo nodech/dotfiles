@@ -77,20 +77,24 @@ alias tkss='tmux kill-session -t'
 # TODO: undotrash
 function rmtrash() {
   name=$(date +%Y-%m-%d/%H:%M:%S)
-  dir="$HOME/.TRASH/$name"
+  MOUNT_DIR=`findmnt -T . -J | jq -r '.filesystems[0].target'`
+  TRASH="$MOUNT_DIR/.TRASH"
+  dir="$TRASH/$name"
 
   mkdir -p $dir
   mv $@ $dir
 }
 
 function cltrash() {
-  $rm -rIv $HOME/.TRASH/*
-  $rm -rIv $HOME/.TRASH/.*
+  mainDir=`findmnt -T . -J | jq -r '.filesystems[0].target'`
+  $rm -rIv $mainDir/.TRASH/*
+  $rm -rIv $mainDir/.TRASH/.*
 }
 
 function cltrashf() {
-  $rm -rvf $HOME/.TRASH/*
-  $rm -rvf $HOME/.TRASH/.*
+  mainDir=`findmnt -T . -J | jq -r '.filesystems[0].target'`
+  $rm -rvf $mainDir/.TRASH/*
+  $rm -rvf $mainDir/.TRASH/.*
 }
 
 alias rrm=$(which rm)
@@ -102,6 +106,15 @@ alias cgw='cp ~/.alacritty.white.yml ~/.alacritty.yml'
 
 # Cross platform open
 which open 2 > /dev/null || alias open=xdg-open;
+
+# Linux notification sound
+function notif_sound() {
+  notif="$HOME/.ui/notification.mp3"
+
+  if [[ -f "$notif" ]]; then
+    mpv --no-video $notif 1> /dev/null 2> /dev/null
+  fi
+}
 
 # LSD Wrappers for ls if they are available.
 if [[ -x `which lsd` ]]; then

@@ -1,0 +1,16 @@
+# General configurations
+keybase_id='nodech'
+gpg_key='d2b2828bd29374d5e9ba3e52cce677b05cc0fe23'
+
+gh_comment_ack(){
+  head=`git rev-parse HEAD`
+  echo ACK "$head"
+  echo \<details\>\<summary\>Show Signature\<\/summary\>
+  echo -e '\n```'
+  echo ACK "$head" | gpg -s -q -a --clearsign
+  echo -e '```\n'
+  echo "$keybase_id's public key is [on keybase](https://keybase.io/$keybase_id/pgp_keys.asc?fingerprint=$gpg_key)"
+  echo \<\/details\>
+}
+
+alias gh_comment_ack_verify='gpg --verify'

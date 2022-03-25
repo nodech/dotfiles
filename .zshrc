@@ -14,7 +14,7 @@ plugins=(
   docker
   npm
   #kubectl
-  osx
+  macos
   autojump
 )
 
@@ -39,6 +39,9 @@ source ~/.zshrc.paths
 
 # Setup some zsh aliases
 source ~/.zshrc.aliases
+
+# Setup some hsd utilities
+source ~/.zshrc.hsd
 
 #Ruby Env load stuff
 irbenv() {
@@ -100,6 +103,7 @@ tmn() {
 export XDG_CONFIG_HOME=$HOME/.config
 
 # Linux version
+
 if [[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]];
 then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -111,7 +115,6 @@ ulimit -n 2048
 function findUpHome() {
   local dir=$1
   local name=$2
-
 
   if [[ -f "$dir/$name" ]];then
     echo "$dir/$name"
@@ -140,25 +143,7 @@ function printPkg() {
   fi
 }
 
-function get_prompt() {
-  local bnet=$(get_bnet)
-  local pkg=$(printPkg)
-
-  echo -n $pkg $bnet
-}
-
-# Bcoin related
-function btcreg() {
-  cd ~/.bcoin/regtest/
-  source env.sh
-  #invm
-}
-
-function hsdreg() {
-  cd ~/.hsd/regtest
-  source env.sh
-  #invm
-}
+HSD_ORG=$HOME/dev/handshake-org
 
 ## ASDF version manager..
 source $HOME/.asdf/asdf.sh

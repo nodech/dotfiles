@@ -49,7 +49,6 @@ set wildmode=list:longest,full
 
 set cursorline
 set lazyredraw
-set hidden
 
 set listchars=tab:▸\ ,eol:¬
 set list
@@ -127,6 +126,11 @@ au FocusGained * :set rnu
 autocmd InsertEnter * :set rnu!
 autocmd InsertLeave * :set rnu
 
+
+
+" Remap Paste, keeps the clipboard/yank
+xnoremap <leader>p "_dP
+
 " Keymap->Tabmoves
 map <silent> <leader>tn :tabmove +1<CR>
 map <silent> <leader>tp :tabmove -1<CR>
@@ -134,26 +138,6 @@ map <silent> <leader>tp :tabmove -1<CR>
 " Keymap->Terminal
 tnoremap <C-]> <c-\><c-n>
 
-" {{{ Copy/Paste across ssh sessions.
-" copy to attached terminal using the yank(1) script:
-" https://github.com/sunaku/home/blob/master/bin/yank
-function! Yank(text) abort
-  let escape = system('yank', a:text)
-  if v:shell_error
-    echoerr escape
-  else
-    call writefile([escape], '/dev/tty', 'b')
-  endif
-endfunction
-noremap <silent> <Leader>y y:<C-U>call Yank(@0)<CR>
-
-" automatically run yank(1) whenever yanking in Vim
-" (this snippet was contributed by Larry Sanderson)
-function! CopyYank() abort
-  call Yank(join(v:event.regcontents, "\n"))
-endfunction
-autocmd TextYankPost * call CopyYank()
-" }}}
 
 " Custom commands
 command JSrun execute '!node '.shellescape(@%, 1)<CR>
@@ -178,6 +162,8 @@ Plug 'Raimondi/delimitMate'
 "" {{{ Auto comment
 Plug 'scrooloose/nerdcommenter' " autocomment
 
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
 nmap <C-;> <Leader>ci " Uncomment
 "" }}}
 
@@ -220,9 +206,9 @@ Plug 'junegunn/gv.vim'
 """ }}}
 
 "" {{{ Conquer of Completion
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
@@ -283,9 +269,10 @@ let g:ale_fixers = {
 "" }}}
 
 " -- Syntax highlighting.
-Plug 'morhetz/gruvbox' " Dark/Light gruvbox
-"Plug 'arcticicestudio/nord-vim'
-Plug 'joshdick/onedark.vim'
+" Plug 'morhetz/gruvbox'          " Dark/Light gruvbox
+" Plug 'arcticicestudio/nord-vim'
+" Plug 'joshdick/onedark.vim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 "" {{{ Javascript
 Plug 'pangloss/vim-javascript'
@@ -451,3 +438,6 @@ let g:vimwiki_folding = 'custom'
 
 au FileType vimwiki set filetype=markdown.pandoc
 "" }}}
+
+" -- Some
+" Plug 'wakatime/vim-wakatime'
