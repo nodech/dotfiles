@@ -162,7 +162,7 @@ mode "resize" {
 # Status bar configs
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.config/dunst/launch.sh
-exec_always --no-startup-id feh --bg-scale --randomize $HOME/.wallpapers/*
+exec_always --no-startup-id feh --bg-scale --randomize $HOME/.ui/wallpapers/*
 #exec_always --no-startup-id nitrogen --no-recurse --set-scaled $HOME/.wallpaper.png
 #
 exec --no-startup-id picom --backend glx
