@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+# i3/xrandr second monitor setup on 4th workspace.
+# Supports one monitor on 4th workspace ?
+
+i3sock=`ls $XDG_RUNTIME_DIR/i3/ipc-socket.*`
+
+connected_count() {
+  echo `xrandr | grep " connected" | wc -l`
+}
+
+active_count() {
+  count=`xrandr --listactivemonitors | wc -l`
+  ((count = count - 1))
+  echo $count
+}
+
+needs_connecting() {
+  connected=`connected_count`
+  active=`active_count`
+
+  if [[ $connected -eq 1 || $connected -eq $active ]];
+  then
+    echo "no"
+    exit
+  fi
+
+  echo "yes"
+}
+
+get_connected_monitor() {
+  monitor_info=`xrandr | grep " connected" | grep -v "primary" | tail -n 1`
+  monitor_name=`echo "$monitor_info" | cut -d ' ' -f1`
+
+  echo $monitor_name
+}
+
+get_active_monitor() {
+  monitor_info=`xrandr --listactivemonitors | tail -n 1`
+  monitor_name=`echo "$monitor_info" | rev | cut -d ' ' -f1 | rev`
+
+  echo $monitor_name
+}
+
+get_primary_monitor() {
+  primary=`xrandr | grep "connected primary" | cut -d ' ' -f1`
+  echo $primary
+}
+
+connect_monitor_above() {
+  primary=`get_primary_monitor`
+  xrandr --output $1 --above "$primary" --mode 3840x2160
+  i3-msg -s $i3sock "restart"
+}
+
+disconnect_monitor() {
+  echo "Disconnecting monitor... Killing space..."
+  i3-msg -s $i3sock "[workspace=4] kill"
+
+  xrandr --output $1 --off
+}
+
+monitor_fix() {
+  connected=`connected_count`
+  active=`active_count`
+
+  echo "Check monitor information..."
+  if [[ $active -gt $connected ]]
+  then
+    echo "Updating monitors..."
+    xrandr --auto
+  fi
+
+  connected=`connected_count`
+  active=`active_count`
+
+  [[ $active -eq 1 ]] && exit
+
+  connected=`get_connected_monitor`
+  active=`get_active_monitor`
+
+  if [[ "$active" != "$connected" ]]; then
+    echo "Disconnecting $active..."
+    disconnect_monitor "$active"
+  fi
+}
+
+(monitor_fix)
+
+if [[ "`needs_connecting`" == "no" ]]
+then
+  echo "Nothing to update."
+  exit 1
+fi
+
+monitor=`get_connected_monitor`
+echo "Connecting monitor $monitor"
+connect_monitor_above "$monitor"
