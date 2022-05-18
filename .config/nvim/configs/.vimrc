@@ -177,6 +177,9 @@ let g:gitgutter_sign_removed='◢'
 let g:gitgutter_sign_removed_first_line='◥'
 let g:gitgutter_sign_modified_removed='◢'
 "let g:gitgutter_highlight_lines = 1
+
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
 "" }}}
 
 "" {{{ Git commands
@@ -272,7 +275,8 @@ let g:ale_fixers = {
 " Plug 'morhetz/gruvbox'          " Dark/Light gruvbox
 " Plug 'arcticicestudio/nord-vim'
 " Plug 'joshdick/onedark.vim'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'ayu-theme/ayu-vim'
 
 "" {{{ Javascript
 Plug 'pangloss/vim-javascript'
@@ -439,5 +443,14 @@ let g:vimwiki_folding = 'custom'
 au FileType vimwiki set filetype=markdown.pandoc
 "" }}}
 
+"" {{{ Indent line
+Plug 'Yggdroot/indentLine'
+
+let g:indentLine_setColors = 0
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_concealcursor = 'inc'
+let g:indentLine_conceallevel = 2
+"" }}}
+
 " -- Some
-" Plug 'wakatime/vim-wakatime'
+Plug 'wakatime/vim-wakatime'

@@ -1,9 +1,13 @@
+
+:exec "source " . CONFIGS . "/colorplug.vimrc"
+
 " Load after
 call plug#end()
 
 " Colors and fonts
-colorscheme tokyonight  " Default is STORM
+" colorscheme tokyonight  " Default is STORM
 
+:exec "source " . CONFIGS . "/colorconf.vimrc"
 "let g:hybrid_reduced_contrast = 1
 "let g:hybrid_custom_term_colors = 1
 
