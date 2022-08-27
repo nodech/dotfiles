@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONFIG_DIR=$HOME/.config/nod
-VIM_DIR=$HOME/.config/nvim/configs
+LUA_DIR=$HOME/.config/lua
 
 ## .config/nod configs
 ##   alacritty/template.yml
@@ -12,7 +12,6 @@ VIM_DIR=$HOME/.config/nvim/configs
 THEMES_DIR="${CONFIG_DIR}/themes"
 
 ALA_CONFIG_FILE="${CONFIG_DIR}/alacritty.sh"
-ALA_COLORS_DIR="${CONFIG_DIR}/alacritty/colors"
 ALA_TEMPLATE="${CONFIG_DIR}/alacritty/template.yml"
 
 source $ALA_CONFIG_FILE
@@ -34,9 +33,9 @@ list() {
       echo -n " (alacritty)"
     fi
 
-    if [[ -f "$dir/colorconf.vimrc" && -f "$dir/colorplug.vimrc" ]]
+    if [[ -f "$dir/color.lua" ]]
     then
-      echo -n " (vimrc)"
+      echo -n " (nvim)"
     fi
     echo 
   done
@@ -66,19 +65,15 @@ generate_ala() {
 generate_vim() {
   colors_dir="${THEMES_DIR}/$1"
 
-  src_plug="$colors_dir/colorplug.vimrc"
-  src_conf="$colors_dir/colorconf.vimrc"
-  vim_plug="$VIM_DIR/colorplug.vimrc"
-  vim_conf="$VIM_DIR/colorconf.vimrc"
+  src="$colors_dir/color.lua"
+  dst="$LUA_DIR/color.lua"
 
-  if [[ -f "$src_plug" && -f "$src_conf" ]]
+  if [[ -f "$src" ]]
   then
     echo "Removing vim configs..."
-    rm $vim_plug
-    rm $vim_conf
+    rm $dst
     echo "Relinking vim configs..."
-    ln -s $src_plug $vim_plug
-    ln -s $src_conf $vim_conf
+    ln -s $src $vim_conf
     exit 0
   fi
 
