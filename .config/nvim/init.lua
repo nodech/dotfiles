@@ -1,6 +1,7 @@
 -- Nod vim init.
 
 require('globals')
+local statusline = require('statusline')
 local nod = require('nod')
 local pkg = require('pkg')
 local color = require('color')
@@ -137,17 +138,24 @@ if color.plugin then
   pkg.list.color = { p = color.plugin }
 end
 
+-- Setup auto commands and keymaps for all the deps
 pkg.prepare()
 
--- Final setup
+-- Setup auto commands for the statusline
+statusline.commands()
+
+-- Register all keymaps
 nod.map_keys()
+
+-- Register all autocommands
 nod.register_aucmds()
+
+_G.statusline = statusline.statusline
+set.statusline = '%!v:lua.statusline()'
 
 -- Setup packages
 vim.cmd [[packadd vim-packager]]
 require('packager').setup(pkg.setup)
-
--- Final setup
 
 vim.cmd[[
   filetype plugin indent on
