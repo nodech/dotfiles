@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONFIG_DIR=$HOME/.config/nod
-LUA_DIR=$HOME/.config/lua
+LUA_DIR=$HOME/.config/nvim/lua
 
 ## .config/nod configs
 ##   alacritty/template.yml
@@ -73,7 +73,7 @@ generate_vim() {
     echo "Removing vim configs..."
     rm $dst
     echo "Relinking vim configs..."
-    ln -s $src $vim_conf
+    ln -s $src $dst
     exit 0
   fi
 
