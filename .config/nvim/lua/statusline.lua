@@ -175,13 +175,13 @@ return {
       }
     }
   end,
-  statusline = function()
+  statusline = function(bufnrp)
     local list = {}
-    local bufno= vim.api.nvim_get_current_buf()
+    local bufno = vim.api.nvim_get_current_buf()
     local git = get_cached_branch(bufno)
 
     -- buffer number
-    table.insert(list, '[%n] ')
+    table.insert(list, '[' .. tostring(bufno) .. '] ')
     -- truncated file path
     table.insert(list, '%<%.99f ')
 
