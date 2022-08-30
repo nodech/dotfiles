@@ -99,7 +99,8 @@ local function format_git_info(info)
   if info.summary.staged then
     table.insert(result, '~')
   end
-  table.insert(result, info.branch)
+
+  table.insert(result, info.branch ~= '' and info.branch or '-')
   table.insert(result, colors.clean)
 
   if info.summary.untracked then
@@ -161,6 +162,22 @@ local function get_cached_branch(no)
   return format_git_info(cached.info)
 end
 
+local function get_ale_status(bufno)
+  local counts = vim.fn['ale#statusline#Count'](bufno)
+  local all_errors = counts.error + counts.style_error
+  local non_errors = counts.total - all_errors
+  local color = colors.ggadd
+
+  if counts.total == 0 then
+    return colors.ggadd .. '[OK]' .. colors.clean
+  end
+
+  color = all_errors > 0 and colors.derror or colors.dwarning
+
+  return color .. '[' .. tostring(non_errors) .. ' Warn '
+         .. tostring(all_errors) .. ' Err]' .. colors.clean
+end
+
 return {
   commands = function()
     nod.commands['sl_postwrites'] = {
@@ -179,6 +196,8 @@ return {
     local list = {}
     local bufno = vim.api.nvim_get_current_buf()
     local git = get_cached_branch(bufno)
+    local ale = get_ale_status(bufno)
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
 
     -- buffer number
     table.insert(list, '[' .. tostring(bufno) .. '] ')
@@ -208,14 +227,17 @@ return {
 
     -- git info
     table.insert(list, git)
+    table.insert(list, tostring(ale))
 
     -- right side/spli
     table.insert(list, '%=')
 
     -- line number / total lines
-    table.insert(list, '%l ')
-    -- column number
-    table.insert(list, '%c%V ')
+    if cursor_pos[2] >= 80 then
+      table.insert(list, colors.derror)
+    end
+    table.insert(list, '%-14(%l,%c%V%) ')
+    table.insert(list, colors.clean)
     -- Percent in a file
     table.insert(list, '%P')
 

@@ -151,7 +151,7 @@ nod.map_keys()
 nod.register_aucmds()
 
 _G.statusline = statusline.statusline
-set.statusline = "%{%v:lua.statusline(bufnr('%'))%}"
+set.statusline = "%{%v:lua.statusline()%}"
 
 -- Setup packages
 vim.cmd [[packadd vim-packager]]

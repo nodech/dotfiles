@@ -79,6 +79,28 @@ pkg.list = {
   lspstatus = {
     p = 'nvim-lua/lsp-status.nvim'
   },
+  ale = {
+    p = 'w0rp/ale',
+    cmd = [[
+      let g:ale_lint_on_text_changed = 'normal'
+      let g:ale_linters = {
+      \   'typescript': ['tslint'],
+      \   'javascript': ['eslint', 'tsserver'],
+      \   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ],
+      \   'c': [ ]
+      \}
+
+      let g:ale_fixers = {
+      \   'typescript': ['tslint']
+      \}
+    ]],
+    keymap = {
+      n = {
+        { k = '[l', a = '<Plug>(ale_previous_wrap)' },
+        { k = ']l', a = '<Plug>(ale_next_wrap)' }
+      }
+    }
+  },
   vimjs = {
     p = 'pangloss/vim-javascript',
     cmd = [[
