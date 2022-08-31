@@ -17,6 +17,25 @@ local colors = {
   clean = '%*',
 }
 
+local recover = {}
+
+local function c(color)
+  table.insert(recover, color)
+  return colors.clean .. colors[color]
+end
+
+local function cc()
+  local response = colors.clean
+
+  table.remove(recover, #recover)
+
+  if #recover == 0 then
+    return response
+  end
+
+  return response .. colors[recover[#recover]]
+end
+
 local function get_git_state()
   local res = vim.fn.FugitiveExecute('status', '--short');
   local state = {
@@ -81,58 +100,60 @@ local function format_git_info(info)
   end
 
   local bufhunksum = vim.fn.GitGutterGetHunkSummary()
+  local hunks = vim.fn.GitGutterGetHunks()
+  local hunksLen = #hunks
   local gcolor = nil
 
   if info.summary.modified then
-    gcolor = colors.derror
+    gcolor = "derror"
   elseif info.summary.staged then
-    gcolor = colors.dwarning
+    gcolor = "dwarning"
   else
-    gcolor = colors.ggadd
+    gcolor = "ggadd"
   end
 
   local result = {}
 
-  table.insert(result, gcolor)
+  table.insert(result, c(gcolor))
   table.insert(result, '[')
 
   if info.summary.staged then
-    table.insert(result, '~')
+    table.insert(result, c('ggadd') .. '~' .. cc())
   end
 
   table.insert(result, info.branch ~= '' and info.branch or '-')
-  table.insert(result, colors.clean)
 
   if info.summary.untracked then
-    table.insert(result, colors.derror)
+    table.insert(result, c('derror'))
     table.insert(result, '*')
-    table.insert(result, colors.clean)
+    table.insert(result, cc())
   end
 
   if bufhunksum and bufhunksum[1] > 0 then
-    table.insert(result, colors.ggadd)
-    table.insert(result, ' +')
-    table.insert(result, tostring(bufhunksum[1]))
-    table.insert(result, colors.clean)
+    table.insert(result, c('ggadd'))
+    table.insert(result, ' +' .. tostring(bufhunksum[1]))
+    table.insert(result, cc())
   end
 
   if bufhunksum and bufhunksum[2] > 0 then
-    table.insert(result, colors.ggchange)
-    table.insert(result, ' ~')
-    table.insert(result, tostring(bufhunksum[2]))
-    table.insert(result, colors.clean)
+    table.insert(result, c('ggchange'))
+    table.insert(result, ' ~' .. tostring(bufhunksum[2]))
+    table.insert(result, cc())
   end
 
   if bufhunksum and bufhunksum[3] > 0 then
-    table.insert(result, colors.ggdelete)
-    table.insert(result, ' -')
-    table.insert(result, tostring(bufhunksum[3]))
-    table.insert(result, colors.clean)
+    table.insert(result, c('ggdelete'))
+    table.insert(result, ' -' .. tostring(bufhunksum[3]))
+    table.insert(result, cc())
   end
 
-  table.insert(result, gcolor)
+  if hunksLen > 0 then
+    table.insert(result, ' | ' .. c('ggadd') .. tostring(hunksLen) .. 'h'
+                 .. cc())
+  end
+
   table.insert(result, ']')
-  table.insert(result, colors.clean)
+  table.insert(result, cc())
 
   return table.concat(result)
 end
