@@ -43,6 +43,9 @@ source ~/.zshrc.aliases
 # Setup some hsd utilities
 source ~/.zshrc.hsd
 
+# Setup rootless docker
+source ~/.zshrc.docker
+
 #Ruby Env load stuff
 irbenv() {
   eval "$(rbenv init -)"
@@ -143,8 +146,13 @@ function printPkg() {
   fi
 }
 
-HSD_ORG=$HOME/dev/handshake-org
+export CC="ccache gcc"
+export CXX="ccache c++"
 
 ## ASDF version manager..
 source $HOME/.asdf/asdf.sh
 source $HOME/.asdf/completions/asdf.bash
+
+export HISTSIZE=1000000
+export SAVEHIST=1000000
+setopt EXTENDED_HISTORY
