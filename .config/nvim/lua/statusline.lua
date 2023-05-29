@@ -17,6 +17,11 @@ local colors = {
   clean = '%*',
 }
 
+local filetypeMap = {
+  javascript = 'js',
+  markdown = 'md'
+}
+
 local recover = {}
 
 local function c(color)
@@ -114,8 +119,8 @@ local function format_git_info(info)
 
   local result = {}
 
-  table.insert(result, c(gcolor))
   table.insert(result, '[')
+  table.insert(result, c(gcolor))
 
   if info.summary.staged then
     table.insert(result, c('ggadd') .. '~' .. cc())
@@ -152,8 +157,8 @@ local function format_git_info(info)
                  .. cc())
   end
 
-  table.insert(result, ']')
   table.insert(result, cc())
+  table.insert(result, ']')
 
   return table.concat(result)
 end
@@ -190,13 +195,13 @@ local function get_ale_status(bufno)
   local color = colors.ggadd
 
   if counts.total == 0 then
-    return colors.ggadd .. '[OK]' .. colors.clean
+    return '[' .. colors.ggadd .. 'OK' .. colors.clean .. ']'
   end
 
   color = all_errors > 0 and colors.derror or colors.dwarning
 
-  return color .. '[' .. tostring(non_errors) .. ' Warn '
-         .. tostring(all_errors) .. ' Err]' .. colors.clean
+  return '[' .. color .. tostring(non_errors) .. ' Warn '
+         .. tostring(all_errors) .. ' Err' .. colors.clean .. ']'
 end
 
 return {
@@ -213,12 +218,13 @@ return {
       }
     }
   end,
-  statusline = function(bufnrp)
+  statusline = function()
     local list = {}
     local bufno = vim.api.nvim_get_current_buf()
     local git = get_cached_branch(bufno)
     local ale = get_ale_status(bufno)
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    local filetype = vim.bo.filetype
 
     -- buffer number
     table.insert(list, '[' .. tostring(bufno) .. '] ')
@@ -242,9 +248,15 @@ return {
     table.insert(list, colors.clean)
 
     -- file type
-    table.insert(list, colors.dinfo)
-    table.insert(list, '%y')
-    table.insert(list, colors.clean)
+    if filetype ~= '' then
+      table.insert(list, '[' .. colors.dinfo)
+      if filetypeMap[filetype] ~= nil then
+        table.insert(list, filetypeMap[filetype])
+      else
+        table.insert(list, filetype)
+      end
+      table.insert(list, colors.clean .. ']')
+    end
 
     -- git info
     table.insert(list, git)
@@ -257,7 +269,7 @@ return {
     if cursor_pos[2] >= 80 then
       table.insert(list, colors.derror)
     end
-    table.insert(list, '%-14(%l,%c%V%) ')
+    table.insert(list, '%l,%c%V% |')
     table.insert(list, colors.clean)
     -- Percent in a file
     table.insert(list, '%P')

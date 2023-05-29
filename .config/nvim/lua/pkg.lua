@@ -58,7 +58,7 @@ pkg.list = {
         { k = 'K', a = ':call CocShowDocumentation()<CR>' },
 
         { k = '<leader>rn', a = '<Plug>(coc-rename)' },
-        { k = '<leader>lc', a = 'CocList<CR>' },
+        { k = '<leader>lc', a = ':CocList<CR>' },
 
         { k = '<leader>f', a = '<Plug>(coc-format-selected)' }
       },
@@ -87,12 +87,21 @@ pkg.list = {
       \   'typescript': ['tslint'],
       \   'javascript': ['eslint', 'tsserver'],
       \   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ],
-      \   'c': [ ]
+      \   'c': [ ],
+      \   'rust': [ 'cargo', 'rustc' ]
       \}
+
+      let g:ale_rust_cargo_use_clippy = 1
 
       let g:ale_fixers = {
       \   'typescript': ['tslint']
       \}
+      let g:ale_sign_column_always = 1
+      let g:ale_sign_error = '>>'
+      let g:ale_sign_warning = '--'
+
+      let g:ale_virtualtext_cursor = 2
+      let g:ale_virtualtext_prefix = "\t\t\t>  "
     ]],
     keymap = {
       n = {
@@ -101,6 +110,7 @@ pkg.list = {
       }
     }
   },
+  -- vimes6 = { p = 'isRuslan/vim-es6' },
   vimjs = {
     p = 'pangloss/vim-javascript',
     cmd = [[
@@ -115,7 +125,6 @@ pkg.list = {
       { e = 'FileType', p = 'markdown', cmd = 'set wrap'}
     }
   },
-  vimes6 = { p = 'isRuslan/vim-es6' },
   vimts = { p = 'HerringtonDarkholme/yats.vim' }, -- typescript syntax
   vimglsl = { p = 'tikhomirov/vim-glsl' },
   vimjson5 = { p = 'GutenYe/json5.vim' },
@@ -153,18 +162,25 @@ pkg.list = {
     p = 'mileszs/ack.vim',
     cmd = "let g:ackprg = 'arg --vimpgrep'"
   },
-  choosewin = {
-    p = 't9md/vim-choosewin',
-    cmd = 'let g:choosewin_overlay_enable = 1',
+  -- choosewin = {
+  --   p = 't9md/vim-choosewin',
+  --   cmd = 'let g:choosewin_overlay_enable = 1',
+  --   keymap = {
+  --     n = {
+  --       { k = '-', a = '<Plug>(choosewin)' }
+  --     }
+  --   }
+  -- },
+  surround = { p = 'tpope/vim-surround' },
+  ranger = { p = 'Mizuchi/vim-ranger' },
+  vista = {
+    p = 'liuchengxu/vista.vim',
     keymap = {
       n = {
-        { k = '-', a = '<Plug>(choosewin)' }
+        { k = '<leader>lv', a = ':Vista finder<CR>' },
       }
     }
   },
-  surround = { p = 'tpope/vim-surround' },
-  ranger = { p = 'Mizuchi/vim-ranger' },
-  vista = { p = 'liuchengxu/vista.vim' },
   editconf = { p = 'editorconfig/editorconfig-vim' },
   rfc = { p = 'vim-scripts/rfc-syntax' },
 
@@ -179,12 +195,16 @@ pkg.list = {
         \ 'ctrl-t': 'tab split',
         \ 'ctrl-x': 'split',
         \ 'ctrl-v': 'vsplit' }
+
+      command! -bang -nargs=? GFilesCwd
+      \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == '?' ? { 'dir': getcwd(), 'placeholder': '' } : { 'dir': getcwd() }), <bang>0)
     ]],
     keymap = {
       n = {
         { k = '<leader>lb', a = ':Buffers<CR>' },
         { k = '<leader>lf', a = ':GFiles<CR>' },
-        { k = '<leader>lF', a = ':Files<CR>' },
+        { k = '<leader>lF', a = ':GFilesCwd<CR>' },
+        { k = '<leader>ll', a = ':Files<CR>' },
         { k = '<leader>lw', a = ':Windows<CR>' },
         { k = '<leader>lg', a = ':GFiles?<CR>' },
       }
@@ -200,6 +220,28 @@ pkg.list = {
     ]]
   },
   wakatime = { p = 'wakatime/vim-wakatime' },
+  vimgo = {
+    p = 'fatih/vim-go',
+    cmd = [[
+      let g:go_code_completion_enabled = 0
+    ]],
+  },
+  vimtpl = {
+    p = 'aperezdc/vim-template',
+    cmd = [[
+      let g:templates_directory = '~/.config/nvim/templates'
+    ]]
+  },
+  treesitter = {
+    p = 'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+  },
+  gosyntax = {
+    p = 'charlespascoe/vim-go-syntax'
+  },
+  llvmsyntax = {
+    p = 'tymcauley/llvm-vim-syntax'
+  }
 }
 
 pkg.prepare = function()

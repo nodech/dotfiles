@@ -15,7 +15,6 @@ set.number = true         -- show numbers
 set.rnu = true            -- show relative line numbers
 set.complete = set.complete + 'k'  -- scan the files as well
 set.wrap = false           -- don't wrap lines
-set.popt = 'left:8pc,right:3pc'
 
 set.listchars = {
   tab = '▸ ',
@@ -57,6 +56,7 @@ set.smartcase = true      -- smart case
 set.autoindent = true     -- auto indent
 set.smartindent = true    -- smart indent
 set.completeopt='menuone,menu,longest,preview'
+-- set.showtabline = 2       -- always on. (experiment with custom tabline)
 
 set.wildignore = {
   'tags',
@@ -72,8 +72,29 @@ nod.keymaps = {
   -- normal mode
   n = {
     -- Clipboard switches, TODO: pastetoggle?
-    { k = '<C-c>', a = ':set clipboard=unnamedplus<CR>' },
-    { k = '<C-x>', a = ':set clipboard=<CR>' },
+    { k = '<F2>', a = function()
+      local current = set.clipboard:get()
+
+      if #current == 0 then
+        set.clipboard = 'unnamedplus'
+        print('clipboard=unnamedplus')
+      else
+        set.clipboard = ''
+        print('clipboard=')
+      end
+    end },
+    { k = '<F3>', a = ':Vista!!<CR>' },
+    { k = '<F4>', a = function ()
+      local copilot_enabled = vim.g.copilot_enabled
+
+      if copilot_enabled == 1 or copilot_enabled == nil then
+        vim.g.copilot_enabled = 0
+        print('copilot disabled')
+      else
+        vim.g.copilot_enabled = 1
+        print('copilot enabled')
+      end
+    end},
 
     { k = '<C-L>', a = ':nohl<CR><C-L>' },
     { k = '<C-K>', a = ':set list!<CR>' },
@@ -88,6 +109,16 @@ nod.keymaps = {
     { k = '<C-P>', a = 'gT' },
     { k = '<leader>tn', a = 'tabmove +1<CR>' },
     { k = '<leader>tp', a = 'tabmove -1<CR>' },
+
+    -- buffer jumps
+    { k = '[b', a = ':bprev<CR>' },
+    { k = ']b', a = ':bnext<CR>' },
+
+    -- debug syntax
+    {
+      k = '<leader>zS',
+      a = [[:echo join(reverse(map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')),' ')<CR>]]
+    },
   },
 
   -- visual mode
@@ -133,6 +164,33 @@ vim.cmd [[
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 ]]
 
+-- Some Vim helper functions
+vim.cmd [[
+fun! InspectSynHL()
+    let l:synNames = []
+    let l:idx = 0
+    for id in synstack(v:beval_lnum, v:beval_col)
+        call add(l:synNames, printf('%s%s', repeat(' ', idx), synIDattr(id, 'name')))
+        let l:idx+=1
+    endfor
+    return join(l:synNames, "\n")
+endfun
+
+function! SynStack ()
+    for i1 in synstack(line("."), col("."))
+        let i2 = synIDtrans(i1)
+        let n1 = synIDattr(i1, "name")
+        let n2 = synIDattr(i2, "name")
+        echo n1 "->" n2
+    endfor
+endfunction
+
+function! SynGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+]]
+
 -- Setup pkg
 if color.plugin then
   pkg.list.color = { p = color.plugin }
@@ -150,8 +208,8 @@ nod.map_keys()
 -- Register all autocommands
 nod.register_aucmds()
 
-_G.statusline = statusline.statusline
-set.statusline = "%{%v:lua.statusline()%}"
+_G.nodstatusline = statusline.statusline
+set.statusline = "%{%v:lua.nodstatusline()%}"
 
 -- Setup packages
 vim.cmd [[packadd vim-packager]]
@@ -171,4 +229,11 @@ end
 
 if color.colorscheme then
   vim.cmd('colorscheme ' .. color.colorscheme)
+end
+
+-- Unfortunately coc-flow and coc-tsserver are incompatible.
+if vim.env.ONLY_FLOW ~= nil then
+  vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/flow'
+else
+  vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/general'
 end
