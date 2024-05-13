@@ -1,13 +1,30 @@
 {
-  "suggest.triggerAfterInsertEnter": true,
+  "suggest.noselect": true,
   "suggest.timeout": 500,
   "suggest.acceptSuggestionOnCommitCharacter": true,
-  "suggest.noselect": true,
-  "suggest.enablePreview": true,
-  "suggest.minTriggerInputLength": 1,
-  "suggest.snippetIndicator": " ►",
+  "suggest.enableFloat": true,
+  "suggest.triggerAfterInsertEnter": true,
+
+  "colors.enable": true,
+
+  "semanticTokens.enable": true,
+
+  "inlayHint.enable": true,
+  "inlayHint.refreshOnInsertMode": true,
+
   "signature.enable": true,
-  "signature.preferShownAbove": true,
-  "coc.preferences.hoverTarget": "preview",
-  "clangd.semanticHighlighting": true
+
+  "codeLens.enable": true,
+  "diagnostic.virtualText": true,
+
+  // javascript configs
+  "javascript.showUnused": true,
+  "javascript.showDeprecated": true,
+
+  // Rust
+  "rust-analyzer.inlayHints.typeHints.enable": true,
+  "rust-analyzer.inlayHints.expressionAdjustmentHints.enable": "reborrow",
+  "rust-analyzer.inlayHints.closureStyle": "impl_fn",
+  "rust-analyzer.lens.enable": false,
+  "svelte.enable-ts-plugin": true
 }

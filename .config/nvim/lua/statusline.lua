@@ -86,7 +86,13 @@ local function get_git_info()
     is_git = false
   }
 
-  local is_git = vim.fn.FugitiveIsGitDir()
+  local success, result = pcall(vim.fn.FugitiveIsGitDir)
+
+  if not success then
+    return info
+  end
+
+  local is_git = result
 
   if is_git == 0 then
     return info
@@ -189,7 +195,13 @@ local function get_cached_branch(no)
 end
 
 local function get_ale_status(bufno)
-  local counts = vim.fn['ale#statusline#Count'](bufno)
+  local success, result = pcall(vim.fn['ale#statusline#Count'], bufno)
+
+  if not success then
+    return ''
+  end
+
+  local counts = result
   local all_errors = counts.error + counts.style_error
   local non_errors = counts.total - all_errors
   local color = colors.ggadd

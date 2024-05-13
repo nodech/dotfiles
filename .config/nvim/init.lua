@@ -32,7 +32,10 @@ set.mouse = 'a'           -- mouse support
 
 -- Fold Configs
 set.foldenable = true     -- enable folding
-set.foldmethod = 'syntax' -- fold using expression
+set.foldmethod = 'expr'
+set.foldexpr = 'nvim_treesitter#foldexpr()'
+
+-- set.foldmethod = 'syntax' -- fold using expression
 set.foldlevelstart = 100  -- start fold level
 set.foldnestmax = 7       -- fold nesters
 
@@ -59,9 +62,6 @@ set.completeopt='menuone,menu,longest,preview'
 -- set.showtabline = 2       -- always on. (experiment with custom tabline)
 
 set.wildignore = {
-  'tags',
-  'tmp/**',
-  'node_modules/**',
 }
 
 set.termguicolors = true  -- use terminal colors
@@ -83,7 +83,6 @@ nod.keymaps = {
         print('clipboard=')
       end
     end },
-    { k = '<F3>', a = ':Vista!!<CR>' },
     { k = '<F4>', a = function ()
       local copilot_enabled = vim.g.copilot_enabled
 
@@ -113,6 +112,10 @@ nod.keymaps = {
     -- buffer jumps
     { k = '[b', a = ':bprev<CR>' },
     { k = ']b', a = ':bnext<CR>' },
+
+    -- quickfix list
+    { k = '[q', a = ':cprev<CR>' },
+    { k = ']q', a = ':cnext<CR>' },
 
     -- debug syntax
     {
@@ -153,6 +156,9 @@ nod.commands = {
   rnu = {
     { e = {'FocusLost', 'InsertEnter'}, cmd = 'set rnu!' },
     { e = {'FocusGained', 'InsertLeave'}, cmd = 'set rnu' },
+  },
+  highligh_yank = {
+    { e = 'TextYankPost', cmd = 'silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=100})'}
   },
 
   -- err_80 = {
@@ -229,11 +235,4 @@ end
 
 if color.colorscheme then
   vim.cmd('colorscheme ' .. color.colorscheme)
-end
-
--- Unfortunately coc-flow and coc-tsserver are incompatible.
-if vim.env.ONLY_FLOW ~= nil then
-  vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/flow'
-else
-  vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/general'
 end

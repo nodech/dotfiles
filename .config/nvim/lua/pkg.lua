@@ -47,8 +47,11 @@ pkg.list = {
     ]],
     keymap = {
       n = {
-        { k = '[c', a = '<Plug>(coc-diagnostic-prev)' },
-        { k = ']c', a = '<Plug>(coc-diagnostic-next)' },
+        { k = '[d', a = '<Plug>(coc-diagnostic-prev)' },
+        { k = ']d', a = '<Plug>(coc-diagnostic-next)' },
+
+        { k = '[c', a = ':CocPrev<CR>' },
+        { k = ']c', a = ':CocNext<CR>' },
 
         { k = 'gd', a = '<Plug>(coc-definition)' },
         { k = 'gy', a = '<Plug>(coc-type-definition)' },
@@ -70,15 +73,15 @@ pkg.list = {
       { e = 'CursorHold', cmd = ":call CocActionAsync('highlight')" },
     }
   },
-  cxx_highlight = {
-    -- coc-clangd + vim-lsp-cxx-highligh will give
-    -- better semantic Highlightings for C & C++.
-    p = 'jackguo380/vim-lsp-cxx-highlight',
-    cmd = 'let g:coc_default_semantic_highlight_groups = 1',
-  },
-  lspstatus = {
-    p = 'nvim-lua/lsp-status.nvim'
-  },
+  -- cxx_highlight = {
+  --   -- coc-clangd + vim-lsp-cxx-highligh will give
+  --   -- better semantic Highlightings for C & C++.
+  --   p = 'jackguo380/vim-lsp-cxx-highlight',
+  --   cmd = 'let g:coc_default_semantic_highlight_groups = 1',
+  -- },
+  -- lspstatus = {
+  --   p = 'nvim-lua/lsp-status.nvim'
+  -- },
   ale = {
     p = 'w0rp/ale',
     cmd = [[
@@ -88,7 +91,7 @@ pkg.list = {
       \   'javascript': ['eslint', 'tsserver'],
       \   'go': [ 'golint', 'govet', 'gometalinter', 'gosimple', 'staticheck' ],
       \   'c': [ ],
-      \   'rust': [ 'cargo', 'rustc' ]
+      \   'rust': [ 'cargo' ]
       \}
 
       let g:ale_rust_cargo_use_clippy = 1
@@ -110,24 +113,26 @@ pkg.list = {
       }
     }
   },
-  -- vimes6 = { p = 'isRuslan/vim-es6' },
-  vimjs = {
-    p = 'pangloss/vim-javascript',
-    cmd = [[
-      let g:javascript_plugin_jsdoc = 1
-      let g:javascript_plugin_ngdoc = 0
-      let g:javascript_plugin_flow = 1
-    ]]
-  },
-  vimmd = {
-    p = 'plasticboy/vim-markdown',
-    aucmds = {
-      { e = 'FileType', p = 'markdown', cmd = 'set wrap'}
-    }
-  },
-  vimts = { p = 'HerringtonDarkholme/yats.vim' }, -- typescript syntax
-  vimglsl = { p = 'tikhomirov/vim-glsl' },
-  vimjson5 = { p = 'GutenYe/json5.vim' },
+  -- vimjs = {
+  --   p = 'pangloss/vim-javascript',
+  --   cmd = [[
+  --     let g:javascript_plugin_jsdoc = 1
+  --     let g:javascript_plugin_ngdoc = 0
+  --     let g:javascript_plugin_flow = 1
+  --   ]]
+  -- },
+  -- vimmd = {
+  --   p = 'plasticboy/vim-markdown',
+  --   aucmds = {
+  --     { e = 'FileType', p = 'markdown', cmd = 'set wrap'}
+  --   },
+  --   cmd = [[
+  --     let g:vim_markdown_conceal = 0
+  --   ]]
+  -- },
+  -- vimts = { p = 'HerringtonDarkholme/yats.vim' }, -- typescript syntax
+  -- vimglsl = { p = 'tikhomirov/vim-glsl' },
+  -- vimjson5 = { p = 'GutenYe/json5.vim' },
   qscope = {
     p = 'unblevable/quick-scope',
     cmd = "let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']",
@@ -174,10 +179,11 @@ pkg.list = {
   surround = { p = 'tpope/vim-surround' },
   ranger = { p = 'Mizuchi/vim-ranger' },
   vista = {
-    p = 'liuchengxu/vista.vim',
+    p = 'nodech/vista.vim',
     keymap = {
       n = {
-        { k = '<leader>lv', a = ':Vista finder<CR>' },
+        { k = '<leader>lv', a = ':Vista finder coc<CR>' },
+        { k = '<F3>', a = ':Vista!!<CR>' }
       }
     }
   },
@@ -213,17 +219,24 @@ pkg.list = {
   indentline = {
     p = 'Yggdroot/indentLine',
     cmd = [[
-      let g:indentLine_setColors = 0
+      let g:indentLine_setColors = 1
       let g:indentLine_char_list = ['|', '¦', '┆', '┊']
       let g:indentLine_concealcursor = 'inc'
       let g:indentLine_conceallevel = 2
+      let g:vim_json_conceal = 0
+      let g:vim_markdown_conceal = 0
+      let g:vim_json_syntax_conceal = 0
+      let g:vim_markdown_conceal = 0
+      let g:vim_markdown_conceal_code_blocks = 0
     ]]
   },
-  wakatime = { p = 'wakatime/vim-wakatime' },
   vimgo = {
     p = 'fatih/vim-go',
     cmd = [[
       let g:go_code_completion_enabled = 0
+      let g:go_def_mapping_enabled = 0     " Disable gd
+      let g:go_doc_keywordprg_enabled = 0  " Disable K
+      let g:go_gopls_enabled = 0
     ]],
   },
   vimtpl = {
@@ -236,12 +249,57 @@ pkg.list = {
     p = 'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
   },
-  gosyntax = {
-    p = 'charlespascoe/vim-go-syntax'
+  treesitterContext = {
+    p = 'nvim-treesitter/nvim-treesitter-context',
+    keymap = {
+      n = {
+        { k = '<F5>', a = ':TSContextToggle<CR>'}
+      },
+    },
   },
-  llvmsyntax = {
-    p = 'tymcauley/llvm-vim-syntax'
-  }
+  svelte = {
+    p = 'leafOfTree/vim-svelte-plugin',
+    cmd = [[
+      let g:vim_svelte_plugin_use_typescript=1
+    ]]
+  },
+  -- Library for the async IO
+  nio = {
+    p = 'nvim-neotest/nvim-nio'
+  },
+  dap = {
+    p = 'mfussenegger/nvim-dap',
+    keymap = {
+      n = {
+        { k = '<leader>db', a = function () require('dap').toggle_breakpoint() end },
+        { k = '<leader>dR', a = function () require('dap').run_last() end},
+        { k = '<leader>dr', a = ':DapContinue<CR>' },
+        { k = '<leader>dt', a = ':DapTerminate<CR>' },
+        { k = '<F9>', a = ':DapContinue<CR>' },
+        { k = '<F10>', a = ':DapStepOver<CR>' },
+        { k = '<F11>', a = ':DapStepInto<CR>' },
+        { k = '<S-F11>', a = ':DapStepOut<CR>' },
+      }
+    },
+  },
+  dapUI = {
+    p = 'rcarriga/nvim-dap-ui',
+    keymap = {
+      n = {
+        { k = '<leader>dc', a = function() require('dapui').close() end },
+        { k = '<leader>do', a = function() require('dapui').open() end },
+        { k = '<leader>K', a = function() require('dap.ui.widgets').hover() end },
+        { k = '<leader>ww', a = function() require('dapui').float_element('watches', { enter = true }) end },
+        { k = '<leader>wc', a = function() require('dapui').float_element('scopes', { enter = true }) end },
+        { k = '<leader>ws', a = function() require('dapui').float_element('stacks', { enter = true }) end },
+        { k = '<leader>wb', a = function() require('dapui').float_element('breakpoints', { enter = true}) end },
+        { k = '<leader>wr', a = function() require('dapui').float_element('repl', { enter = true }) end },
+      }
+    },
+  },
+  dapVirt = {
+    p = 'theHamsta/nvim-dap-virtual-text',
+  },
 }
 
 pkg.prepare = function()
