@@ -1,1 +1,1 @@
-alacritty --config-file $HOME/.alacritty.hdmi.yml
+alacritty --config-file $HOME/.alacritty.hdmi.toml

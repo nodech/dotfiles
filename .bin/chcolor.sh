@@ -4,15 +4,15 @@ CONFIG_DIR=$HOME/.config/nod
 LUA_DIR=$HOME/.config/nvim/lua
 
 ## .config/nod configs
-##   alacritty/template.yml
+##   alacritty/template.toml
 ##   alacritty.sh - font configs
-##   themes/themes-dir/alacritty.yml
+##   themes/themes-dir/alacritty.toml
 ##   themes/themes-dir/
 
 THEMES_DIR="${CONFIG_DIR}/themes"
 
 ALA_CONFIG_FILE="${CONFIG_DIR}/alacritty.sh"
-ALA_TEMPLATE="${CONFIG_DIR}/alacritty/template.yml"
+ALA_TEMPLATE="${CONFIG_DIR}/alacritty/template.toml"
 
 source $ALA_CONFIG_FILE
 
@@ -28,7 +28,7 @@ list() {
   do
     dir="${THEMES_DIR}/$f"
     echo -n "  $f";
-    if [[ -f "$dir/alacritty.yml" ]]
+    if [[ -f "$dir/alacritty.toml" ]]
     then
       echo -n " (alacritty)"
     fi
@@ -44,21 +44,21 @@ list() {
 generate_ala() {
   colors_dir="${THEMES_DIR}/$1"
 
-  if [[ ! -f "$colors_dir/alacritty.yml" ]]
+  if [[ ! -f "$colors_dir/alacritty.toml" ]]
   then
     echo "Missing alacritty module for '$1'"
     exit 0
   fi
 
-  export COLORS=`cat ${colors_dir}/alacritty.yml`
+  export COLORS=`cat ${colors_dir}/alacritty.toml`
 
-  echo "Generating ~/.alacritty.yml..."
+  echo "Generating ~/.alacritty.toml..."
   export FONT_SIZE=$ALA_FONT_SIZE
-  envsubst < $ALA_TEMPLATE > $HOME/.alacritty.yml
+  envsubst < $ALA_TEMPLATE > $HOME/.alacritty.toml
 
-  echo "Generating ~/.alacritty.hdmi.html..."
+  echo "Generating ~/.alacritty.hdmi.toml..."
   export FONT_SIZE=$ALA_FONT_SIZE_HDMI
-  envsubst < $ALA_TEMPLATE > $HOME/.alacritty.hdmi.yml
+  envsubst < $ALA_TEMPLATE > $HOME/.alacritty.hdmi.toml
 
 }
 

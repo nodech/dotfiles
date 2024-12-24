@@ -15,7 +15,7 @@ toggle() {
       ;;
   esac
 
-  setxkbmap -layout $next
+  setxkbmap -layout $next -option "caps:escape"
 }
 
 toggle
