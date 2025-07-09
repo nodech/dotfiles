@@ -13,17 +13,30 @@ floating_modifier $mod
 
 # General commands
 bindsym $mod+Return exec alacritty
-# compatible with MacOs
-bindsym $alt+q kill
+bindsym $mod+Shift+Return exec alacritty.hdmi
+bindsym $mod+q kill
 
 # MacOs Alfred compatibility (options + space)
 bindsym $alt+space exec "rofi -combi-modi window,drun,run -show combi -modi combi"
 
+## Dunst configuration
+bindsym control+grave exec "dunstctl history-pop"
+bindsym $alt+grave exec "dunstctl close"
+bindsym $alt+Shift+grave exec "dunstctl close-all"
+
 # Taking pictures
-bindsym $alt+control+Shift+4 exec maim -s ~/Desktop/screenshot.png
-#bindsym $alt+control+Shift+4 exec imgur-screenshot.sh
-#bindsym $alt+control+Shift+2 exec imgur-screenshot.sh --full
-#bindsym $alt+control+Shift+3 exec imgur-screenshot.sh --window
+## All screens
+bindsym $alt+control+Shift+1 exec maim -u | xclip -selection clipboard -t image/png
+bindsym $alt+control+1 exec maim -u ~/Desktop/screenshot.png
+## Current screen
+bindsym $alt+control+Shift+2 exec maim -u -g $(detect_monitor.sh getactivegeometry) | xclip -selection clipboard -t image/png
+bindsym $alt+control+2 exec maim -u -g $(detect_monitor.sh getactivegeometry) ~/Desktop/screenshot.png
+## Current window
+bindsym $alt+control+Shift+3 exec maim -u -i $(xdotool selectwindow) | xclip -selection clipboard -t image/png
+bindsym $alt+control+3 exec maim -u -i $(xdotool selectwindow) ~/Desktop/screenshot.png
+## Selection
+bindsym $alt+control+Shift+4 exec maim -u -s | xclip -selection clipboard -t image/png
+bindsym $alt+control+4 exec maim -u -s ~/Desktop/screenshot.png
 
 # Control monitor brightness
 bindsym XF86MonBrightnessUp exec backlight.sh +10
@@ -65,10 +78,10 @@ bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
-bindsym $alt+l workspace next
-bindsym $alt+h workspace prev
-bindsym $alt+Shift+l move container to workspace next
-bindsym $alt+Shift+h move container to workspace prev
+bindsym $mod+$alt+l workspace next
+bindsym $mod+$alt+h workspace prev
+bindsym $mod+$alt+Shift+l move container to workspace next
+bindsym $mod+$alt+Shift+h move container to workspace prev
 
 ## Tiling window tree management
 # split in horizontal orientation
@@ -189,6 +202,7 @@ set $purple #b16286
 set $aqua #689d68
 set $gray #a89984
 set $darkgray #1d2021
+set $white #ffffff
 
 # green gruvbox
 # class                 border|backgr|text|indicator|child_border
