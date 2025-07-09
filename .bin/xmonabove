@@ -49,14 +49,12 @@ get_primary_monitor() {
 
 connect_monitor_above() {
   primary=`get_primary_monitor`
+  xrandr --output $1 --off
   xrandr --output $1 --above "$primary" --mode 3840x2160
   i3-msg -s $i3sock "restart"
 }
 
 disconnect_monitor() {
-  echo "Disconnecting monitor... Killing space..."
-  i3-msg -s $i3sock "[workspace=4] kill"
-
   xrandr --output $1 --off
 }
 
@@ -68,6 +66,8 @@ monitor_fix() {
   if [[ $active -gt $connected ]]
   then
     echo "Updating monitors..."
+    i3-msg -s $i3sock "[workspace=4] kill"
+    sleep 0.2
     xrandr --auto
   fi
 
@@ -80,6 +80,9 @@ monitor_fix() {
   active=`get_active_monitor`
 
   if [[ "$active" != "$connected" ]]; then
+    echo "Cleaning up space..."
+    i3-msg -s $i3sock "[workspace=4] kill"
+    sleep 0.3
     echo "Disconnecting $active..."
     disconnect_monitor "$active"
   fi
@@ -87,7 +90,7 @@ monitor_fix() {
 
 (monitor_fix)
 
-if [[ "`needs_connecting`" == "no" ]]
+if [[ "`needs_connecting`" == "no" && "$1" != "refresh" ]]
 then
   echo "Nothing to update."
   exit 1

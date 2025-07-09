@@ -23,8 +23,8 @@ elif [ "$CHENTRY" = "Enable WiFi 直" ]; then
 elif [ "$CHENTRY" = "Disable WiFi 睊" ]; then
   nmcli radio wifi off
 else
-    # get list of known connections
-    KNOWNCON=$(nmcli connection show)
+  # get list of known connections
+  KNOWNCON=$(nmcli connection show)
 
   # If the connection is already in use, then this will still be able to get the SSID
   if [ "$CHSSID" = "*" ]; then
