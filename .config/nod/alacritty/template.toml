@@ -1,0 +1,62 @@
+[general]
+live_config_reload = true
+
+[bell]
+animation = "EaseOutExpo"
+duration = 50
+
+[cursor]
+style = "Block"
+
+[env]
+TERM = "xterm-256color"
+
+[mouse]
+hide_when_typing = true
+bindings = [{ action = "PasteSelection", mouse = "Middle" }]
+
+[scrolling]
+history = 20000
+multiplier = 3
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+
+[window]
+opacity = 0.99
+padding = { x = 1, y = 1 }
+
+[font]
+size = ${FONT_SIZE}
+offset = { x = 0, y = 0 }
+glyph_offset = { x = 0, y = 0 }
+
+[font.bold]
+style = "Bold"
+#family = Meslo LG S DZ for Powerline
+#family = SFMono for Powerline
+#family = Source Code Pro for Powerline
+family = "SauceCodePro Nerd Font Mono"
+
+[font.italic]
+style = "Italic"
+#family = Meslo LG S DZ for Powerline
+#family = SFMono for Powerline
+#family = Source Code Pro for Powerline
+family = "SauceCodePro Nerd Font Mono"
+
+[font.normal] 
+style = "Regular"
+#family = Meslo LG S DZ for Powerline
+#family = SFMono for Powerline
+#family = Source Code Pro for Powerline
+family = "SauceCodePro Nerd Font Mono"
+
+${COLORS}
+
+
+[keyboard]
+bindings = [
+  { key = "V",        mods = "Command",       action = "Paste" },
+  { key = "C",        mods = "Command",       action = "Copy" },
+]

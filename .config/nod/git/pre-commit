@@ -1,0 +1,28 @@
+#!/bin/sh
+
+root=$(git rev-parse --show-toplevel)
+
+# Node.JS run LINTER before committing.
+if [[ -f "$root/package.json" && -x `which eslint` ]]
+then
+  lint=`cat $root/package.json | jq -r '.scripts.lint'`
+
+  # We could not parse package.json?
+  [[ $? -ne 0 ]] && echo "File $root/package.json" && exit 1;
+
+  # Could not find scripts.lint
+  [[ "$lint" == "null" ]] && exit 0;
+
+  npm run lint || exit 1;
+else
+  exit 0
+fi
+
+# Node.JS run JSDOC before committing
+if [[ -f "$root/package.json" && -f "$root/jsdoc.json" ]]
+then
+  echo "Running jsdoc..."
+  jsdoc -c $root/jsdoc.json || exit 1;
+else
+  exit 0
+fi
