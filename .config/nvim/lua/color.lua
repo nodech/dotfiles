@@ -1,8 +1,1 @@
-
-local color = {
-  plugin = 'nvimdev/zephyr-nvim',
-  cmd = '',
-  colorscheme = 'zephyr'
-}
-
-return color
+/home/nd/.config/nod/themes/ayu-mirage/color.lua

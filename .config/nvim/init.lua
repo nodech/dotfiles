@@ -27,13 +27,14 @@ set.tabstop = 2           -- tabstop 2 spaces
 set.expandtab = true      -- expand tabs to spaces
 
 set.visualbell = true     -- visual bell
-set.pastetoggle = '<F2>'  -- paste toggle
 set.mouse = 'a'           -- mouse support
 
 -- Fold Configs
 set.foldenable = true     -- enable folding
 set.foldmethod = 'expr'
-set.foldexpr = 'nvim_treesitter#foldexpr()'
+-- set.foldexpr = 'nvim_treesitter#foldexpr()'
+set.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+--set.foldtext = "v:lua.vim.treesitter.foldtext()"
 
 -- set.foldmethod = 'syntax' -- fold using expression
 set.foldlevelstart = 100  -- start fold level
@@ -67,6 +68,10 @@ set.wildignore = {
 set.termguicolors = true  -- use terminal colors
 
 vim.g.mapleader = ','
+
+-- FLICKERING FIX
+-- Maybe this PR will fix it at some point: https://github.com/neovim/neovim/pull/33145
+vim.g._ts_force_sync_parsing = true
 
 nod.keymaps = {
   -- normal mode

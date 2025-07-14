@@ -2,6 +2,9 @@ local nod = require('nod');
 local pkg = {}
 
 pkg.list = {
+  -- Libs
+  plenary = { p = 'nvim-lua/plenary.nvim' },
+  --
   delimitmate = { p = 'Raimondi/delimitMate' },
   nerdcommenter = {
     -- Comement/Uncomment
@@ -63,7 +66,9 @@ pkg.list = {
         { k = '<leader>rn', a = '<Plug>(coc-rename)' },
         { k = '<leader>lc', a = ':CocList<CR>' },
 
-        { k = '<leader>f', a = '<Plug>(coc-format-selected)' }
+        { k = '<leader>f', a = '<Plug>(coc-format-selected)' },
+
+        { k = '<leader>th', a = ':CocCommand document.toggleInlayHint<CR>' },
       },
       v = {
         { k = '<leader>f', a = '<Plug>(coc-format-selected)' },
@@ -71,6 +76,8 @@ pkg.list = {
     },
     aucmds = {
       { e = 'CursorHold', cmd = ":call CocActionAsync('highlight')" },
+      -- { e = 'InsertEnter', cmd = ':CocCommand document.disableInlayHint' },
+      -- { e = 'InsertLeave', cmd = ':CocCommand document.enableInlayHint' },
     }
   },
   -- cxx_highlight = {
@@ -105,6 +112,8 @@ pkg.list = {
 
       let g:ale_virtualtext_cursor = 2
       let g:ale_virtualtext_prefix = "\t\t\t>  "
+
+      let g:ale_disable_lsp = 1
     ]],
     keymap = {
       n = {
@@ -163,21 +172,7 @@ pkg.list = {
       let g:multi_cursor_quit_key            = '<Esc>'
     ]]
   },
-  ack = {
-    p = 'mileszs/ack.vim',
-    cmd = "let g:ackprg = 'arg --vimpgrep'"
-  },
-  -- choosewin = {
-  --   p = 't9md/vim-choosewin',
-  --   cmd = 'let g:choosewin_overlay_enable = 1',
-  --   keymap = {
-  --     n = {
-  --       { k = '-', a = '<Plug>(choosewin)' }
-  --     }
-  --   }
-  -- },
   surround = { p = 'tpope/vim-surround' },
-  ranger = { p = 'Mizuchi/vim-ranger' },
   vista = {
     p = 'nodech/vista.vim',
     keymap = {
@@ -201,6 +196,9 @@ pkg.list = {
         \ 'ctrl-t': 'tab split',
         \ 'ctrl-x': 'split',
         \ 'ctrl-v': 'vsplit' }
+
+      let g:fzf_vim = {}
+      let g:fzf_vim.listproc = { list -> fzf#vim#listproc#quickfix(list) }
 
       command! -bang -nargs=? GFilesCwd
       \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == '?' ? { 'dir': getcwd(), 'placeholder': '' } : { 'dir': getcwd() }), <bang>0)
@@ -257,6 +255,10 @@ pkg.list = {
       },
     },
   },
+
+  treesitterTextObjects = {
+    p = 'nvim-treesitter/nvim-treesitter-textobjects',
+  },
   svelte = {
     p = 'leafOfTree/vim-svelte-plugin',
     cmd = [[
@@ -300,7 +302,26 @@ pkg.list = {
   dapVirt = {
     p = 'theHamsta/nvim-dap-virtual-text',
   },
+  -- ranger = { p = 'Mizuchi/vim-ranger' },
+  devicons = {
+    p = 'nvim-tree/nvim-web-devicons'
+  },
+  oil = {
+    p = 'stevearc/oil.nvim',
+  },
+  -- nui = {
+  --   p = 'MunifTanjim/nui.nvim',
+  -- },
+  -- hardtime = {
+  --   p = 'm4xshen/hardtime.nvim'
+  -- },
 }
+
+local pkgKeys = {}
+
+for name, _ in pairs(pkg.list) do
+  table.insert(pkgKeys, name)
+end
 
 pkg.prepare = function()
   for name, pkg in pairs(pkg.list) do
@@ -316,6 +337,41 @@ pkg.prepare = function()
       nod.merge_map_keys(pkg.keymap)
     end
   end
+
+  vim.api.nvim_create_user_command('NodPkgMappings', function (opts)
+    local name = opts.fargs[1]
+    local keymap = pkg.listKeymap(name)
+
+    if keymap == nil then
+      print('Keymap not found for ' .. name)
+      return
+    end
+
+    print('Keymap for ' .. name)
+    put(keymap)
+
+  end, {
+    nargs = 1,
+    complete = function (arglead, cmdLine, cursorPos)
+      local matches = {}
+
+      for _, item in ipairs(pkgKeys) do
+        if item:sub(1, #arglead) == arglead then
+          table.insert(matches, item)
+        end
+      end
+
+      return matches
+    end
+  })
+end
+
+pkg.listKeymap = function (name)
+  if pkg.list[name] == nil or pkg.list[name].keymap == nil then
+    return nil
+  end
+
+  return pkg.list[name].keymap
 end
 
 pkg.setup = function(packager)
