@@ -5,13 +5,13 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X
 export PATH="$PATH:$HOME/.local/bin"
 
 # linuxbrew
-export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
+# export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 
 # Rbenv
-export PATH="$PATH:$HOME/.rbenv/bin"
+# export PATH="$PATH:$HOME/.rbenv/bin"
 
 # gpgbin
-export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
+#export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 
 # GEM
 export PATH="$PATH:$HOME/.gem/ruby/3.0.0/bin"
@@ -27,15 +27,58 @@ export PATH="$PATH:$HOME/.asdf/shims"
 
 
 # Custom system installations in userspace
-# custom shared libs
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/lib"
+custom_sys() {
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/lib"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/usr/lib"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/usr/local/lib"
 
-# Custom link libs
-export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/lib"
-# Compile using custom lib headers
-export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/.custom_sys/include"
-# Custom compiled projects.
-export PATH="$PATH:$HOME/.custom_sys/bin"
+  # Custom link libs
+  export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/lib"
+  export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/usr/lib"
+  export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/usr/local/lib"
+
+  export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/.custom_sys/lib"
+  export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/.custom_sys/usr/lib"
+  export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/.custom_sys/usr/local/lib"
+
+  # Compile using custom lib headers
+  export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/.custom_sys/include"
+  export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/.custom_sys/usr/include"
+  export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/.custom_sys/usr/local/include"
+
+  # Custom compiled projects.
+  export PATH="$PATH:$HOME/.custom_sys/bin"
+  export PATH="$PATH:$HOME/.custom_sys/usr/bin"
+  export PATH="$PATH:$HOME/.custom_sys/usr/local/bin"
+
+}
+
+games_sys() {
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/games/lib"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/games/usr/lib"
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/games/usr/local/lib"
+
+  # Custom link libs
+  export LIBRARY_PATH="$LIBRARY_PATH:$HOME/games/lib"
+  export LIBRARY_PATH="$LIBRARY_PATH:$HOME/games/usr/lib"
+  export LIBRARY_PATH="$LIBRARY_PATH:$HOME/games/usr/local/lib"
+
+  export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/games/lib"
+  export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/games/usr/lib"
+  export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/games/usr/local/lib"
+
+  # Compile using custom lib headers
+  export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/games/include"
+  export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/games/usr/include"
+  export C_INCLUDE_PATH="$C_INCLUDE_PATH:$HOME/games/usr/local/include"
+
+  # Custom compiled projects.
+  export PATH="$PATH:$HOME/games/bin"
+  export PATH="$PATH:$HOME/games/usr/bin"
+  export PATH="$PATH:$HOME/games/usr/local/bin"
+
+}
+# custom shared libs
 
 # Add openssl to bin
 export PATH="/usr/local/opt/openssl/bin:$PATH"

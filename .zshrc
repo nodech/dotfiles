@@ -13,9 +13,10 @@ plugins=(
   git-extras
   docker
   npm
+  golang
+  rust
   #kubectl
-  macos
-  autojump
+  zoxide
 )
 
 
@@ -23,6 +24,7 @@ local rm=$(which rm);
 alias rmunsafe="$rm"
 
 source $ZSH/oh-my-zsh.sh
+# eval "$(starship init zsh)"
 
 export EDITOR='nvim'
 export SHELL=`which zsh`
@@ -66,6 +68,7 @@ iaws() {
 }
 
 # ifzf() {
+export FZF_DEFAULT_OPTS="--walker-skip=.git"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }
 
@@ -107,10 +110,10 @@ export XDG_CONFIG_HOME=$HOME/.config
 
 # Linux version
 
-if [[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]];
-then
-  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
+# if [[ -f "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]];
+# then
+#   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# fi
 
 ulimit -n 2048
 
@@ -148,6 +151,8 @@ function printPkg() {
 
 export CC="ccache gcc"
 export CXX="ccache c++"
+export RUSTC_WRAPPER="$HOME/.cargo/bin/sccache"
+export EM_CACHE="$HOME/.cache/emscripten"
 
 ## ASDF version manager..
 source $HOME/.asdf/asdf.sh
@@ -156,3 +161,10 @@ source $HOME/.asdf/completions/asdf.bash
 export HISTSIZE=1000000
 export SAVEHIST=1000000
 setopt EXTENDED_HISTORY
+
+# bun completions
+[ -s "/home/nd/.bun/_bun" ] && source "/home/nd/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

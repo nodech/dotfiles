@@ -76,13 +76,13 @@ alias tkss='tmux kill-session -t'
 
 # TODO: undotrash
 function rmtrash() {
-  name=$(date +%Y-%m-%d/%H:%M:%S)
+  local name=$(date +%Y-%m-%d/%H:%M:%S)
   MOUNT_DIR=`findmnt -T . -J | jq -r '.filesystems[0].target'`
   TRASH="$MOUNT_DIR/.TRASH"
-  dir="$TRASH/$name"
+  TRASH_DIR="$TRASH/$name"
 
-  mkdir -p $dir
-  mv $@ $dir
+  mkdir -p $TRASH_DIR
+  mv $@ $TRASH_DIR
 }
 
 function cltrash() {
@@ -101,8 +101,8 @@ alias rrm=$(which rm)
 alias rm='echo use rmtrash'
 
 # alacrity changes
-alias cgd='cp ~/.alacritty.dark.yml ~/.alacritty.yml'
-alias cgw='cp ~/.alacritty.white.yml ~/.alacritty.yml'
+alias coldark='chcolor.sh ayu-dark'
+alias collight='chcolor.sh gruvbox-light'
 
 # Cross platform open
 which open 2 > /dev/null || alias open=xdg-open;
@@ -127,3 +127,33 @@ else
   echo "no lsd.."
   alias ll="ls -lsah"
 fi
+
+dates() {
+  echo "US/NY:\t`TZ=America/New_York date`"
+  # echo "US/SF:\t`TZ=America/Los_Angeles date`"
+  # echo "EU/LD:\t`TZ=Europe/London date`"
+  echo "GE/TB:\t`TZ=Asia/Tbilisi date`"
+}
+
+# Alias for difftastic git diff
+alias tgd="GIT_EXTERNAL_DIFF='difft --display=inline' git diff"
+
+watchex() {
+  watchexec -e $1 --clear --restart --stdin-quit ${@:2}
+}
+
+watchjs() {
+  watchex js,jsx,ts,tsx,mjs $@
+}
+
+watchgo() {
+  watchex go $@
+}
+
+watchrust() {
+  watchex rs $@
+}
+
+watchc() {
+  watchex c,h,cc,hh $@
+}
