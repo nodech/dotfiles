@@ -157,3 +157,5 @@ watchrust() {
 watchc() {
   watchex c,h,cc,hh $@
 }
+
+alias j=z
