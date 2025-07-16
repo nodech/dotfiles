@@ -1,25 +1,21 @@
 * {
   /* `otf-font-awesome` is required to be installed for icons */
-  font-family: SauceCodePro Nerd Font Mono, Font Awesome, sans-serif;
-  font-size: 18px;
+  /* font-family: SauceCodePro Nerd Font Mono, Font Awesome, sans-serif; */
+  /* font-family: DejaVu SansM Nerd Font, sans-serif; */
+  font-family: MesloLGM Nerd Font;
+  font-size: 16px;
 }
 
 window#waybar {
   background-color: rgba(0, 0, 0, 0.7);
   border-bottom: 1px solid rgba(100, 114, 125, 0.5);
   color: #ffffff;
-  transition-property: background-color;
-  transition-duration: .5s;
 }
 
 
 /* Add margin from the left and the right */
 .modules-left > widget:first-child > #workspaces {
-    margin-left: 14;
-}
-
-#custom-power {
-  margin-right: 14;
+  margin-left: 14;
 }
 
 button {
@@ -36,10 +32,30 @@ button:hover {
     box-shadow: inset 0 -3px #ffffff;
 }
 
-/* you can set a style on hover for any module like this */
-#pulseaudio:hover {
-    background-color: #a37800;
+#clock,
+#battery,
+#backlight,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#network,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd {
+  padding-left: 15px;
+  color: #ffffff;
 }
+
+/* #custom-power { */
+/*   margin-right: 14; */
+/* } */
+
 
 #workspaces button {
     padding: 0 5px;
@@ -65,45 +81,30 @@ button:hover {
     box-shadow: inset 0 -3px #ffffff;
 }
 
-#clock,
-#battery,
-#cpu,
-#memory,
-#disk,
-#temperature,
-#backlight,
-#network,
-#pulseaudio,
-#wireplumber,
-#custom-media,
-#tray,
-#mode,
-#idle_inhibitor,
-#scratchpad,
-#power-profiles-daemon,
-#mpd {
-    padding: 0 10px;
-    color: #ffffff;
+#custom-tray-separator {
+  color: rgba(100, 114, 125, 0.5);
+  padding: 0 2px;
 }
 
-#window,
-#workspaces {
-    margin: 0 4px;
+#language {
+  color: #f9e2af;
+  padding: 0 5px;
+  margin-left: 5px;
+  border: 1px solid rgba(249, 226, 175, 0.6);
 }
 
-
-#clock {
-    background-color: #64727D;
+#language.ge {
+  color: red;
+  border: 1px solid red;
 }
 
-#battery {
-    background-color: #ffffff;
-    color: #000000;
+#language.us {
+  min-width: 0;
 }
 
 #battery.charging, #battery.plugged {
-    color: #ffffff;
-    background-color: #26A65B;
+  padding-top: 2px;
+  border-bottom: 2px solid #26A65B;
 }
 
 @keyframes blink {
@@ -117,11 +118,37 @@ button:hover {
 #battery.critical:not(.charging) {
     background-color: #f53c3c;
     color: #ffffff;
-    animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: steps(12);
     animation-iteration-count: infinite;
     animation-direction: alternate;
+}
+
+#backlight {
+  /* Nothing */
+}
+
+#temperature.critical {
+  background-color: #eb4d4b;
+}
+
+#network {
+}
+
+#network.disconnected {
+  /* background-color: #f53c3c; */
+  padding-top: 2px;
+  border-bottom: 2px solid #f53c3c;
+}
+
+
+#memory {
+  padding-left: 0px;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
 }
 
 #power-profiles-daemon {
@@ -147,48 +174,17 @@ label:focus {
     background-color: #000000;
 }
 
-#cpu {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-#memory {
-    background-color: #9b59b6;
-}
-
 #disk {
     background-color: #964B00;
 }
 
-#backlight {
-    background-color: #90b1b1;
-}
-
-#network {
-    background-color: #2980b9;
-}
-
-#network.disconnected {
-    background-color: #f53c3c;
-}
-
-#pulseaudio {
-    background-color: #f1c40f;
-    color: #000000;
-}
-
-#pulseaudio.muted {
-    background-color: #90b1b1;
-    color: #2a5c45;
-}
-
 #wireplumber {
-    background-color: #fff0f5;
-    color: #000000;
 }
 
 #wireplumber.muted {
-    background-color: #f53c3c;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: rgba(249, 226, 175, 0.6);
 }
 
 #custom-media {
@@ -205,34 +201,27 @@ label:focus {
     background-color: #ffa000;
 }
 
-#temperature {
-    background-color: #f0932b;
-}
-
-#temperature.critical {
-    background-color: #eb4d4b;
-}
-
 #tray {
-    background-color: #2980b9;
+  padding: 0px 10px;
 }
 
 #tray > .passive {
-    -gtk-icon-effect: dim;
+  -gtk-icon-effect: dim;
 }
 
 #tray > .needs-attention {
-    -gtk-icon-effect: highlight;
-    background-color: #eb4d4b;
+  -gtk-icon-effect: highlight;
+  background-color: #eb4d4b;
 }
 
 #idle_inhibitor {
-    background-color: #2d3436;
+  color: grey;
+  padding: 0px 17px 0px 10px;
 }
 
 #idle_inhibitor.activated {
-    background-color: #ecf0f1;
-    color: #2d3436;
+  background-color: #ecf0f1;
+  color: #2d3436;
 }
 
 #mpd {
@@ -250,30 +239,6 @@ label:focus {
 
 #mpd.paused {
     background-color: #51a37a;
-}
-
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state {
-    background: #97e1ad;
-    color: #000000;
-    padding: 0 0px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state > label {
-    padding: 0 5px;
-}
-
-#keyboard-state > label.locked {
-    background: rgba(0, 0, 0, 0.2);
 }
 
 #scratchpad {
