@@ -11,8 +11,10 @@ local HOME = os.getenv("HOME")
 
 
 -- Unfortunately coc-flow and coc-tsserver are incompatible.
--- if vim.env.ONLY_FLOW ~= nil then
---   vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/flow'
+if vim.env.ONLY_FLOW ~= nil then
+  vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/flow'
+end
+
 -- else
 --   vim.g.coc_config_home = HOME .. '/.config/nvim/coc-configs/general'
 -- end

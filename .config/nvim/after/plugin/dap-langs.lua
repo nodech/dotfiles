@@ -42,10 +42,12 @@ dap.configurations.javascript = {
 
 dap.adapters.lldb = {
   type = 'executable',
-  command = '/usr/bin/lldb-vscode',
+  command = '/usr/bin/lldb-dap',
   name = 'lldb',
   console = 'integratedTerminal',
 }
+
+dap.adapters.c = dap.adapters.lldb;
 
 dap.configurations.rust = {
   {
@@ -81,3 +83,31 @@ dap.configurations.rust = {
     -- ...,
   }
 }
+
+dap.configurations.c = {
+  {
+    name = 'Launch',
+    type = 'lldb',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+  },
+  {
+    name = 'Launch With Arguments',
+    type = 'lldb',
+    request = 'launch',
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = function()
+        local input = vim.fn.input('Arguments: ')
+        return vim.split(input, ' ')
+    end,
+  },
+};
