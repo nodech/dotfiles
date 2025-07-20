@@ -197,6 +197,13 @@ mode "resize" {
 # Status bar configs
 exec_always --no-startup-id $HOME/.config/dunst/launch.sh
 
+# IDLE WORK
+exec_always --no-startup-id pkill swayidle; swayidle -w \
+  timeout 180 'swaylock.sh' \
+  timeout 200 'swaymsg "output * power off"' \
+  resume 'swaymsg "output * power on" && backlight.sh `backlight.sh`' \
+  before-sleep 'swaylock.sh'
+
 ### GRUV THEME Config
 set $bg #282828
 set $red #cc241d
@@ -226,7 +233,6 @@ client.urgent           $red $red $white $red $red
 #end of window title bars & borders section
 
 bar swaybar_command waybar
-
 
 gaps outer 0
 gaps inner 0
