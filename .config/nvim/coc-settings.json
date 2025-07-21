@@ -1,4 +1,7 @@
 {
+  // ALE Configuration
+  "diagnostic.displayByAle": true,
+
   "suggest.noselect": true,
   "suggest.timeout": 500,
   "suggest.acceptSuggestionOnCommitCharacter": true,
@@ -10,7 +13,7 @@
   "semanticTokens.enable": true,
 
   "inlayHint.enable": true,
-  "inlayHint.refreshOnInsertMode": true,
+  "inlayHint.refreshOnInsertMode": false,
 
   "signature.enable": true,
 
@@ -20,11 +23,34 @@
   // javascript configs
   "javascript.showUnused": true,
   "javascript.showDeprecated": true,
+  "javascript.inlayHints.parameterNames.enabled": "none",
+  "javascript.inlayHints.parameterTypes.enabled": false,
+  "javascript.inlayHints.propertyDeclarationTypes.enabled": false,
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": false,
+  "javascript.inlayHints.variableTypes.enabled": false,
+  "javascript.inlayHints.enumMemberValues.enabled": false,
+
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.parameterTypes.enabled": false,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.inlayHints.variableTypes.enabled": false,
+  "typescript.inlayHints.enumMemberValues.enabled": true,
 
   // Rust
   "rust-analyzer.inlayHints.typeHints.enable": true,
   "rust-analyzer.inlayHints.expressionAdjustmentHints.enable": "reborrow",
   "rust-analyzer.inlayHints.closureStyle": "impl_fn",
   "rust-analyzer.lens.enable": false,
-  "svelte.enable-ts-plugin": true
+
+  "svelte.enable-ts-plugin": true,
+
+  "tsserver.enable": true,
+  "flow.enable": false,
+
+  "go.goplsOptions": {
+    "buildFlags": [
+      "-tags=rpctest"
+    ]
+  }
 }

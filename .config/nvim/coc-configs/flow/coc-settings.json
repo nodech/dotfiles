@@ -1,0 +1,42 @@
+{
+  "diagnostic.displayByAle": false,
+  "semanticTokens.enable": true,
+  "hover.target": "float",
+  "colors.enable": true,
+
+  "suggest.selection": "recentlyUsedByPrefix",
+  "suggest.triggerAfterInsertEnter": true,
+  "suggest.timeout": 500,
+  "suggest.acceptSuggestionOnCommitCharacter": true,
+  "suggest.noselect": true,
+  "suggest.snippetIndicator": " ►",
+  "suggest.enableFloat": true,
+  "suggest.reversePumAboveCursor": false,
+
+  "signature.enable": true,
+  "signature.preferShownAbove": true,
+
+  "javascript.showUnused": true,
+  "javascript.showDeprecated": true,
+  "javascript.implementationsCodeLens.enable": true,
+  "javascript.referencesCodeLens.enable": true,
+  "javascript.referencesCodeLens.showOnAllFunctions": true,
+  "javascript.validate.enable": false,
+  "javascript.suggest.jsdoc.generateReturns": true,
+
+  "javascript.inlayHints.variableTypes.enabled": false,
+  "javascript.inlayHints.parameterNames.enabled": "none",
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": false,
+  "javascript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "javascript.inlayHints.enumMemberValues.enabled": true,
+  "javascript.suggest.completeJSDocs": true,
+
+  "rust-analyzer.server.path": "/usr/bin/rust-analyzer",
+
+  "clangd.enabled": true,
+
+  "go.goplsPath": "/home/nd/go/bin/gopls",
+
+  "javascript.validate.enable": false,
+  "flow.enable": true
+}
