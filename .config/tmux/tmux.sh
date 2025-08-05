@@ -33,3 +33,13 @@ if [[ -x $(which "i3status") ]]
 then
   i3status -c ~/.config/i3status/tmux.config
 fi
+
+if [[ -x $XDG_CONFIG_HOME/nod/scripts/tasks.js ]]
+then
+  tasks=$($XDG_CONFIG_HOME/nod/scripts/tasks.js --tmux)
+
+  if [[ -n "$tasks" ]]
+  then
+    echo "$tasks"
+  fi
+fi

@@ -158,7 +158,7 @@
     //   }
     // },
     "custom/tasks": {
-        "exec": "$XDG_CONFIG_HOME/waybar/scripts/tasks.js",
+        "exec": "$XDG_CONFIG_HOME/nod/scripts/tasks.js",
         "exec-if": "ls -A ~/.local/share/waytasks | grep -q .",
         "interval": 5,
         "format-alt": "<span color='#64727d'>[ {alt} ]</span>",
