@@ -1,0 +1,97 @@
+#!/bin/bash
+
+task_name=`basename $1`
+
+if [ -z "$task_name" ]; then
+  echo "Usage: `basename $0` <task_name> <command> [args...]"
+  exit 1
+fi
+
+TASKS_DIR="$HOME/.local/share/waytasks"
+mkdir -p "$TASKS_DIR"
+
+full_command=${@:1}
+timestamp=$(date +%s)
+pwd="$(pwd)"
+filename="waytask-${timestamp}-${RANDOM}.json"
+
+"${@:1}" &
+command_pid=$!
+
+jq -n \
+  --arg name "$task_name" \
+  --arg command "$full_command" \
+  --arg cwd "$pwd" \
+  --arg status "running" \
+  --arg pid "$command_pid" \
+  --arg start_time "$timestamp" \
+  '{
+    name: $name,
+    command: $command,
+    cwd: $cwd,
+    status: $status,
+    pid: $pid,
+    start_time: $start_time,
+    end_time: ""
+  }' > $TASKS_DIR/$filename
+
+
+cleanup_on_interrupt() {
+  if ps -p "$command_pid" > /dev/null; then # Check if the process is still running
+    kill -SIGTERM "$command_pid"
+  fi
+
+  jq -n \
+    --arg name "$task_name" \
+    --arg command "$full_command" \
+    --arg cwd "$pwd" \
+    --arg status "aborted" \
+    --arg pid "$command_pid" \
+    --arg start_time "$timestamp" \
+    --arg end_time "$(date +%s)" \
+    '{
+      name: $name,
+      command: $command,
+      cwd: $cwd,
+      status: $status,
+      pid: $pid,
+      start_time: $start_time,
+      end_time: $end_time
+    }' > $TASKS_DIR/$filename
+
+  exit 130
+}
+
+trap cleanup_on_interrupt INT TERM
+
+wait $command_pid
+status=$?
+
+trap - INT TERM
+
+status_str=""
+if [ $status -eq 0 ]; then
+  status_str="success"
+else
+  status_str="failed"
+fi
+
+jq -n \
+  --arg name "$task_name" \
+  --arg command "$full_command" \
+  --arg cwd "$pwd" \
+  --arg status "$status_str" \
+  --arg pid "$command_pid" \
+  --arg start_time "${timestamp}" \
+  --arg end_time "$(date +%s)" \
+  '{
+    name: $name,
+    command: $command,
+    cwd: $cwd,
+    status: $status,
+    pid: $pid,
+    start_time: $start_time,
+    end_time: $end_time
+  }' > $TASKS_DIR/$filename
+
+exit $status

@@ -15,9 +15,11 @@
         // "custom/media"
     ],
     "modules-center": [
+        "custom/tasks"
     ],
     "modules-right": [
         "idle_inhibitor",
+        "custom/github",
         // "power-profiles-daemon",
 
         "wireplumber",
@@ -30,8 +32,8 @@
         "clock",
         "sway/language",
         "custom/tray-separator",
-        "tray",
-        "custom/tray-separator"
+        "custom/tray-count",
+        "tray"
     ],
     // LEFT SIDE from left to right
     "sway/mode": {
@@ -47,7 +49,7 @@
     "tray": {
         // "icon-size": 15,
         "show-passive-items": true,
-        "spacing": 1
+        "spacing": 10
         // "icons": {
         //   "blueman": "bluetooth",
         //   "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
@@ -67,10 +69,16 @@
         "warning": 30,
         "critical": 10
       },
-      "format": "<span color='#28CD41'>{icon}</span> {capacity}%",
-      "format-charging": "󱐋{capacity}%",
+      "format": "{icon} {capacity}%",
+      "format-charging": "<span color='#a9f99f'>󱐋</span> {capacity}%",
       "interval": 1,
-      "format-icons": ["󰂎", "󰁼", "󰁿", "󰂁", "󰁹"],
+      "format-icons": [
+          "<span color='#ee532e'>󰂎</span>",
+          "<span color='#ff9977'>󰁼</span>",
+          "<span color='#ffffa5'>󰁿</span>",
+          "<span color='#88ffa5'>󰂁</span>",
+          "<span color='#19ee15'>󰁹</span>"
+      ],
       "tooltip": true
     },
     "backlight": {
@@ -81,7 +89,7 @@
     },
     "temperature": {
         "critical-threshold": 80,
-        "format-critical": "<span color='#ff0000'> {icon}</span>{temperatureC}°C",
+        "format-critical": "<span color='#ff0000'>{icon}</span> {temperatureC}°C",
         "format": "<span color='#fab387'>{icon}</span> {temperatureC}°C",
         "format-icons": ["", "", ""],
         "tooltip": false
@@ -105,12 +113,13 @@
       "format": "<span color='#9b59b6'></span> {used:0.1f}G/{total:0.1f}G"
     },
     "network": {
-        "format-wifi": "<span color='#00FFFF'>{icon}</span> {essid} (↓{bandwidthDownBytes}) ",
-        "format-ethernet": "<span color='#7FFF00'> </span>Wired ",
-        "tooltip-format": "{ipaddr} <span color='#FF1493'> 󰅧 </span>{bandwidthUpBytes}  <span color='#00BFFF'> 󰅢 </span>{bandwidthDownBytes}",
+        "interval": 5,
+        "format-wifi": "<span color='#00FFFF'>{icon}</span> {essid}",
+        "format-ethernet": "<span color='#7FFF00'> </span> Wired",
+        "tooltip-format": "{ipaddr} <span color='#FF1493'>󰅧 </span>{bandwidthUpBytes}  <span color='#00BFFF'>󰅢 </span>{bandwidthDownBytes}",
         "format-linked": "<span color='#FFA500'> 󱘖 </span>{ifname} (No IP) ",
         "format-disconnected": "<span color='#FF4040'>󰤮</span> -- ",
-        "format-alt": "{ipaddr} <span color='#FF1493'> 󰅧 </span>{bandwidthUpBytes}  <span color='#00BFFF'> 󰅢 </span>{bandwidthDownBytes}",
+        "format-alt": "{ipaddr} <span color='#FF1493'>󰅧</span> {bandwidthUpBytes}  <span color='#00BFFF'>󰅢</span> {bandwidthDownBytes}",
         "format-icons": [
           "<span color='#dd532e'>󰤠</span>",
           "<span color='#ff9977'>󰤟</span>",
@@ -148,4 +157,26 @@
     //     "power-saver": ""
     //   }
     // },
+    "custom/tasks": {
+        "exec": "$XDG_CONFIG_HOME/waybar/scripts/tasks.js",
+        "exec-if": "ls -A ~/.local/share/waytasks | grep -q .",
+        "interval": 5,
+        "format-alt": "<span color='#64727d'>[ {alt} ]</span>",
+        "format": "<span color='#64727d'>[ {} ]</span>",
+        "on-click": "",
+        "return-type": "json"
+    },
+    "custom/github": {
+      "format": " {}",
+      "return-type": "json",
+      "interval": 300,
+      "exec": "$XDG_CONFIG_HOME/waybar/scripts/github.sh",
+      "on-click": "xdg-open https://github.com/notifications"
+    },
+    "custom/tray-count": {
+      "format": "{}",
+      "return-type": "json",
+      "interval": 30,
+      "exec": "$XDG_CONFIG_HOME/waybar/scripts/tray-count.sh"
+    }
 }

@@ -15,7 +15,7 @@ window#waybar {
 
 /* Add margin from the left and the right */
 .modules-left > widget:first-child > #workspaces {
-  margin-left: 14;
+  margin-left: 14px;
 }
 
 button {
@@ -42,13 +42,16 @@ button:hover {
 #network,
 #wireplumber,
 #custom-media,
-#tray,
+#custom-tasks,
+#custom-github,
+/* #tray, */
+/* #custom-tray-count, */
 #mode,
 #idle_inhibitor,
 #scratchpad,
 #power-profiles-daemon,
 #mpd {
-  padding-left: 15px;
+  margin-left: 15px;
   color: #ffffff;
 }
 
@@ -83,6 +86,14 @@ button:hover {
 
 #custom-tray-separator {
   color: rgba(100, 114, 125, 0.5);
+  padding: 0 2px;
+}
+
+#custom-tray-count {
+  margin-right: 5px;
+}
+
+#custom-tasks {
   padding: 0 2px;
 }
 
@@ -202,7 +213,7 @@ label:focus {
 }
 
 #tray {
-  padding: 0px 10px;
+  padding: 0px 10px 0px 0px;
 }
 
 #tray > .passive {
@@ -216,7 +227,7 @@ label:focus {
 
 #idle_inhibitor {
   color: grey;
-  padding: 0px 17px 0px 10px;
+  padding: 0px 10px 0px 10px;
 }
 
 #idle_inhibitor.activated {
@@ -269,4 +280,3 @@ label:focus {
 #privacy-item.audio-out {
     background-color: #0069d4;
 }
-
