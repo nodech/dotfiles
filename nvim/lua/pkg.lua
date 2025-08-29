@@ -100,6 +100,7 @@ pkg.list = {
       \   'c': [ ],
       \   'rust': [ 'cargo' ]
       \}
+      " \   'rust': [ 'cargo' ]
 
       let g:ale_rust_cargo_use_clippy = 1
 
@@ -118,7 +119,9 @@ pkg.list = {
     keymap = {
       n = {
         { k = '[l', a = '<Plug>(ale_previous_wrap)' },
-        { k = ']l', a = '<Plug>(ale_next_wrap)' }
+        { k = ']l', a = '<Plug>(ale_next_wrap)' },
+        { k = '[e', a = '<Plug>(ale_previous_wrap_error)' },
+        { k = ']e', a = '<Plug>(ale_next_wrap_error)' }
       }
     }
   },

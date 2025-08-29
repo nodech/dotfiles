@@ -2,18 +2,26 @@
   // ALE Configuration
   "diagnostic.displayByAle": true,
 
-  "suggest.noselect": true,
   "suggest.timeout": 500,
   "suggest.acceptSuggestionOnCommitCharacter": true,
   "suggest.enableFloat": true,
   "suggest.triggerAfterInsertEnter": true,
 
+
+  "suggest.noselect": true,
+  // experiment
+  "suggest.enablePreselect": false,
+
   "colors.enable": true,
 
   "semanticTokens.enable": true,
 
+  "coc.preferences.messageLevel": "error",
+
   "inlayHint.enable": true,
   "inlayHint.refreshOnInsertMode": false,
+
+  "suggest.snippetsSupport": false,
 
   "signature.enable": true,
 
@@ -29,6 +37,8 @@
   "javascript.inlayHints.functionLikeReturnTypes.enabled": false,
   "javascript.inlayHints.variableTypes.enabled": false,
   "javascript.inlayHints.enumMemberValues.enabled": false,
+  // annoying snippet insertion, works terribly.
+  "javascript.suggest.completeFunctionCalls": false,
 
   "typescript.inlayHints.parameterNames.enabled": "all",
   "typescript.inlayHints.parameterTypes.enabled": false,
@@ -42,6 +52,8 @@
   "rust-analyzer.inlayHints.expressionAdjustmentHints.enable": "reborrow",
   "rust-analyzer.inlayHints.closureStyle": "impl_fn",
   "rust-analyzer.lens.enable": false,
+  // "rust-analyzer.diagnostics.warningsAsHint": ["all"],
+  // "rust-analyzer.diagnostics.warningsAsInfo": ["all"],
 
   "svelte.enable-ts-plugin": true,
 

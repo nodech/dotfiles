@@ -67,11 +67,15 @@ set.wildignore = {
 
 set.termguicolors = true  -- use terminal colors
 
+set.title = true          -- set terminal title
+set.titlestring="Nvim - %t%( %M%)%( (%{expand(\"%:~:h\")})%)%a"
+
 vim.g.mapleader = ','
 
 -- FLICKERING FIX
 -- Maybe this PR will fix it at some point: https://github.com/neovim/neovim/pull/33145
-vim.g._ts_force_sync_parsing = true
+-- vim.g._ts_force_sync_parsing = true
+
 
 nod.keymaps = {
   -- normal mode
@@ -241,3 +245,7 @@ end
 if color.colorscheme then
   vim.cmd('colorscheme ' .. color.colorscheme)
 end
+
+vim.keymap.set("n", "<leader>dt", function()
+  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end)

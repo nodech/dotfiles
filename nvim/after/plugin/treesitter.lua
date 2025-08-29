@@ -62,6 +62,9 @@ mod.setup {
 
         ["ic"] = "@conditional.inner",
         ["ac"] = "@conditional.outer",
+
+        ["aa"] = "@parameter.outer",
+        ["ia"] = "@parameter.inner",
       },
     },
   },
