@@ -1,0 +1,6 @@
+#!/bin/bash
+
+TASKS_DIR="$HOME/.local/share/waytasks"
+mkdir -p "$TASKS_DIR"
+
+rm "$TASKS_DIR"/*.json

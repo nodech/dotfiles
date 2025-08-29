@@ -3,9 +3,15 @@ TARGET_DIR := $(HOME)
 DRY_RUN := $(if $(DRY_RUN),1)
 STOW_FLAGS := $(if $(DRY_RUN),-n)
 
-.PHONY: all
+.PHONY: all install uninstall
 all:
 	@echo "Doing nothing."
+
+install: zsh config nvim
+	@echo "Done"
+
+uninstall: unnvim unconfig unzsh
+	@echo "Done"
 
 # ZSH {{{
 .PHONY: zsh unzsh nodzsh unnodzsh
@@ -22,7 +28,7 @@ endif
 
 nodzsh: $(TARGET_DIR)/.oh-my-zsh
 	@echo " > Stowing zsh theme"
-	cd $(STOW_DIR)/.oh-my-zsh && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/themes themes
+	cd $(STOW_DIR)/oh-my-zsh && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/themes themes
 ifeq ($(DRY_RUN),1)
 	-@rmdir ~/.oh-my-zsh/themes
 	-@rmdir ~/.oh-my-zsh
@@ -30,7 +36,7 @@ endif
 
 unnodzsh:
 	@echo " > Unstowing zsh theme"
-	cd $(STOW_DIR)/.oh-my-zsh && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/themes themes
+	cd $(STOW_DIR)/oh-my-zsh && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/themes themes
 
 zsh: nodzsh
 	@echo " > Stowing zsh configuration..."
@@ -48,11 +54,11 @@ unzsh: unnodzsh
 
 config:
 	@echo " > Stowing .config"
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config .config
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config config
 
 unconfig:
 	@echo " > Unstowing .config"
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config .config
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config config
 
 # }}} /.config
 
