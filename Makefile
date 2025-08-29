@@ -55,3 +55,16 @@ unconfig:
 	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config .config
 
 # }}} /.config
+
+# NVIM {{{
+.PHONY: nvim unnvim
+
+nvim:
+	@echo " > Stowing nvim"
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
+
+unnvim:
+	@echo " > Unstowing nvim"
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
+
+# }}}
