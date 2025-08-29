@@ -41,3 +41,17 @@ unzsh: unnodzsh
 	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR) zsh
 
 # }}} /ZSH 
+
+# Config directory contains fully linkable things only
+# CONFIG {{{
+.PHONY: config unconfig
+
+config:
+	@echo " > Stowing .config"
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config .config
+
+unconfig:
+	@echo " > Unstowing .config"
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config .config
+
+# }}} /.config
