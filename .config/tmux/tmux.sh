@@ -1,12 +1,10 @@
 #!/bin/bash
 
+DATE=$(date +%H:%M:%S\ %b\ %d)
 BATTERY=""
 
 if [[ -x $(which "system_profiler") ]]
 then
-  ip=$(ifconfig en0  | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*')
-  HOSTNAME=$(whoami)@$ip
-  DATE=$(date +%H:%M:%S\ %b\ %d)
 
   BATTERY=$(system_profiler SPPowerDataType | grep 'mAh' | awk '{print $NF}' | tr '\n' ' ' | awk '{printf("%.2f%%", $1/$2 * 100)}')
   BATTERY=${BATTERY/%%/}
@@ -26,7 +24,7 @@ then
   fi
 
   BATTERY="$COLOR$BATTERY%"
-  echo "#[fg=white]$BATTERY#[fg=green]#[bg=#333333] $HOSTNAME $DATE  "
+  echo -n "#[fg=white]$BATTERY#[fg=green]#[bg=#333333]"
 fi
 
 if [[ -x $(which "i3status") ]]
@@ -40,6 +38,8 @@ then
 
   if [[ -n "$tasks" ]]
   then
-    echo "$tasks"
+    echo -n "$tasks"
   fi
 fi
+
+echo "  #[fg=green]$DATE"
