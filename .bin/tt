@@ -15,7 +15,7 @@ timestamp=$(date +%s)
 pwd="$(pwd)"
 filename="waytask-${timestamp}-${RANDOM}.json"
 
-"${@:1}" &
+"${@:1}" <&0 &
 command_pid=$!
 
 jq -n \
