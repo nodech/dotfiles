@@ -34,7 +34,41 @@ GPG_TTY=$(tty)
 export GPG_TTY
 
 # SOME ZSH Configs
-DISABLE_AUTO_TITLE=true
+#DISABLE_AUTO_TITLE=true
+DISABLE_AUTO_TITLE=false
+
+function precmd() {
+  # Get the absolute path
+  local fullpath="${PWD}"
+
+  # Replace $HOME with ~
+  fullpath="${fullpath/#$HOME/~}"
+
+  # Extract parent and current directory
+  local current="${fullpath##*/}"
+  local parent="${fullpath%/*}"
+
+  # If we're at root or home, adjust parent display
+  if [[ "$parent" == "$fullpath" ]]; then
+    parent=""
+  elif [[ "$parent" == "~" || "$parent" == "/" ]]; then
+    parent="$parent"
+  else
+    parent="${parent##*/}"
+  fi
+
+  # Combine parent/current or just show fullpath if no parent
+  local display_path
+  if [[ -n "$parent" ]]; then
+    display_path="$parent/$current"
+  else
+    display_path="$fullpath"
+  fi
+
+  # Set terminal title
+  local window_title="\033]0;${display_path}\007"
+  echo -ne "$window_title"
+}
 
 # Include system and bin paths
 source ~/.zshrc.paths
@@ -149,14 +183,14 @@ function printPkg() {
   fi
 }
 
-export CC="ccache gcc"
-export CXX="ccache c++"
-export RUSTC_WRAPPER="$HOME/.cargo/bin/sccache"
+# export CC="ccache gcc"
+# export CXX="ccache c++"
+export RUSTC_WRAPPER="$sccache"
 export EM_CACHE="$HOME/.cache/emscripten"
 
 ## ASDF version manager..
-source $HOME/.asdf/asdf.sh
-source $HOME/.asdf/completions/asdf.bash
+# export ASDF_DATA_DIR="/your/custom/data/dir"
+# export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 export HISTSIZE=1000000
 export SAVEHIST=1000000
@@ -168,3 +202,6 @@ setopt EXTENDED_HISTORY
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Ripgrep
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
