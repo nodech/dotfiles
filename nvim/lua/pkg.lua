@@ -318,6 +318,10 @@ pkg.list = {
   -- hardtime = {
   --   p = 'm4xshen/hardtime.nvim'
   -- },
+  ppd = {
+    p = "nodech/ppd.nvim",
+
+  },
 }
 
 local pkgKeys = {}

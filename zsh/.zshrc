@@ -102,7 +102,7 @@ iaws() {
 }
 
 # ifzf() {
-export FZF_DEFAULT_OPTS="--walker-skip=.git"
+export FZF_DEFAULT_OPTS="--walker-skip=.git --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # }
 

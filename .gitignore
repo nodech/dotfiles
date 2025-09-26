@@ -9,5 +9,5 @@ node_modules/
 
 !.vim/tmp/.track
 
-.config/tmux/plugins
+config/tmux/plugins
 .config/systemd/user
