@@ -70,6 +70,8 @@ set.termguicolors = true  -- use terminal colors
 set.title = true          -- set terminal title
 set.titlestring="Nvim - %t%( %M%)%( (%{expand(\"%:~:h\")})%)%a"
 
+set.viewoptions = ""
+
 vim.g.mapleader = ','
 
 -- FLICKERING FIX

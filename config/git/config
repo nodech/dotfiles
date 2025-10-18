@@ -13,6 +13,22 @@
   excludesfile=/home/nd/.config/git/.gitignore_global
   hooksPath = /home/nd/.config/git/hooks
   pager = less -FRX
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true  # use n and N to move between diff sections
+  dark = true      # or light = true, or omit for auto-detection
+  line-numbers = true
+  features = calochortus-lyallii-nod
+
+[include]
+  path = /home/nd/.config/git/delta-themes/themes.gitconfig
+
+[merge]
+    conflictStyle = zdiff3
 
 [credential "https://github.com"]
   helper = 

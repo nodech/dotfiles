@@ -1,11 +1,14 @@
 #!/bin/bash
 
-DATE=$(date +%H:%M:%S\ %b\ %d)
+# DATE=$(date +%H:%M:%S\ %b\ %d)
+DATE=`date +'%Y-%m-%d %H:%M'`
 BATTERY=""
 
-if [[ -x $(which "system_profiler") ]]
-then
+SYS_PROFILE=`which system_profiler 2> /dev/null`
+I3STATUS=`which i3status 2> /dev/null`
 
+if [[ -x $SYS_PROFILE ]]
+then
   BATTERY=$(system_profiler SPPowerDataType | grep 'mAh' | awk '{print $NF}' | tr '\n' ' ' | awk '{printf("%.2f%%", $1/$2 * 100)}')
   BATTERY=${BATTERY/%%/}
   COLOR="#[fg=green]"
@@ -27,7 +30,7 @@ then
   echo -n "#[fg=white]$BATTERY#[fg=green]#[bg=#333333]"
 fi
 
-if [[ -x $(which "i3status") ]]
+if [[ -x $I3STATUS ]]
 then
   i3status -c ~/.config/i3status/tmux.config
 fi

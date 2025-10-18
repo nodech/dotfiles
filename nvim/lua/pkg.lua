@@ -29,6 +29,7 @@ pkg.list = {
     },
   },
   fugitive = { p = 'tpope/vim-fugitive', },
+  gbrowse = { p = 'tpope/vim-rhubarb' },
   gvvim = { p = 'junegunn/gv.vim' }, -- Depends on 'tpope/vim-fugitive'
   coc = {
     p = 'neoclide/coc.nvim',

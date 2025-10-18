@@ -73,4 +73,15 @@ unnvim:
 	@echo " > Unstowing nvim"
 	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
 
-# }}}
+# }}} /NVIM
+
+# NVIM 0.12 {{{
+nvim12:
+	@echo " > Stowing nvim 0.12"
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim12 nvim12
+
+unnvim12:
+	@echo " > Unstowing nvim 0.12"
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim12 nvim12
+
+# }}} /NVIM 0.12

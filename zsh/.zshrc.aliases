@@ -22,33 +22,6 @@ psa() {
     { for ( x=4 ; x<=NF ; x++ ) { printf ("%s ",$x) } print ("") }'
 }
 
-# multiconfig NVIM
-if [ "${NVIMBIN}" = "" ]
-then
-  NVIMBIN=$(which nvim)
-fi
-
-nvim () {
-  VIMRC="$HOME/.config/nvim/configs/${1}.vimrc"
-  if [ $# -gt 0 ]
-  then
-    if [[ -a $1 ]]
-    then
-      $NVIMBIN $@
-    elif [[ -a "$VIMRC" ]]
-    then
-      $NVIMBIN -u "$VIMRC" ${@:2}
-    else
-      $NVIMBIN $@
-    fi
-  else
-    $NVIMBIN
-  fi
-}
-
-alias vim='nvim'
-
-
 # Download torrents and links using aria and progress..
 download() {
   local dir=$HOME/.ariaDn
