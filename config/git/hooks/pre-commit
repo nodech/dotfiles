@@ -14,8 +14,6 @@ then
   [[ "$lint" == "null" ]] && exit 0;
 
   npm run lint || exit 1;
-else
-  exit 0
 fi
 
 # Node.JS run JSDOC before committing
@@ -23,6 +21,13 @@ if [[ -f "$root/package.json" && -f "$root/jsdoc.json" ]]
 then
   echo "Running jsdoc..."
   jsdoc -c $root/jsdoc.json || exit 1;
-else
-  exit 0
 fi
+
+# Rust
+if [[ -f "$root/Cargo.toml" && -f "$root/rustfmt.toml" ]]
+then
+  echo "Running cargo fmt --check..."
+  cargo fmt --check || exit 1;
+fi
+
+exit 0
