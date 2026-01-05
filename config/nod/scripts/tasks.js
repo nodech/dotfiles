@@ -8,6 +8,7 @@ import { exec as execCb } from 'node:child_process';
 const exec = util.promisify(execCb);
 
 const TASKS_DIR = path.join(process.env.HOME || '', '.local', 'share', 'waytasks');
+const SHOW_ITEMS = 3;
 
 const SUCCESS_LOGO_1 = "✅";
 // const SUCCESS_LOGO_2 = "";
@@ -81,6 +82,8 @@ function printWaybar() {
     // percentage: 0,
   };
 
+  const results = [];
+
   const sums = {
     running: 0,
     fail: 0,
@@ -128,12 +131,21 @@ function printWaybar() {
       }
     }
 
-    result.text += `<span color='${iconColor}'>${icon}</span> <span color='${textColor}'>${formatName(task.name)}</span> `;
-    result.tooltip += `<span color='${iconColor}'>${icon}</span> <span color='${textColor}'>${task.name} (${task.pid})</span> - ${task.cwd}\n`
-      + `  ${task.command}\n`;
+    results.push({
+      text: `<span color='${iconColor}'>${icon}</span><span color='${textColor}'>${formatName(task.name)}</span>`,
+      tooltip:`<span color='${iconColor}'>${icon}</span> <span color='${textColor}'>${task.name} (${task.pid})</span> - ${task.cwd}\n`
+        + `  ${task.command}`
+    });
   }
 
-  result.text = result.text.trim();
+  result.tooltip = results.map(r => r.tooltip).join('\n').trim();
+
+  if (results.length > SHOW_ITEMS + 1) {
+    const left = results.length - SHOW_ITEMS;
+    result.text = `..${left}.. ` + results.slice(-SHOW_ITEMS).map(r => r.text).join(' ').trim();
+  } else {
+    result.text = results.map(r => r.text).join(' ').trim();
+  }
 
   if (sums.success)
     result.alt += ` <span color='${SUCCESS_COLOR}'>${SUCCESS_LOGO_1}</span> <span color='${SUCCESS_TEXT_COLOR}'>${sums.success}</span>`;
@@ -202,7 +214,13 @@ function printTmux() {
     output.push(`#[fg=${iconColor}]${icon}#[fg=${textColor}]${formatName(task.name)}`);
   }
 
-  const finalOutput = output.join(' | ');
+  const final = [];
+
+  if (output.length > SHOW_ITEMS)
+    final.push('...');
+
+  final.push( ...output.slice(-SHOW_ITEMS));
+  const finalOutput = final.join(' | ');
   console.log(finalOutput);
 }
 
