@@ -105,7 +105,7 @@ iaws() {
 export FZF_DEFAUT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 export FZF_ALT_C_COMMAND="$FZF_DEFAUT_COMMAND"
-export FZF_DEFAULT_OPTS="--walker-skip=.git --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+# export FZF_DEFAULT_OPTS="--walker-skip=.git --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.fzf/fzf-git.sh/fzf-git.sh ] && source ~/.fzf/fzf-git.sh/fzf-git.sh
 # }
