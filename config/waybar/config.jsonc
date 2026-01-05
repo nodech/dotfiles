@@ -15,8 +15,8 @@
         // "custom/media"
     ],
     "modules-center": [
-        "custom/tasks",
-        "mpris"
+        "mpris",
+        "custom/tasks"
     ],
     "modules-right": [
         "idle_inhibitor",
@@ -62,8 +62,8 @@
     },
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "<span color='#bf00ff'> </span>{:%A, %b %d, %Y %H:%M}",
-        "format-alt": "{:%Y-%m-%d}"
+        "format": "<span color='#bf00ff'> </span>{:%a, %b %d, %Y %H:%M}",
+        "format-alt": "<span color='#bf00ff'> </span>{:%Y-%m-%d %H:%M}"
     },
     "battery": {
       "states": {
@@ -195,6 +195,14 @@
         "title",
         "length",
         "position"
-      ]
+      ],
+      "dynamic-importance-order": [
+        "title",
+        "position",
+        "length",
+        "artist"
+      ],
+      "dynamic-len": 50,
+      "title-len": 20
     }
 }
