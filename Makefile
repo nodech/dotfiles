@@ -76,7 +76,12 @@ unnvim:
 # }}} /NVIM
 
 # NVIM 0.12 {{{
-nvim12:
+.PHONY: nvim12 unnvim12
+
+$(TARGET_DIR)/.config/nvim12:
+	mkdir -p $(TARGET_DIR)/.config/nvim12
+
+nvim12: $(TARGET_DIR)/.config/nvim12
 	@echo " > Stowing nvim 0.12"
 	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim12 nvim12
 
