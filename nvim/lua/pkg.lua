@@ -269,7 +269,7 @@ pkg.list = {
   },
   treesitter = {
     p = 'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
+    -- run = ':TSUpdate',
   },
   treesitterContext = {
     p = 'nvim-treesitter/nvim-treesitter-context',
