@@ -1,11 +1,17 @@
 local user=""
 local ret_status="%(?:%{$fg_bold[green]%}✓ :%{$fg_bold[red]%}✗ %s)"
+local docker_indicator=""
 
 if [[ $(whoami) != "nod" ]] then
   user=$(whoami)
 fi
 
-PROMPT='%F{green}${user}${ret_status}%f%{$reset_color%}'
+if [[ -f /.dockerenv ]]; then
+  # docker_indicator="%F{blue}🐳 %f"
+  docker_indicator="%F{blue} %f"
+fi
+
+PROMPT='${docker_indicator}%F{green}${user}${ret_status}%f%{$reset_color%}'
 
 if [[ $SERVER = true ]] then
   PROMPT='%F{green}$(hostname) %f'$PROMPT
