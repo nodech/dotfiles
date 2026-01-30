@@ -67,7 +67,8 @@ pkg.list = {
         { k = '<leader>rn', a = '<Plug>(coc-rename)' },
         { k = '<leader>lc', a = ':CocList<CR>' },
 
-        { k = '<leader>f', a = '<Plug>(coc-format-selected)' },
+        { k = '<leader>fs', a = '<Plug>(coc-format-selected)' },
+        { k = '<leader>ff', a = ':call CocAction("format")<CR>' },
 
         { k = '<leader>th', a = ':CocCommand document.toggleInlayHint<CR>' },
       },
@@ -119,8 +120,8 @@ pkg.list = {
     ]],
     keymap = {
       n = {
-        { k = '[l', a = '<Plug>(ale_previous_wrap)' },
-        { k = ']l', a = '<Plug>(ale_next_wrap)' },
+        { k = '[a', a = '<Plug>(ale_previous_wrap)' },
+        { k = ']a', a = '<Plug>(ale_next_wrap)' },
         { k = '[e', a = '<Plug>(ale_previous_wrap_error)' },
         { k = ']e', a = '<Plug>(ale_next_wrap_error)' }
       }
@@ -204,8 +205,26 @@ pkg.list = {
       let g:fzf_vim = {}
       let g:fzf_vim.listproc = { list -> fzf#vim#listproc#quickfix(list) }
 
+      function! UpdateFzfLayout()
+        let g:fzf_layout = {
+          \ 'window': {
+            \ 'width': min([240, float2nr(&columns * 0.8)]),
+            \ 'height': 0.8,
+            \ 'border': 'rounded'
+          \ }
+        \ }
+      endfunction
+
+      call UpdateFzfLayout()
+      autocmd VimResized * call UpdateFzfLayout()
+
+      let g:fzf_vim.preview_window = ['right,50%,<100(hidden)', 'ctrl-/']
+
       command! -bang -nargs=? GFilesCwd
       \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(<q-args> == '?' ? { 'dir': getcwd(), 'placeholder': '' } : { 'dir': getcwd() }), <bang>0)
+
+      command! -nargs=? -complete=dir Dirs
+      \ call fzf#run(fzf#wrap({ 'source': 'fd --type d', 'dir': <q-args>, 'sink': 'e' }))
     ]],
     keymap = {
       n = {
@@ -215,6 +234,7 @@ pkg.list = {
         { k = '<leader>ll', a = ':Files<CR>' },
         { k = '<leader>lw', a = ':Windows<CR>' },
         { k = '<leader>lg', a = ':GFiles?<CR>' },
+        { k = '<leader>ld', a = ':Dirs<CR>' },
       }
     }
   },
@@ -321,8 +341,7 @@ pkg.list = {
   -- },
   ppd = {
     p = "nodech/ppd.nvim",
-
-  },
+  }
 }
 
 local pkgKeys = {}

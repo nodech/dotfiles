@@ -133,6 +133,10 @@ nod.keymaps = {
       k = '<leader>zS',
       a = [[:echo join(reverse(map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')),' ')<CR>]]
     },
+
+    -- Focus / blur a buffer.
+    { k = '<C-w>z', a = ':tab split<CR>' },
+    { k = '<C-w>Z', a = ':tab close<CR>' },
   },
 
   -- visual mode

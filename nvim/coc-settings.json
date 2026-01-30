@@ -71,4 +71,19 @@
   "python.formatting.blackArgs": ["--line-length", "88"],
   "python.linting.enabled": true,
   "python.analysis.typeCheckingMode": "basic",
+
+  "languageserver": {
+    "harper": {
+      "command": "harper-ls",
+      "args": ["--stdio"],
+      "filetypes": ["*"],
+      "settings": {
+        "harper-ls": {
+          "linters": {
+            "ExpandMemoryShorthands": false
+          }
+        }
+      }
+    }
+  }
 }
