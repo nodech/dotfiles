@@ -15,3 +15,27 @@ map('n', '<F2>', function()
     print('clipboard=')
   end
 end)
+
+-- folds
+map('n', '<leader>zc', ':set foldlevel=1<CR>')
+map('n', '<leader>zo', ':set foldlevel=99<CR>')
+map('n', '<leader>zf', ':set foldlevel=', { silent = false })
+
+-- Focus / blur a buffer.
+map('n', '<C-w>z', ':tab split<CR>')
+map('n', '<C-w>Z', ':tab close<CR>')
+
+-- Indent/Unindent quickly.
+map('v', '.', ':norm.<CR>')
+
+map('v', '>', '> gv')
+map('v', '<', '< gv')
+
+map('v', 'K', ':m -2<CR> gv')
+map('v', 'J', ':m +1<CR> gv')
+
+-- remap paste that keeps the clipboard
+map('x', '<leader>p', '"_dP')
+
+-- terminal simpler escape
+map('t', '<C-]>', '<c-\\><c-n>')

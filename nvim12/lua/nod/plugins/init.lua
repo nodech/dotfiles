@@ -4,6 +4,9 @@ local shell = function(path, cmd)
 end
 
 local plugins = {
+  -- General
+  { gh('nodech/nvim-web-devicons') }, -- { gh('nvim-tree/nvim-web-devicons') },
+
   -- fzf fuzzy finder.
   {
     gh('junegunn/fzf.vim'),
@@ -27,6 +30,52 @@ local plugins = {
     },
     config = 'nod.plugins.treesitter-textobjects',
   },
+
+  -- Completion and related
+  {
+    gh('nodech/blink.cmp'), -- gh('saghen/blink.cmp'),
+    config = 'nod.plugins.blink'
+  },
+  {
+    gh('nodech/vista.vim'),
+    config_fn = function ()
+      vim.keymap.set('n', '<leader>lv', ':Vista finder vim_lsp<CR>')
+      vim.keymap.set('n', '<F3>', ':Vista!!<CR>')
+    end
+  },
+
+  -- Git related
+  { gh('nodech/vim-fugitive') }, -- { gh('tpope/fugitive') },
+  {
+    gh('nodech/diffview.nvim'), -- { gh('sindrets/diffview.nvim') },
+    config = 'nod.plugins.diffview'
+  },
+
+  {
+    gh('nodech/gitsigns.nvim'), -- { gh('lewis6991/gitsigns') }
+    config = 'nod.plugins.gitsigns'
+  },
+
+  -- { gh('tpope/')},
+
+  -- File utilities
+  { gh('nodech/oil.nvim') }, -- { gh('stevearc/oil.nvim') },
+  { gh('nodech/ppd.nvim') }, -- { gh('PriceHiller/ppd.nvim')}
+
+  -- Edit utilities
+  { gh('nodech/vim-surround') }, -- tpope
+  { gh('nodech/vim-visual-multi') }, -- gh('mg979/vim-visual-multi')}
+
+  -- Windows
+  {
+    gh('nodech/winresizer'),
+    config_fn = function ()
+      vim.cmd[[
+        let g:winresizer_start_key = "<leader>e"
+        let g:winresizer_vert_size = 5
+      ]]
+    end
+  }, -- simeji
 }
 
 local plug2hook = {}
@@ -67,5 +116,9 @@ for _, mod in ipairs(plugins) do
     if not success then
       vim.notify('Failed to load ' .. mod.config .. ': ' .. err, vim.log.levels.WARN)
     end
+  end
+
+  if mod.config_fn then
+    mod.config_fn()
   end
 end

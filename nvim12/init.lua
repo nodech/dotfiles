@@ -3,6 +3,7 @@ require('nod.options')
 require('nod.plugins')
 require('nod.keymaps')
 require('nod.autocmds')
+require('nod.lsp')
 
 -- Load color.lua - dynamic theme if available.
 local ok, color = pcall(require, 'color');

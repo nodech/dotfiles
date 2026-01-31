@@ -10,4 +10,13 @@ function _G.put(...)
   return ...
 end
 
+function _G.modok(name)
+  local ok, mod = pcall(require, name)
 
+  if not ok then
+    vim.notify('Failed to load ' .. mod, vim.log.levels.WARN)
+    return nil
+  end
+
+  return mod
+end

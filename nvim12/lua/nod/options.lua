@@ -9,6 +9,7 @@ vim.opt.wrap = false           -- don't wrap lines
 vim.opt.listchars = {
   tab = '▸ ',
   eol = '¬',
+  leadmultispace = "│ ",
 } -- show tabs and end of line
 vim.opt.list = true
 
