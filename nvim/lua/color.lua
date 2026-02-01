@@ -1,1 +1,0 @@
-/home/nd/.config/nod/themes/ayu-mirage/color.lua
