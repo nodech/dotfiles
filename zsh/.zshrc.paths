@@ -2,7 +2,7 @@
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 # Linux User pip
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$HOME/.local/bin:$PATH"
 
 # linuxbrew
 # export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
