@@ -1,5 +1,9 @@
 -- Nod statusline.
 
+local config = {
+  show_filetype = false,
+}
+
 -- only check git status every minute
 local GIT_UPDATE_INTERVAL = 60000
 
@@ -113,13 +117,13 @@ local function format_git_info(info)
   -- Get gitsigns status for current buffer
   local gitsigns_status = vim.b.gitsigns_status_dict
   local hunks = {}
-  
+
   -- Try to get hunks from gitsigns
   local gs_ok, gitsigns = pcall(require, 'gitsigns')
   if gs_ok and gitsigns.get_hunks then
     hunks = gitsigns.get_hunks() or {}
   end
-  
+
   local added = gitsigns_status and gitsigns_status.added or 0
   local changed = gitsigns_status and gitsigns_status.changed or 0
   local removed = gitsigns_status and gitsigns_status.removed or 0
@@ -204,32 +208,6 @@ local function get_cached_branch(no)
   return format_git_info(cached.info)
 end
 
-local function get_diag_status(bufno)
-  local diags = vim.diagnostic.get(bufno)
-
-  if #diags == 0 then
-    return ''
-  end
-
-  local errors = 0
-  local warnings = 0
-
-  for _, d in ipairs(diags) do
-    if d.severity == vim.diagnostic.severity.ERROR then
-      errors = errors + 1
-    elseif d.severity == vim.diagnostic.severity.WARN then
-      warnings = warnings + 1
-    end
-  end
-
-  local color = errors > 0 and colors.derror or colors.dwarning
-
-  return colors.dwarning .. (warnings > 0 and 'W:' .. tostring(warnings) or '') ..
-    colors.clean ..
-    colors.derror .. (errors > 0 and 'E:' .. tostring(errors) or '') ..
-    colors.clean .. ' '
-end
-
 -- Invalidate git cache on writes
 local augroup = vim.api.nvim_create_augroup('nod_statusline', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'FileAppendPost', 'FileWritePost' }, {
@@ -248,9 +226,7 @@ return {
     local list = {}
     local bufno = vim.api.nvim_get_current_buf()
     local git = get_cached_branch(bufno)
-    -- local diag = get_diag_status(bufno)
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
-    local filetype = vim.bo.filetype
 
     -- buffer number
     table.insert(list, '[' .. tostring(bufno) .. '] ')
@@ -272,15 +248,17 @@ return {
     table.insert(list, colors.clean)
 
     -- file type
-    -- if filetype ~= '' then
-    --   table.insert(list, colors.dinfo)
-    --   if filetypeMap[filetype] ~= nil then
-    --     table.insert(list, filetypeMap[filetype])
-    --   else
-    --     table.insert(list, filetype)
-    --   end
-    --   table.insert(list, colors.clean)
-    -- end
+    if config.show_filetype and vim.bo.filetype ~= '' then
+      local filetype = vim.bo.filetype
+
+      table.insert(list, colors.dinfo)
+      if filetypeMap[filetype] ~= nil then
+        table.insert(list, filetypeMap[filetype])
+      else
+        table.insert(list, filetype)
+      end
+      table.insert(list, colors.clean)
+    end
 
     -- git info
     table.insert(list, git)

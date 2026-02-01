@@ -63,17 +63,17 @@ unconfig:
 # }}} /.config
 
 # NVIM 0.12 {{{
-.PHONY: nvim12 unnvim12
+.PHONY: nvim unnvim
 
-$(TARGET_DIR)/.config/nvim12:
-	mkdir -p $(TARGET_DIR)/.config/nvim12
+$(TARGET_DIR)/.config/nvim:
+	mkdir -p $(TARGET_DIR)/.config/nvim
 
-nvim12: $(TARGET_DIR)/.config/nvim12
+nvim: $(TARGET_DIR)/.config/nvim
 	@echo " > Stowing nvim 0.12"
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim12
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
 
-unnvim12:
+unnvim:
 	@echo " > Unstowing nvim 0.12"
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim12
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
 
 # }}} /NVIM 0.12
