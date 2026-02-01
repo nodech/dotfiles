@@ -16,7 +16,6 @@ autocmd({ 'FocusGained', 'InsertLeave' }, {
   command = 'set rnu',
 })
 
-
 -- highlight copied text.
 local highlight_yank = augroup('nod_highlight_yank', { clear = true })
 

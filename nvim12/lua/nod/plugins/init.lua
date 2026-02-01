@@ -1,6 +1,5 @@
-local gh = function(x) return 'https://github.com/' .. x end
-local shell = function(path, cmd)
-  vim.system({ 'sh', '-c', cmd }, { cwd = path })
+local gh = function(x)
+  return 'https://github.com/' .. x
 end
 
 local plugins = {
@@ -9,14 +8,16 @@ local plugins = {
 
   -- fzf fuzzy finder.
   {
-    gh('junegunn/fzf.vim'),
-    config = 'nod.plugins.fzf'
+    gh('nodech/fzf.vim'), -- gh('junegunn/fzf.vim'),
+    config = 'nod.plugins.fzf',
   },
 
   -- Treesitter
   {
     gh('nvim-treesitter/nvim-treesitter'),
-    hook = function() vim.cmd('TSUpdate') end,
+    hook = function()
+      vim.cmd('TSUpdate')
+    end,
     config = 'nod.plugins.treesitter',
   },
   {
@@ -34,53 +35,88 @@ local plugins = {
   -- Completion and related
   {
     gh('nodech/blink.cmp'), -- gh('saghen/blink.cmp'),
-    config = 'nod.plugins.blink'
+    config = 'nod.plugins.blink',
   },
   {
     gh('nodech/vista.vim'),
-    config_fn = function ()
+    config_fn = function()
       vim.keymap.set('n', '<leader>lv', ':Vista finder vim_lsp<CR>')
       vim.keymap.set('n', '<F3>', ':Vista!!<CR>')
-    end
+    end,
   },
 
   -- Git related
   { gh('nodech/vim-fugitive') }, -- { gh('tpope/fugitive') },
-  {
-    gh('nodech/diffview.nvim'), -- { gh('sindrets/diffview.nvim') },
-    config = 'nod.plugins.diffview'
-  },
 
   {
     gh('nodech/gitsigns.nvim'), -- { gh('lewis6991/gitsigns') }
-    config = 'nod.plugins.gitsigns'
+    config = 'nod.plugins.gitsigns',
   },
 
-  -- { gh('tpope/')},
-
   -- File utilities
-  { gh('nodech/oil.nvim') }, -- { gh('stevearc/oil.nvim') },
-  { gh('nodech/ppd.nvim') }, -- { gh('PriceHiller/ppd.nvim')}
+  {
+    gh('nodech/oil.nvim'),
+    config_fn = function()
+      require('oil').setup {
+        delete_to_trash = true,
+
+        columns = {
+          'icon',
+          -- "permissions",
+          -- "size",
+          -- "mtime",
+        },
+
+        view_options = {
+          show_hidden = true,
+        },
+      }
+    end,
+  }, -- { gh('stevearc/oil.nvim') },
+  {
+    gh('nodech/ppd.nvim'),
+    config_fn = function()
+      local ppd = require('ppd')
+      ppd.setup({
+        -- Automatically push paths from DirChanged events onto the stack
+        auto_cd = true,
+        dedup = {
+          -- Do not push a path that is the same as the newest path on the stack
+          top = true,
+          -- Do not push any duplicates onto the stack
+          all = false,
+        },
+        notify = {
+          -- Display the stack on all pushd invocations
+          on_pushd = true,
+          -- Display the stack on all popd invocations
+          on_popd = true,
+        },
+      })
+    end,
+  }, -- { gh('PriceHiller/ppd.nvim')}
 
   -- Edit utilities
   { gh('nodech/vim-surround') }, -- tpope
-  { gh('nodech/vim-visual-multi') }, -- gh('mg979/vim-visual-multi')}
+  { gh('nodech/vim-visual-multi') }, -- mg979
+  { gh('nodech/quick-scope') }, -- unblevable
 
   -- Windows
   {
     gh('nodech/winresizer'),
-    config_fn = function ()
-      vim.cmd[[
-        let g:winresizer_start_key = "<leader>e"
+    config_fn = function()
+      vim.cmd [[
+        let g:winresizer_start_key = '<leader>e'
         let g:winresizer_vert_size = 5
       ]]
-    end
+    end,
   }, -- simeji
 }
 
 local plug2hook = {}
 
-local load_list = vim.iter(plugins)
+local load_list = vim
+  .iter(plugins)
   :map(function(x)
     -- index post install/update hooks
     if x.hook then
@@ -98,18 +134,15 @@ local hook = function(ev)
   end
 end
 
-local update_group = vim.api.nvim_create_augroup('nod_packs', { clear = true });
+local update_group = vim.api.nvim_create_augroup('nod_packs', { clear = true })
 vim.api.nvim_create_autocmd('PackChanged', {
   group = update_group,
-  callback = hook
-});
+  callback = hook,
+})
 
 vim.pack.add(load_list)
 
 for _, mod in ipairs(plugins) do
-  local path = mod.src or mod[1]
-  local configs = mod.config;
-
   if mod.config then
     local success, err = pcall(require, mod.config)
 

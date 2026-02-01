@@ -2,7 +2,9 @@ local map = vim.keymap.set
 
 -- Should clipboard be shared with the system.
 -- Default true
-vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
+vim.schedule(function()
+  vim.o.clipboard = 'unnamedplus'
+end)
 
 map('n', '<F2>', function()
   local current = vim.opt.clipboard:get()
@@ -39,3 +41,29 @@ map('x', '<leader>p', '"_dP')
 
 -- terminal simpler escape
 map('t', '<C-]>', '<c-\\><c-n>')
+
+-- Quick list/ Loc list
+map('n', '<leader>tq', function()
+  local qf_open = vim.fn.getqflist({ winid = 0 }).winid ~= 0
+  if qf_open then
+    vim.cmd('cclose')
+  else
+    vim.cmd('copen')
+  end
+end)
+
+-- Toggle loclist
+map('n', '<leader>tl', function()
+  local loc_open = vim.fn.getloclist(0, { winid = 0 }).winid ~= 0
+  if loc_open then
+    vim.cmd('lclose')
+  else
+    vim.cmd('lopen')
+  end
+end)
+
+-- Close both
+map('n', '<leader>c', function()
+  vim.cmd 'cclose'
+  vim.cmd 'lclose'
+end)

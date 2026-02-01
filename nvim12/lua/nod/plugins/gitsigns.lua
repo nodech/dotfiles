@@ -1,30 +1,33 @@
 local mod = modok('gitsigns')
-if not mod then return end
+
+if not mod then
+  return
+end
 
 mod.setup {
   signs = {
-    add          = { text = '┃' },
-    change       = { text = '┃' },
-    delete       = { text = '_' },
-    topdelete    = { text = '‾' },
+    add = { text = '┃' },
+    change = { text = '┃' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
     changedelete = { text = '~' },
-    untracked    = { text = '┆' },
+    untracked = { text = '┆' },
   },
   signs_staged = {
-    add          = { text = '┃' },
-    change       = { text = '┃' },
-    delete       = { text = '_' },
-    topdelete    = { text = '‾' },
+    add = { text = '┃' },
+    change = { text = '┃' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
     changedelete = { text = '~' },
-    untracked    = { text = '┆' },
+    untracked = { text = '┆' },
   },
   signs_staged_enable = true,
-  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
-  numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
-  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
-  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+  numhl = true, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
   watch_gitdir = {
-    follow_files = true
+    follow_files = true,
   },
   auto_attach = true,
   attach_to_untracked = false,
@@ -47,9 +50,8 @@ mod.setup {
     style = 'minimal',
     relative = 'cursor',
     row = 0,
-    col = 1
+    col = 1,
   },
-  
   on_attach = function(bufnr)
     local gitsigns = mod
     local function map(mode, l, r, opts)
@@ -60,7 +62,7 @@ mod.setup {
 
     map('n', ']h', function()
       if vim.wo.diff then
-        vim.cmd.normal({']c', bang = true})
+        vim.cmd.normal({ ']c', bang = true })
       else
         gitsigns.nav_hunk('next')
       end
@@ -68,11 +70,12 @@ mod.setup {
 
     map('n', '[h', function()
       if vim.wo.diff then
-        vim.cmd.normal({'[c', bang = true})
+        vim.cmd.normal({ '[c', bang = true })
       else
         gitsigns.nav_hunk('prev')
       end
     end)
 
-  end
+    map('n', '<leader>hp', gitsigns.preview_hunk)
+  end,
 }
