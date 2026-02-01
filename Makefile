@@ -77,3 +77,14 @@ unnvim:
 	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
 
 # }}} /NVIM 0.12
+
+# GPG config.
+.PHONY: gnupg ungnupg
+
+gnupg:
+	@echo " > Stowing gnupg..."
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.gnupg/ gnupg
+
+ungnupg:
+	@echo " > Unstowing gnupg..."
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.gnupg/ gnupg
