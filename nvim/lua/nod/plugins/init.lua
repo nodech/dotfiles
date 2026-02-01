@@ -22,7 +22,14 @@ local plugins = {
   },
   {
     gh('nvim-treesitter/nvim-treesitter-context'),
-    config = 'nod.plugins.treesitter-context',
+    config_fn = function ()
+      local mod = require 'treesitter-context'
+      mod.setup {
+        enable = true,
+        line_numbers = true,
+        trim_scope = 'outer'
+      }
+    end
   },
   {
     {
