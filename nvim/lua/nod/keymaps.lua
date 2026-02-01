@@ -46,9 +46,9 @@ map('t', '<C-]>', '<c-\\><c-n>')
 map('n', '<leader>tq', function()
   local qf_open = vim.fn.getqflist({ winid = 0 }).winid ~= 0
   if qf_open then
-    vim.cmd'cclose'
+    vim.cmd 'cclose'
   else
-    vim.cmd'copen'
+    vim.cmd 'copen'
   end
 end)
 
@@ -69,6 +69,6 @@ map('n', '<leader>c', function()
 end)
 
 -- utilities
-map('n', '<leader>fd', function ()
+map('n', '<leader>fd', function()
   vim.cmd 'e `dirname %`'
 end)
