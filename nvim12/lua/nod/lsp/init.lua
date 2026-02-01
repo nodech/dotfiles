@@ -109,5 +109,5 @@ map('n', ']e', function()
 end)
 
 map('n', 'gl', vim.diagnostic.open_float)
-map('n', '<leader>q', vim.diagnostic.setloclist)
-map('n', '<leader>Q', vim.diagnostic.setqflist)
+map('n', '<leader>dq', vim.diagnostic.setloclist)
+map('n', '<leader>dQ', vim.diagnostic.setqflist)

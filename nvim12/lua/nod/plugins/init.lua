@@ -99,7 +99,14 @@ local plugins = {
   -- Edit utilities
   { gh('nodech/vim-surround') }, -- tpope
   { gh('nodech/vim-visual-multi') }, -- mg979
-  { gh('nodech/quick-scope') }, -- unblevable
+  {
+    gh('nodech/quick-scope'),
+    config_fn = function ()
+      vim.cmd [[
+        let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+      ]]
+    end
+  }, -- unblevable
 
   -- Windows
   {
