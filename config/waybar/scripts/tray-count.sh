@@ -29,10 +29,12 @@ done
 local docker_count
 docker_count=$(docker ps -q 2>/dev/null | wc -l)
 
-[[ $nvim_count -eq 0 && $docker_count -eq 0 ]] && exit 0
+local watchexec_count
+watchexec_count=$(pgrep -c watchexec 2>/dev/null || echo 0)
+
+[[ $nvim_count -eq 0 && $docker_count -eq 0 && $watchexec_count -eq 0 ]] && exit 0
 
 local text=""
-
 
 if [[ $nvim_count -gt 0 ]]; then
   text+="<span color='#39FF14'></span><sub><b>$nvim_count</b></sub>"
@@ -41,6 +43,11 @@ fi
 if [[ $docker_count -gt 0 ]]; then
   [[ -n "$text" ]] && text+=" "
   text+="<span color='#2496ED'></span><sub><b>$docker_count</b></sub>"
+fi
+
+if [[ $watchexec_count -gt 0 ]]; then
+  [[ -n "$text" ]] && text+=" "
+  text+="<span color='#FF8C00'>󰦖</span><sub><b>$watchexec_count</b></sub>"
 fi
 
 jq -cn \
