@@ -1,7 +1,7 @@
 [user]
   email = nodar.chkuaselidze@gmail.com
   name = "Nodari Chkuaselidze"
-  signingkey = 0xB018A7BB437D1F05
+  signingkey = 0x3A7B82E7241D78C4
 
 [commit]
   gpgsign = true
