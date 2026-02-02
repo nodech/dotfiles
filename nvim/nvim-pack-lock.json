@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "ayu-vim": {
+      "rev": "2eb0a2fc88e4036ec52adbe82cfedf399ee07b52",
+      "src": "https://github.com/nodech/ayu-vim"
+    },
     "blink.cmp": {
       "rev": "b137f63d89d0285ca76eed12e1923220e0aff8c1",
       "src": "https://github.com/nodech/blink.cmp"

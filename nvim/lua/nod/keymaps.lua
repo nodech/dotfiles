@@ -72,3 +72,8 @@ end)
 map('n', '<leader>fd', function()
   vim.cmd 'e `dirname %`'
 end)
+
+-- Toggle window width / no resize on C-W =
+map('n', '<leader>wf', function ()
+  vim.cmd 'set winfixwidth!'
+end)

@@ -81,7 +81,7 @@ mod.setup {
     map('n', '<leader>hs', gitsigns.stage_hunk)
     map('n', '<leader>hu', gitsigns.reset_hunk)
 
-    map('n', '<leader>gQ', ':Gitsigns setqflist all<CR>')
-    map('n', '<leader>gq', ':Gitsigns setloclist<CR>')
+    map('n', '<leader>gQ', ':Gitsigns setqflist all<CR>', { silent = true })
+    map('n', '<leader>gq', ':Gitsigns setloclist<CR>', { silent = true })
   end,
 }
