@@ -107,6 +107,8 @@ export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git
 export FZF_ALT_C_COMMAND="$FZF_DEFAUT_COMMAND"
 # export FZF_DEFAULT_OPTS="--walker-skip=.git --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 source <(fzf --zsh)
+# curl https://raw.githubusercontent.com/junegunn/fzf-git.sh/5411a0589b69faa457e438a10c1446a6a43a357c/fzf-git.sh\
+#   --output ~/.fzf-git.sh
 [ -f ~/.fzf-git.sh ] && source ~/.fzf-git.sh
 # }
 

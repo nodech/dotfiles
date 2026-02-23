@@ -5,7 +5,7 @@
       "src": "https://github.com/nodech/ayu-vim"
     },
     "blink.cmp": {
-      "rev": "b137f63d89d0285ca76eed12e1923220e0aff8c1",
+      "rev": "6f49a14f533f9d33ae3b83ca7e72e78326c30670",
       "src": "https://github.com/nodech/blink.cmp"
     },
     "fzf.vim": {
@@ -15,6 +15,10 @@
     "gitsigns.nvim": {
       "rev": "abf82a65f185bd54adc0679f74b7d6e1ada690c9",
       "src": "https://github.com/nodech/gitsigns.nvim"
+    },
+    "nvim": {
+      "rev": "beaf41a30c26fd7d6c386d383155cbd65dd554cd",
+      "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-treesitter": {
       "rev": "4967fa48b0fe7a7f92cee546c76bb4bb61bb14d5",
@@ -68,6 +72,10 @@
     "winresizer": {
       "rev": "9bd559a03ccec98a458e60c705547119eb5350f3",
       "src": "https://github.com/nodech/winresizer"
+    },
+    "zephyr-nvim": {
+      "rev": "7fd86b7164442d3b5ec2c81b2694d040e716b5cf",
+      "src": "https://github.com/nvimdev/zephyr-nvim"
     }
   }
 }
