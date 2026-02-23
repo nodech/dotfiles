@@ -88,15 +88,33 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local map = vim.keymap.set
 
 vim.diagnostic.config({
-  virtual_text = true,
+  virtual_text = {
+    severity = vim.diagnostic.severity.ERROR
+  },
+  -- virtual_lines = {
+  --   severity = vim.diagnostic.severity.ERROR
+  -- },
   float = {
     border = 'rounded',
     source = true,
   },
 })
+
 -- Toggle active diagnostics texts.
-map('n', '<leader>td', function()
+map('n', '<leader>tdd', function()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end)
+
+map('n', '<leader>tdl', function ()
+  vim.diagnostic.config({
+    virtual_lines = not vim.diagnostic.config().virtual_lines,
+  })
+end)
+
+map('n', '<leader>tdt', function ()
+  vim.diagnostic.config({
+    virtual_text = not vim.diagnostic.config().virtual_text,
+  })
 end)
 
 -- Errors only (rust-analyzer in practice)
