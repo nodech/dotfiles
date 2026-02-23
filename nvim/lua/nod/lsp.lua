@@ -21,6 +21,10 @@ local languages = {
     name = 'stylua',
     config = require 'nod.lsp.stylua',
   },
+  {
+    name = 'ts_ls',
+    config = require 'nod.lsp.ts_ls',
+  },
 }
 
 for _, lang in pairs(languages) do
