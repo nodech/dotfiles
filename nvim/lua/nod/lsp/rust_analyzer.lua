@@ -129,6 +129,14 @@ return {
         run = { enable = true },
         updateTest = { enable = true },
       },
+      check = {
+        command = "clippy",
+      },
+      diagnostics = {
+        styleLints = {
+          enable = true,
+        },
+      },
     },
   },
   before_init = function(init_params, config)
