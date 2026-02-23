@@ -21,6 +21,10 @@ if ok and color.plugin then
     vim.cmd(color.cmd)
   end
 
+  if color.setup then
+    color.setup()
+  end
+
   if color.colorscheme then
     vim.cmd('colorscheme ' .. color.colorscheme)
   end
