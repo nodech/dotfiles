@@ -9,6 +9,8 @@ const exec = util.promisify(execCb);
 
 const TASKS_DIR = path.join(process.env.HOME || '', '.local', 'share', 'waytasks');
 const SHOW_ITEMS = 3;
+const DEFAULT_TMUX = 6;
+const DEFAULT_WAYBAR = 3;
 
 const SUCCESS_LOGO_1 = "✅";
 // const SUCCESS_LOGO_2 = "";
@@ -73,7 +75,7 @@ async function isRunning(task) {
   }
 }
 
-function printWaybar() {
+function printWaybar(maxItems = SHOW_ITEMS) {
   const result = {
     text: ' ',
     tooltip: '',
@@ -133,16 +135,16 @@ function printWaybar() {
 
     results.push({
       text: `<span color='${iconColor}'>${icon}</span><span color='${textColor}'>${formatName(task.name)}</span>`,
-      tooltip:`<span color='${iconColor}'>${icon}</span> <span color='${textColor}'>${task.name} (${task.pid})</span> - ${task.cwd}\n`
+      tooltip: `<span color='${iconColor}'>${icon}</span> <span color='${textColor}'>${task.name} (${task.pid})</span> - ${task.cwd}\n`
         + `  ${task.command}`
     });
   }
 
   result.tooltip = results.map(r => r.tooltip).join('\n').trim();
 
-  if (results.length > SHOW_ITEMS + 1) {
-    const left = results.length - SHOW_ITEMS;
-    result.text = `..${left}.. ` + results.slice(-SHOW_ITEMS).map(r => r.text).join(' ').trim();
+  if (results.length > maxItems + 1) {
+    const left = results.length - maxItems;
+    result.text = `..${left}.. ` + results.slice(-maxItems).map(r => r.text).join(' ').trim();
   } else {
     result.text = results.map(r => r.text).join(' ').trim();
   }
@@ -150,7 +152,7 @@ function printWaybar() {
   if (sums.success)
     result.alt += ` <span color='${SUCCESS_COLOR}'>${SUCCESS_LOGO_1}</span> <span color='${SUCCESS_TEXT_COLOR}'>${sums.success}</span>`;
   if (sums.running)
-    result.alt += ` <span color='${RUNNING_COLOR}'>${RUNNING_LOGO_1}</span> <span color='${RUNNING_TEXT_COLOR}'>${sums.running}</span>`; 
+    result.alt += ` <span color='${RUNNING_COLOR}'>${RUNNING_LOGO_1}</span> <span color='${RUNNING_TEXT_COLOR}'>${sums.running}</span>`;
   if (sums.fail)
     result.alt += ` <span color='${FAIL_COLOR}'>${FAIL_LOGO_1}</span> <span color='${FAIL_TEXT_COLOR}'>${sums.fail}</span>`;
   if (sums.aborted)
@@ -161,7 +163,7 @@ function printWaybar() {
   console.log(JSON.stringify(result));
 }
 
-function printTmux() {
+function printTmux(maxItems = SHOW_ITEMS) {
   const sums = {
     running: 0,
     fail: 0,
@@ -216,21 +218,21 @@ function printTmux() {
 
   const final = [];
 
-  if (output.length > SHOW_ITEMS)
+  if (output.length > maxItems)
     final.push('...');
 
-  final.push( ...output.slice(-SHOW_ITEMS));
+  final.push(...output.slice(-maxItems));
   const finalOutput = final.join(' | ');
   console.log(finalOutput);
 }
 
 if (process.argv.includes('--tmux')) {
   // If running in tmux, print the tmux output.
-  printTmux();
+  printTmux(DEFAULT_TMUX);
   process.exit(0);
 }
 
-printWaybar();
+printWaybar(DEFAULT_WAYBAR);
 
 function formatName(name) {
   if (name in aliases) {
