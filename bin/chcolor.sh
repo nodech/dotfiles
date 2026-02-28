@@ -24,7 +24,7 @@ help() {
 list() {
   files=`ls ${THEMES_DIR}`
 
-  echo "Showing colors.."
+  echo "Showing themes.."
   printf "  %-22s %-10s %-6s %-6s\n" "Theme" "Alacritty" "Nvim" "Tmux"
   printf "  %-22s %-10s %-6s %-6s\n" "-----" "---------" "----" "----"
   for f in $files; do
@@ -126,7 +126,6 @@ for i in "$@"
 do
   case $i in
     -l)
-      echo "Showing list of colors.."
       list
       exit 0
       ;;

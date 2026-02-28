@@ -30,7 +30,7 @@ setopt TRANSIENT_RPROMPT
 
 # ── Prompt setup ──
 local user=""
-local ret_status="%(?:%B${_C_GREEN}✓%b:${_C_RED}✗ %s)"
+local ret_status="%(?:%B${_C_GREEN}✓%b:${_C_RED}✗%s)"
 local docker_indicator=""
 
 if [[ $(whoami) != "nod" ]]; then
@@ -55,3 +55,5 @@ ZSH_THEME_GIT_PROMPT_PREFIX="${_C_YELLOW}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="${_C_RESET}"
 ZSH_THEME_GIT_PROMPT_DIRTY=" ${_C_RED}\ue0a0${_C_RESET}"
 ZSH_THEME_GIT_PROMPT_CLEAN=" ${_C_GREEN}\ue0a0${_C_RESET}"
+
+alias reload-theme="source ${0}"
