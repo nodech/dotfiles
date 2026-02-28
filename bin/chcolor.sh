@@ -2,6 +2,7 @@
 
 CONFIG_DIR=$HOME/.config/nod
 LUA_DIR=$HOME/.config/nvim/lua
+TMUX_DIR=$HOME/.config/tmux
 
 ## .config/nod configs
 ##   alacritty/template.toml
@@ -24,20 +25,24 @@ list() {
   files=`ls ${THEMES_DIR}`
 
   echo "Showing colors.."
-  for f in $files
-  do
+  printf "  %-22s %-10s %-6s %-6s\n" "Theme" "Alacritty" "Nvim" "Tmux"
+  printf "  %-22s %-10s %-6s %-6s\n" "-----" "---------" "----" "----"
+  for f in $files; do
     dir="${THEMES_DIR}/$f"
-    echo -n "  $f";
-    if [[ -f "$dir/alacritty.toml" ]]
-    then
-      echo -n " (alacritty)"
-    fi
+    alacritty=" ";
+    nvim=" ";
+    tmux=" "
 
-    if [[ -f "$dir/color.lua" ]]
-    then
-      echo -n " (nvim)"
-    fi
-    echo 
+    [[ -f "$dir/alacritty.toml" ]] && alacritty="✓"
+    [[ -f "$dir/color.lua" ]] && {
+      nvim="✓"
+      current=$(dirname `readlink -f $LUA_DIR/color.lua`)
+      theme=`readlink -f $dir`
+      [[ "$current" == "$theme" ]] && f="${f}*"
+    }
+    [[ -f "$dir/tmux-theme.conf" ]] && tmux="✓"
+
+    printf "  %-22s %-12s %-8s %-6s %s\n" "$f" "$alacritty" "$nvim" "$tmux"
   done
 }
 
@@ -74,10 +79,26 @@ generate_vim() {
     rm $dst
     echo "Relinking vim configs..."
     ln -s $src $dst
-    exit 0
   fi
 
   echo "Missing VIM module for '$1'."
+}
+
+generate_tmux() {
+  colors_dir="${THEMES_DIR}/$1"
+
+  src="$colors_dir/tmux-theme.conf"
+  dst="$TMUX_DIR/tmux-theme.conf"
+
+  if [[ -f "$src" ]]
+  then
+    echo "Removing tmux configs..."
+    rm $dst
+    echo "Relinking tmux configs..."
+    ln -s $src $dst
+  fi
+
+  echo "Missing TMUX module for '$1'."
 }
 
 generate() {
@@ -91,7 +112,10 @@ generate() {
   fi
 
   generate_ala $1
+  echo "VIM?"
   generate_vim $1
+  echo "tmux???"
+  generate_tmux $1
   exit 0
 }
 
@@ -101,7 +125,7 @@ do
     -l)
       echo "Showing list of colors.."
       list
-      exit 1
+      exit 0
       ;;
     -h)
       help

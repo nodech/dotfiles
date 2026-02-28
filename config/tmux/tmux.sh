@@ -1,39 +1,27 @@
 #!/bin/bash
 
+# ── Pull theme colors from tmux ──
+theme_var() {
+  local val
+  val=$(tmux show-environment -g "$1" 2>/dev/null)
+  echo "${val#*=}"
+}
+
+T_BG=$(theme_var TMUX_THEME_BG)
+T_FG=$(theme_var TMUX_THEME_FG)
+T_GREEN=$(theme_var TMUX_THEME_GREEN)
+T_YELLOW=$(theme_var TMUX_THEME_YELLOW)
+T_RED=$(theme_var TMUX_THEME_RED)
+T_BLUE=$(theme_var TMUX_THEME_BLUE)
+T_ACCENT=$(theme_var TMUX_THEME_ACCENT)
+
+# Fallbacks if no theme is loaded
+: "${T_BG:=#333333}" "${T_FG:=white}" "${T_GREEN:=green}"
+: "${T_YELLOW:=yellow}" "${T_RED:=red}" "${T_BLUE:=blue}" "${T_ACCENT:=blue}"
+
 # DATE=$(date +%H:%M:%S\ %b\ %d)
 DATE=`date +'%Y-%m-%d %H:%M'`
 BATTERY=""
-
-SYS_PROFILE=`which system_profiler 2> /dev/null`
-I3STATUS=`which i3status 2> /dev/null`
-
-if [[ -x $SYS_PROFILE ]]
-then
-  BATTERY=$(system_profiler SPPowerDataType | grep 'mAh' | awk '{print $NF}' | tr '\n' ' ' | awk '{printf("%.2f%%", $1/$2 * 100)}')
-  BATTERY=${BATTERY/%%/}
-  COLOR="#[fg=green]"
-
-  if [ $(echo "$BATTERY > 80" | bc) -eq 1 ]
-  then
-    COLOR="#[fg=brightgreen]"
-  elif [ $(echo "$BATTERY > 50" | bc) -eq 1 ]
-  then
-    COLOR="#[fg=green]"
-  elif [ $(echo "$BATTERY > 20" | bc) -eq 1 ]
-  then
-    COLOR="#[fg=yellow]"
-  else
-    COLOR="#[bg=red]#[fg=white]"
-  fi
-
-  BATTERY="$COLOR$BATTERY%"
-  echo -n "#[fg=white]$BATTERY#[fg=green]#[bg=#333333]"
-fi
-
-if [[ -x $I3STATUS ]]
-then
-  i3status -c ~/.config/i3status/tmux.config
-fi
 
 if [[ -x $XDG_CONFIG_HOME/nod/scripts/tasks.js ]]
 then
@@ -45,4 +33,38 @@ then
   fi
 fi
 
-echo "  #[fg=green]$DATE"
+
+BAT_PATH="/sys/class/power_supply/BAT0"
+
+[[ ! -d $BAT_PATH ]] && BAT_PATH="/sys/class/power_supply/BAT1"
+
+if [[ -d $BAT_PATH ]]; then
+  BATTERY=$(cat "$BAT_PATH/capacity" 2>/dev/null)
+  STATUS=$(cat "$BAT_PATH/status" 2>/dev/null)
+
+  if [[ -n $BATTERY ]]; then
+    if [ "$BATTERY" -gt 80 ]; then
+      COLOR="#[fg=$T_GREEN,bg=$T_BG,bold]"
+      ICON="󰁹"
+    elif [ "$BATTERY" -gt 50 ]; then
+      COLOR="#[fg=$T_GREEN,bg=$T_BG]"
+      ICON="󰁾"
+    elif [ "$BATTERY" -gt 20 ]; then
+      COLOR="#[fg=$T_YELLOW,bg=$T_BG]"
+      ICON="󰁼"
+    else
+      COLOR="#[fg=$T_RED,bg=$T_BG]"
+      ICON="󰁺"
+    fi
+
+    if [[ "$STATUS" == "Charging" ]]; then
+      ICON="󰂄"
+    elif [[ "$STATUS" == "Not charging" ]]; then
+      ICON="󰚥"
+    fi
+
+    echo -n "${COLOR} ${ICON} ${BATTERY}% "
+  fi
+fi
+
+echo "#[fg=$T_ACCENT]$DATE"

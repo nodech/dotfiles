@@ -10,4 +10,5 @@ node_modules/
 !.vim/tmp/.track
 
 config/tmux/plugins
+config/tmux/tmux-theme.conf
 .config/systemd/user
