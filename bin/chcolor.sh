@@ -79,9 +79,9 @@ generate_vim() {
     rm $dst
     echo "Relinking vim configs..."
     ln -s $src $dst
+  else
+    echo "Missing VIM module for '$1'."
   fi
-
-  echo "Missing VIM module for '$1'."
 }
 
 generate_tmux() {
@@ -96,9 +96,9 @@ generate_tmux() {
     rm $dst
     echo "Relinking tmux configs..."
     ln -s $src $dst
+  else
+    echo "Missing TMUX module for '$1'."
   fi
-
-  echo "Missing TMUX module for '$1'."
 }
 
 generate() {
@@ -112,10 +112,13 @@ generate() {
   fi
 
   generate_ala $1
-  echo "VIM?"
+  echo "VIM"
   generate_vim $1
-  echo "tmux???"
+  echo "TMUX"
   generate_tmux $1
+
+  # Refresh tmux
+  tmux source-file ~/.config/tmux/tmux-theme.conf 
   exit 0
 }
 

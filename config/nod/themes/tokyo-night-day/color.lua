@@ -1,10 +1,10 @@
 local color = {
   plugin = 'folke/tokyonight.nvim',
-  colorscheme = 'tokyonight-storm',
+  colorscheme = 'tokyonight-day',
   setup = function ()
-    vim.o.background = 'dark';
+    vim.o.background = 'light';
     require('tokyonight').setup {
-      style = 'storm'
+      style = 'day'
     }
   end
 }

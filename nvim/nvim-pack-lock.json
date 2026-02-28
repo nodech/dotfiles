@@ -20,6 +20,10 @@
       "rev": "abf82a65f185bd54adc0679f74b7d6e1ada690c9",
       "src": "https://github.com/nodech/gitsigns.nvim"
     },
+    "gruvbox": {
+      "rev": "697c00291db857ca0af00ec154e5bd514a79191f",
+      "src": "https://github.com/morhetz/gruvbox"
+    },
     "nvim": {
       "rev": "beaf41a30c26fd7d6c386d383155cbd65dd554cd",
       "src": "https://github.com/catppuccin/nvim"
