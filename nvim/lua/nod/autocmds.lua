@@ -28,14 +28,15 @@ autocmd('TextYankPost', {
 })
 
 -- Save/restore view
--- local view_update = augroup('nod_view_update', { clear = true })
--- autocmd('BufWinEnter', {
---   group = view_update,
---   pattern = '*',
---   command = 'silent! loadview',
--- })
--- autocmd('BufWinLeave', {
---   group = view_update,
---   pattern = '*',
---   command = 'silent! mkview',
--- })
+local view_update = augroup('nod_view_update', { clear = true })
+autocmd('BufWinEnter', {
+  group = view_update,
+  pattern = '*',
+  command = 'silent! loadview',
+})
+
+autocmd('BufWinLeave', {
+  group = view_update,
+  pattern = '*',
+  command = 'silent! mkview',
+})

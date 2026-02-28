@@ -8,6 +8,10 @@
       "rev": "6f49a14f533f9d33ae3b83ca7e72e78326c30670",
       "src": "https://github.com/nodech/blink.cmp"
     },
+    "diffview.nvim": {
+      "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
+      "src": "https://github.com/nodech/diffview.nvim"
+    },
     "fzf.vim": {
       "rev": "ddc14a6a5471147e2a38e6b32a7268282f669b0a",
       "src": "https://github.com/nodech/fzf.vim"

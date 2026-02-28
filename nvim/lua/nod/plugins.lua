@@ -39,6 +39,12 @@ local plugins = {
     config = 'nod.plugins.treesitter-textobjects',
   },
 
+  -- Diff view
+  {
+    gh('nodech/diffview.nvim'),
+    config = 'nod.plugins.diffview'
+  },
+
   -- Completion and related
   {
     gh('nodech/blink.cmp'), -- gh('saghen/blink.cmp'),

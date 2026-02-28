@@ -38,16 +38,32 @@ mod.setup {
     ghost_text = {
       enabled = true,
     },
+
+    list = {
+      selection = {
+        preselect = true,
+        auto_insert = false,
+      },
+    },
+
+    accept = {
+      auto_brackets = {
+        enabled = false
+      }
+    },
   },
 
   -- Default list of enabled providers defined so that you can extend it
   -- elsewhere in your config, without redefining it, due to `opts_extend`
   sources = {
-    default = { 'lsp', 'path', 'snippets', 'buffer' },
+    default = { 'lsp', 'path' }, -- , 'buffer', 'snippets'
   },
 
   fuzzy = {
-    implementation = "lua",
+    implementation = "rust",
+    prebuilt_binaries = {
+      ignore_version_mismatch = true
+    },
   },
 
   signature = {

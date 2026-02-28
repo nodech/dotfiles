@@ -59,6 +59,10 @@ vim.opt.termguicolors = true  -- use terminal colors
 vim.opt.title = true          -- vim.opt.terminal title
 vim.opt.titlestring='Nvim - %t%( %M%)%( (%{expand("%:~:h")})%)%a'
 
-vim.opt.viewoptions = ""
+-- Save folds
+vim.opt.viewoptions = "folds"
+
+-- Diff view fill chars
+vim.opt.fillchars:append({ diff = " " })
 
 vim.g.mapleader = ','

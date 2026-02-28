@@ -84,7 +84,7 @@ mod.setup {
     map('n', '<leader>gQ', ':Gitsigns setqflist all<CR>', { silent = true })
     map('n', '<leader>gq', ':Gitsigns setloclist<CR>', { silent = true })
 
-    map('n', '<leader>gdt', function ()
+    map('n', '<leader>tgd', function ()
       gitsigns.toggle_deleted()
       gitsigns.toggle_linehl()
       gitsigns.toggle_word_diff()

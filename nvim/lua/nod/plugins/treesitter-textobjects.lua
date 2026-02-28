@@ -56,3 +56,12 @@ end)
 vim.keymap.set({ "n", "x", "o" }, "[a", function ()
   move.goto_previous_start("@parameter.inner", "textobjects")
 end)
+
+
+vim.keymap.set({ "n", "x", "o" }, "]f", function ()
+  move.goto_next_start("@function.outer", "textobjects")
+end)
+
+vim.keymap.set({ "n", "x", "o" }, "[f", function ()
+  move.goto_previous_start("@function.outer", "textobjects")
+end)
