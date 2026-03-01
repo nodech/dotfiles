@@ -12,3 +12,5 @@ node_modules/
 config/tmux/plugins
 config/tmux/tmux-theme.conf
 .config/systemd/user
+
+bin/codelldb
