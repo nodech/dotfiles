@@ -22,14 +22,13 @@ local plugins = {
   },
   {
     gh('nvim-treesitter/nvim-treesitter-context'),
-    config_fn = function ()
-      local mod = require 'treesitter-context'
-      mod.setup {
+    config_fn = function()
+      require('treesitter-context').setup {
         enable = true,
         line_numbers = true,
-        trim_scope = 'outer'
+        trim_scope = 'outer',
       }
-    end
+    end,
   },
   {
     {
@@ -42,7 +41,7 @@ local plugins = {
   -- Diff view
   {
     gh('nodech/diffview.nvim'),
-    config = 'nod.plugins.diffview'
+    config = 'nod.plugins.diffview',
   },
 
   -- Completion and related
@@ -114,14 +113,14 @@ local plugins = {
   { gh('nodech/vim-visual-multi') }, -- mg979
   {
     gh('nodech/quick-scope'),
-    config_fn = function ()
+    config_fn = function()
       vim.cmd [[
         let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
       ]]
-    end
+    end,
   }, -- unblevable
 
-  -- Windows
+  -- Window
   {
     gh('nodech/winresizer'),
     config_fn = function()
@@ -131,6 +130,65 @@ local plugins = {
       ]]
     end,
   }, -- simeji
+
+  -- Debugger
+  { gh('nodech/nvim-nio') },
+  {
+    gh('nodech/nvim-dap'),
+    config = 'nod.plugins.dap',
+    config_fn = function()
+      vim.keymap.set('n', '<leader>db', function()
+        require('dap').toggle_breakpoint()
+      end)
+      vim.keymap.set('n', '<leader>dR', function()
+        require('dap').run_last()
+      end)
+      vim.keymap.set('n', '<leader>dr', ':DapContinue<CR>')
+      vim.keymap.set('n', '<leader>dt', ':DapTerminate<CR>')
+      vim.keymap.set('n', '<F9>', ':DapContinue<CR>')
+      vim.keymap.set('n', '<F10>', ':DapStepOver<CR>')
+      vim.keymap.set('n', '<F11>', ':DapStepInto<CR>')
+      vim.keymap.set('n', '<S-F11>', ':DapStepOut<CR>')
+    end,
+  },
+  {
+    gh('nodech/nvim-dap-ui'),
+    config_fn = function()
+      local dapui = require('dapui')
+      vim.keymap.set('n', '<leader>dc', function()
+        dapui.close()
+      end)
+      vim.keymap.set('n', '<leader>do', function()
+        dapui.open()
+      end)
+      vim.keymap.set('n', '<leader>K', function()
+        require('dap.ui.widgets').hover()
+      end)
+      vim.keymap.set('n', '<leader>ww', function()
+        dapui.float_element('watches', { enter = true })
+      end)
+      vim.keymap.set('n', '<leader>wc', function()
+        dapui.float_element('scopes', { enter = true })
+      end)
+      vim.keymap.set('n', '<leader>ws', function()
+        dapui.float_element('stacks', { enter = true })
+      end)
+      vim.keymap.set('n', '<leader>wb', function()
+        dapui.float_element('breakpoints', { enter = true })
+      end)
+      vim.keymap.set('n', '<leader>wr', function()
+        dapui.float_element('repl', { enter = true })
+      end)
+    end,
+  },
+  {
+    gh('nodech/nvim-dap-virtual-text'),
+    config_fn = function()
+      require('nvim-dap-virtual-text').setup {
+        comment = true,
+      }
+    end,
+  },
 }
 
 local plug2hook = {}
