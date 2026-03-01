@@ -25,6 +25,14 @@ local languages = {
     name = 'ts_ls',
     config = require 'nod.lsp.ts_ls',
   },
+  {
+    name = 'bash_ls',
+    config = require 'nod.lsp.bash_ls',
+  },
+  {
+    name = 'pyright',
+    config = require 'nod.lsp.pyright',
+  }
 }
 
 for _, lang in pairs(languages) do

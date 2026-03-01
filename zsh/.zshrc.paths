@@ -1,6 +1,9 @@
 # OSX Paths
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
+# Linux user pip
+export PATH="$HOME/.local/bin:$PATH"
+
 # gpgbin
 #export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
 
