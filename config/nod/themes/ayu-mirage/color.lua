@@ -1,5 +1,5 @@
 local color = {
-  plugin = 'ayu-theme/ayu-vim',
+  plugin = 'nodech/ayu-vim',
   cmd = 'let ayucolor="mirage"',
   colorscheme = 'ayu',
   setup = function ()

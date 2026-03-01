@@ -1,5 +1,5 @@
 local color = {
-  plugin = 'morhetz/gruvbox',
+  plugin = 'nodech/gruvbox',
   cmd = 'set background=light',
   colorscheme = 'gruvbox',
 }

@@ -1,5 +1,5 @@
 local color = {
-  plugin = 'catppuccin/nvim',
+  plugin = 'nodech/catppuccin-nvim',
   colorscheme = 'catppuccin',
   setup = function ()
     require('catppuccin').setup({

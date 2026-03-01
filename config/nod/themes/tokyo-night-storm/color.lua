@@ -1,5 +1,5 @@
 local color = {
-  plugin = 'folke/tokyonight.nvim',
+  plugin = 'nodech/tokyonight.nvim',
   colorscheme = 'tokyonight-storm',
   setup = function ()
     vim.o.background = 'dark';
