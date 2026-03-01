@@ -1,26 +1,14 @@
 # OSX Paths
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
-# Linux User pip
-export PATH="$HOME/.local/bin:$PATH"
-
-# linuxbrew
-# export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
-
-# Rbenv
-# export PATH="$PATH:$HOME/.rbenv/bin"
-
 # gpgbin
 #export PATH="$PATH:/usr/local/opt/gnupg/libexec/gpgbin"
-
-# GEM
-export PATH="$PATH:$HOME/.gem/ruby/3.0.0/bin"
 
 # Cargo bins
 export PATH="$PATH:$HOME/.cargo/bin"
 
 # Custom bins
-export PATH="$HOME/.bin/$PATH"
+export PATH="$HOME/.bin/:$PATH"
 
 # Custom system installations in userspace
 custom_sys() {
@@ -76,23 +64,12 @@ games_sys() {
 }
 # custom shared libs
 
-# Add openssl to bin
-export PATH="/usr/local/opt/openssl/bin:$PATH"
-
-# Snapd
-SNAP_PATH="/var/lib/snapd/snap/bin"
-if [ -d "$SNAP_PATH" ]; then PATH="$PATH:$SNAP_PATH"; fi
-
-# Link swift
-alias swift='/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift'
-
 # Link JAVA and android
-export JAVA_HOME=$(/usr/libexec/java_home 2> /dev/null)
-#export ANDROID_HOME=~/Library/Android/sdk
+#export JAVA_HOME=$(/usr/libexec/java_home 2> /dev/null)
 
 #Cuda PATHS
-export PATH=/usr/local/cuda/bin:$PATH
-export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
+#export PATH=/usr/local/cuda/bin:$PATH
+#export DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 
 # GoPATH
 if [[ -x $(which go) ]]; then
@@ -107,17 +84,17 @@ fi
 [[ -f "$HOME/.cargo/env" ]] && source $HOME/.cargo/env
 
 # Google Cloud: The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/.sdk/google-cloud-sdk/path.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/path.zsh.inc"; fi
+#if [ -f "$HOME/.sdk/google-cloud-sdk/path.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/path.zsh.inc"; fi
 
 # Google Cloud: The next line enables shell command completion for gcloud.
-if [ -f "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc"; fi
+#if [ -f "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc" ]; then source "$HOME/.sdk/google-cloud-sdk/completion.zsh.inc"; fi
 
 # NODEJS: include global libraries
 if [ -d '/usr/local/lib/node_modules' ]; then export NODE_PATH=/usr/local/lib/node_modules; fi
 
 ## PERL 
-[[ -f ~/perl5/perlbrew/etc/bashrc ]] && source ~/perl5/perlbrew/etc/bashrc
-export PATH="$PATH:/usr/bin/vendor_perl/"
+#[[ -f ~/perl5/perlbrew/etc/bashrc ]] && source ~/perl5/perlbrew/etc/bashrc
+#export PATH="$PATH:/usr/bin/vendor_perl/"
 
 # ASDF
 # export ASDF_DATA_DIR="/your/custom/data/dir"
