@@ -77,6 +77,10 @@
       "rev": "6cee1d9e0b9ac0fbffeb538d4a5ba9f5628fabbc",
       "src": "https://github.com/nodech/quick-scope"
     },
+    "tokyonight.nvim": {
+      "rev": "5da1b76e64daf4c5d410f06bcb6b9cb640da7dfd",
+      "src": "https://github.com/folke/tokyonight.nvim"
+    },
     "vim-fugitive": {
       "rev": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4",
       "src": "https://github.com/nodech/vim-fugitive"

@@ -18,7 +18,7 @@ ALA_TEMPLATE="${CONFIG_DIR}/alacritty/template.toml"
 source $ALA_CONFIG_FILE
 
 help() {
-  echo "chcolor.sh [-lh] color"
+  echo "chcolor.sh [-lch] color"
 }
 
 list() {
@@ -27,7 +27,9 @@ list() {
   echo "Showing themes.."
   printf "  %-22s %-10s %-6s %-6s\n" "Theme" "Alacritty" "Nvim" "Tmux"
   printf "  %-22s %-10s %-6s %-6s\n" "-----" "---------" "----" "----"
-  for f in $files; do
+
+  for f in $files
+  do
     dir="${THEMES_DIR}/$f"
     alacritty=" ";
     nvim=" ";
@@ -106,7 +108,7 @@ generate() {
 
   if [[ ! -d "$colors_dir" ]]
   then
-    echo "Color '$1' not found, chcek list with"
+    echo "Color '$1' not found, check the list with"
     echo "  chcolor.sh -l"
     exit 1
   fi
@@ -122,9 +124,31 @@ generate() {
   exit 0
 }
 
+current() {
+  files=`ls ${THEMES_DIR}`
+  active=""
+
+  for f in $files
+  do
+    dir="${THEMES_DIR}/$f"
+
+    [[ -f "$dir/color.lua" ]] && {
+      current=$(dirname `readlink -f $LUA_DIR/color.lua`)
+      theme=`readlink -f $dir`
+      [[ "$current" == "$theme" ]] && active="${f}"
+    }
+  done
+
+  echo $active
+}
+
 for i in "$@"
 do
   case $i in
+    -c)
+      current
+      exit 0
+      ;;
     -l)
       list
       exit 0
