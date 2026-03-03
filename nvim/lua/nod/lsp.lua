@@ -32,6 +32,10 @@ local languages = {
   {
     name = 'pyright',
     config = require 'nod.lsp.pyright',
+  },
+  {
+    name = 'docker',
+    config = require 'nod.lsp.docker',
   }
 }
 
