@@ -1,12 +1,18 @@
 # nod.zsh-theme - Syncs with tmux theme
 
 _theme_var() {
+  name="$1"
+  envval="${(P)name}"
+
   if [[ -n "$TMUX" ]]; then
     local val
-    val=$(tmux show-environment -g "$1" 2>/dev/null)
+    val=$(tmux show-environment -g "$name" 2>/dev/null)
     val="${val#*=}"
     [[ -n "$val" ]] && echo "$val" && return
+  elif [[ "$envval" != "" ]]; then
+    echo "$envval" && return
   fi
+
   echo "$2"
 }
 
