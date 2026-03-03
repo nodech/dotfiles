@@ -120,7 +120,7 @@ generate() {
   generate_tmux $1
 
   # Refresh tmux
-  tmux source-file ~/.config/tmux/tmux-theme.conf 
+  [[ -n "$TMUX" ]] && tmux source-file ~/.config/tmux/tmux-theme.conf 
   exit 0
 }
 
