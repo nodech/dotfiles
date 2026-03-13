@@ -110,7 +110,14 @@ local plugins = {
 
   -- Edit utilities
   { gh('nodech/vim-surround') }, -- tpope
-  { gh('nodech/vim-visual-multi') }, -- mg979
+  {
+    gh('nodech/vim-visual-multi'),
+    config_fn = function ()
+      vim.cmd [[
+      let g:VM_leader = '\'
+      ]]
+    end
+  }, -- mg979
   {
     gh('nodech/quick-scope'),
     config_fn = function()
