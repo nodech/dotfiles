@@ -30,7 +30,8 @@ local docker_count
 docker_count=$(docker ps -q 2>/dev/null | wc -l)
 
 local watchexec_count
-watchexec_count=$(pgrep -c watchexec 2>/dev/null || echo 0)
+watchexec_count=$(pgrep -c watchexec 2>/dev/null)
+watchexec_count=${watchexec_count:-0}
 
 [[ $nvim_count -eq 0 && $docker_count -eq 0 && $watchexec_count -eq 0 ]] && exit 0
 
