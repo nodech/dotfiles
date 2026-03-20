@@ -351,6 +351,17 @@ _fzf_git_each_ref() {
   awk '{print $2}'
 }
 
+# nod-msg
+_fzf_git_msg() {
+  _fzf_git_check || return
+  git log --color=$(__fzf_git_color) --pretty="format:%C(yellow)%h%C(reset) %s" |
+  _fzf_git_fzf --ansi --no-sort \
+    --border-label '💬 Messages ' \
+    --preview "grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git show --color=$(__fzf_git_color .) | $(__fzf_git_pager)" "$@" |
+  sed 's/^[^ ]* //'
+}
+# /nod-msg
+
 _fzf_git_worktrees() {
   _fzf_git_check || return
   git worktree list | _fzf_git_fzf \
@@ -378,6 +389,7 @@ CTRL-G CTRL-S for Stashes
 CTRL-G CTRL-L for reflogs
 CTRL-G CTRL-W for Worktrees
 CTRL-G CTRL-E for Each ref (git for-each-ref)
+CTRL-G CTRL-M for last commit Message
 EOF
 }
 
@@ -437,6 +449,14 @@ elif [[ -n "${ZSH_VERSION:-}" ]]; then
     done
   }
 fi
-__fzf_git_init files branches tags remotes hashes stashes lreflogs each_ref worktrees '?list_bindings'
+
+__fzf_git_init files branches tags remotes hashes stashes lreflogs each_ref worktrees msg '?list_bindings'
+
+# nod-msg
+if [[ -n "${ZSH_VERSION:-}" ]]; then
+  fzf-git-msg-widget() { local result=$(_fzf_git_msg); zle reset-prompt; LBUFFER+=$result }
+  zle -N fzf-git-msg-widget
+fi
+# /nod-msg
 
 fi # --------------------------------------------------------------------------
