@@ -1,3 +1,2 @@
-
 include ~/.config/sway/config.d/*
 include @sysconfdir@/sway/config.d/*

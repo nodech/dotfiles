@@ -131,6 +131,10 @@ watchc() {
   watchex c,h,cc,hh $@
 }
 
+watchpy() {
+  watchex py $@
+}
+
 alias j=z
 
 ## AI Aliases
