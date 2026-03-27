@@ -1,0 +1,78 @@
+#compdef tmn
+
+_tmn_targets() {
+  local -a sessions targets
+  local session base id current
+  typeset -A seen_targets seen_ids
+
+  if (( ! $+commands[tmux] )); then
+    _message 'name-id'
+    return
+  fi
+
+  sessions=(${(f)"$(tmux list-sessions -F '#{session_name}' 2>/dev/null)"})
+  current="${words[CURRENT]}"
+
+  for session in "${sessions[@]}"; do
+    [[ "$session" == *-* ]] || continue
+
+    base="${session%-*}"
+    id="${session##*-}"
+
+    [[ -n "$base" && "$id" == <-> ]] || continue
+
+    if [[ "$current" == *- ]]; then
+      [[ "$base" == "${current%-}" ]] || continue
+      [[ -n "${seen_ids[$id]}" ]] && continue
+      targets+=("$id")
+      seen_ids[$id]=1
+    else
+      [[ -n "${seen_targets[$session]}" ]] && continue
+      targets+=("$session")
+      seen_targets[$session]=1
+    fi
+  done
+
+  if (( ${#targets[@]} )); then
+    if [[ "$current" == *- ]]; then
+      compadd -Q -S '' -P "${current}" -- "${targets[@]}"
+    else
+      compadd -Q -S '' -- "${targets[@]}"
+    fi
+  else
+    _message 'name-id'
+  fi
+}
+
+_tmn() {
+  if (( CURRENT == 2 )); then
+    _tmn_targets
+    return
+  fi
+
+  if (( $+functions[_tmux] )); then
+    local -a tmux_words
+    local name="${words[2]%-*}"
+    local target="${words[2]}"
+
+    tmux_words=(
+      tmux
+      new
+      -A
+      -t
+      "$name"
+      -s
+      "$target"
+      "${(@)words[@]:3}"
+    )
+
+    words=("${tmux_words[@]}")
+    CURRENT=$(( CURRENT + 5 ))
+    _tmux
+    return
+  fi
+
+  _message 'tmux arguments'
+}
+
+_tmn "$@"

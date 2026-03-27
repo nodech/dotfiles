@@ -24,19 +24,25 @@ ifneq ($(DRY_RUN),1)
 else
 	@echo "Dry run: Skipping download..."
 	@mkdir -p $(TARGET_DIR)/.oh-my-zsh/custom/themes
+	@mkdir -p $(TARGET_DIR)/.oh-my-zsh/custom/completions
 endif
 
 nodzsh: $(TARGET_DIR)/.oh-my-zsh
 	@echo " > Stowing zsh theme"
-	cd $(STOW_DIR)/oh-my-zsh && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/custom/themes themes
+	cd $(STOW_DIR)/oh-my-zsh && \
+		stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/custom/themes themes && \
+		stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/custom/completions completions
 ifeq ($(DRY_RUN),1)
-	-@rmdir ~/.oh-my-zsh/custom/themes
-	-@rmdir ~/.oh-my-zsh
+	-@rmdir $(TARGET_DIR)/.oh-my-zsh/custom/themes
+	-@rmdir $(TARGET_DIR)/.oh-my-zsh/custom/completions
+	-@rmdir $(TARGET_DIR)/.oh-my-zsh
 endif
 
 unnodzsh:
 	@echo " > Unstowing zsh theme"
-	cd $(STOW_DIR)/oh-my-zsh && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/themes themes
+	cd $(STOW_DIR)/oh-my-zsh && \
+		stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/themes themes && \
+		stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.oh-my-zsh/completions completions
 
 zsh: nodzsh
 	@echo " > Stowing zsh configuration..."
