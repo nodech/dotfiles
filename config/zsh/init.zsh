@@ -1,10 +1,4 @@
-echo "INitializing new ZSH..."
-
-# Color utils
-autoload -Uz colors && colors
-
-# Autocompletion
-autoload -Uz compinit && compinit
+echo "Initializing new ZSH... WIP"
 
 # Limits
 ulimit -u 2048
@@ -19,9 +13,11 @@ setopt EXTENDED_HISTORY
 ZSH_KEYMAP_STYLE_DEFAULT="emacs"
 ZSH_KEYMAP_STYLE="${ZSH_KEYMAP_STYLE:-$ZSH_KEYMAP_STYLE_DEFAULT}"
 
+export EDITOR='nvim'
+export SHELL=$(command -v zsh)
+
 source "$ZSH_CFG/ux-title.zsh"
 source "$ZSH_CFG/prompt-theme.zsh"
 source "$ZSH_CFG/keybinds.zsh"
-
-export EDITOR='nvim'
-export SHELL=$(command -v zsh)
+source "$ZSH_CFG/paths.zsh"
+source "$ZSH_CFG/completions.zsh"

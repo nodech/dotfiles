@@ -1,4 +1,7 @@
-# nod.zsh-theme - Syncs with tmux theme
+# ZSH Theme that sync with tmux.
+# Color utils
+autoload -Uz colors
+colors
 
 _theme_var() {
   name="$1"
