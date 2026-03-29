@@ -54,7 +54,6 @@ _C_RESET="%{$reset_color%}"
 setopt PROMPT_SUBST
 setopt TRANSIENT_RPROMPT
 
-# ── Prompt setup ──
 local user=""
 local ret_status="%(?:%B${_C_GREEN}✓%b:${_C_RED}✗%s)"
 local docker_indicator=""
@@ -63,12 +62,10 @@ if [[ $(whoami) != "nod" ]]; then
   user=$(whoami)
 fi
 
- if [[ -f /.dockerenv ]]; then
-  # docker_indicator="${_C_BLUE} 🐳 ${_C_RESET}"
+if [[ -f /.dockerenv ]]; then
   docker_indicator="${_C_BLUE}  ${_C_RESET}"
- fi
+fi
 
-# PROMPT='${docker_indicator}'"${_C_ACCENT}"'${user}'"${ret_status}${_C_RESET}"
 PROMPT='${docker_indicator}'"${_C_ACCENT}"'${user}'" ${ret_status} ${_C_RESET}"
 
 if [[ $SERVER = true ]]; then
@@ -84,4 +81,3 @@ ZSH_THEME_GIT_PROMPT_DIRTY=" ${_C_RED}${ZSH_THEME_GIT_BRANCH_ICON}${_C_RESET}"
 ZSH_THEME_GIT_PROMPT_CLEAN=" ${_C_GREEN}${ZSH_THEME_GIT_BRANCH_ICON}${_C_RESET}"
 
 alias reload-theme="source ${0}"
-
