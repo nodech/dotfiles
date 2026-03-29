@@ -19,7 +19,7 @@ uninstall: unnvim unconfig unzsh
 	@echo "Done"
 
 # ZSH {{{
-.PHONY: zsh unzsh nodzsh unnodzsh
+.PHONY: zsh unzsh nodzsh unnodzsh zsh2 unzsh2
 
 $(OMZ_DIR):
 	@echo " > Installing Oh My Zsh... $(DRY_RUN)"
@@ -59,6 +59,18 @@ zsh: nodzsh
 unzsh: unnodzsh
 	@echo " > Unstowing zsh configurations..."
 	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR) zsh
+
+$(TARGET_DIR)/.config/zsh:
+	mkdir -p $(TARGET_DIR)/.config/zsh
+
+zsh2: $(TARGET_DIR)/.config/zsh config
+	@echo " > Stowing zsh configuration..."
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR) zsh2
+
+unzsh2:
+	@echo " > Unstowing zsh configurations..."
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR) zsh2
+
 
 # }}} /ZSH 
 
