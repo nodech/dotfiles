@@ -1,8 +1,10 @@
 # UI / UX
 DISABLE_AUTO_TITLE=false
 
+autoload -Uz add-zsh-hook
+
 # Dyn title based on cwd.
-function precmd() {
+_zsh_update_title() {
   # Get the absolute path
   local fullpath="${PWD}"
 
@@ -34,3 +36,5 @@ function precmd() {
   local window_title="\033]0;${display_path}\007"
   echo -ne "$window_title"
 }
+
+add-zsh-hook precmd _zsh_update_title

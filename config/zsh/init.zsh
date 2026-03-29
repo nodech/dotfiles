@@ -16,6 +16,9 @@ ZSH_KEYMAP_STYLE="${ZSH_KEYMAP_STYLE:-$ZSH_KEYMAP_STYLE_DEFAULT}"
 export EDITOR='nvim'
 export SHELL=$(command -v zsh)
 
+# Unique
+typeset -U path PATH fpath
+
 source "$ZSH_CFG/ux-title.zsh"
 source "$ZSH_CFG/prompt-theme.zsh"
 source "$ZSH_CFG/keybinds.zsh"

@@ -1,5 +1,3 @@
-typeset -U path PATH
-
 # system local paths:
 #   dotfile scripts
 #   my binaries from `~/.local/opt` symlinked
@@ -9,15 +7,17 @@ path+=("$HOME/.local/bin")
 
 # Custom system installations in userspace / AUR goes here.
 custom_sys() {
+  # Linux shared libs
   export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/lib"
   export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/usr/lib"
   export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.custom_sys/usr/local/lib"
 
-  # Custom link libs
+  # Link-time
   export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/lib"
   export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/usr/lib"
   export LIBRARY_PATH="$LIBRARY_PATH:$HOME/.custom_sys/usr/local/lib"
 
+  # macOS shared libs
   export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/.custom_sys/lib"
   export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/.custom_sys/usr/lib"
   export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:$HOME/.custom_sys/usr/local/lib"

@@ -3,6 +3,8 @@
 autoload -Uz colors
 colors
 
+HIDE_USERNAME=${HIDE_USERNAME:-nd}
+
 _theme_var() {
   name="$1"
   envval="${(P)name}"
@@ -61,7 +63,7 @@ local user=""
 local ret_status="%(?:%B${_C_GREEN}✓%b:${_C_RED}✗%s)"
 local docker_indicator=""
 
-if [[ $(whoami) != "nod" ]]; then
+if [[ $(whoami) != "$HIDE_USERNAME" ]]; then
   user=$(whoami)
 fi
 
