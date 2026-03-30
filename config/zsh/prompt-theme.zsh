@@ -85,4 +85,12 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="${_C_RESET}"
 ZSH_THEME_GIT_PROMPT_DIRTY=" ${_C_RED}${ZSH_THEME_GIT_BRANCH_ICON}${_C_RESET}"
 ZSH_THEME_GIT_PROMPT_CLEAN=" ${_C_GREEN}${ZSH_THEME_GIT_BRANCH_ICON}${_C_RESET}"
 
-alias reload-theme="source ${0}"
+reload-theme() {
+  source "$ZSH_CFG/prompt-theme.zsh"
+
+  if [[ "$ZSH_KEYMAP_STYLE" == "vi" ]]; then
+    source "$ZSH_CFG/prompt-theme-vi.zsh"
+  fi
+
+  zle && zle reset-prompt 2>/dev/null
+}
