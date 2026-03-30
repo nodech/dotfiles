@@ -1,5 +1,3 @@
-echo "Initializing new ZSH... WIP"
-
 # Limits
 ulimit -n 2048
 
