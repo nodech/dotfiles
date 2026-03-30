@@ -16,7 +16,10 @@ ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 ZSH_COMPDUMP="$ZSH_CACHE_DIR/zcompdump"
 ZSH_COMP_AUDIT_RANDOM="${ZSH_COMP_AUDIT_RANDOM:-100}"
 
-mkdir -p "$ZSH_CACHE_DIR"
+if [ ! -d "$ZSH_CACHE_DIR" ]; then
+  print -u2 "ZSH ERR: Can't find ZSH CACHE DIR"
+  return 1
+fi
 
 # Run random audits.
 if [[ "$ZSH_RUN_COMPAUDIT_RANDOM" == "1" ]]; then

@@ -43,7 +43,9 @@ source "$ZSH_CFG/features/gpg.zsh"
 source "$ZSH_CFG/features/lsd.zsh"
 source "$ZSH_CFG/features/ripgrep.zsh"
 source "$ZSH_CFG/features/safe-rm.zsh"
-source "$ZSH_CFG/features/syntax-highlighting.zsh"
 source "$ZSH_CFG/features/tmux.zsh"
 source "$ZSH_CFG/features/watchexec.zsh"
 source "$ZSH_CFG/features/zoxide.zsh"
+
+# Load last
+source "$ZSH_CFG/features/syntax-highlighting.zsh"

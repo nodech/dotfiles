@@ -4,6 +4,7 @@ DRY_RUN := $(if $(DRY_RUN),1)
 STOW_FLAGS := $(if $(DRY_RUN),-n)
 XDG_BIN_HOME := $(TARGET_DIR)/.local/bin
 XDG_DATA_HOME := $(TARGET_DIR)/.local/share
+XDG_CACHE_HOME := $(TARGET_DIR)/.cache
 RUN := $(if $(DRY_RUN),@echo,@)
 
 .PHONY: all install uninstall
@@ -25,7 +26,10 @@ $(TARGET_DIR)/.config/zsh:
 $(XDG_DATA_HOME)/zsh/completions:
 	$(RUN) mkdir -p $(XDG_DATA_HOME)/zsh/completions
 
-zsh: $(TARGET_DIR)/.config/zsh $(XDG_DATA_HOME)/zsh/completions config
+$(XDG_CACHE_HOME)/zsh:
+	$(RUN) mkdir -p $(XDG_CACHE_HOME)/zsh
+
+zsh: $(XDG_CACHE_HOME)/zsh $(TARGET_DIR)/.config/zsh $(XDG_DATA_HOME)/zsh/completions config
 	@echo " > Stowing zsh configuration..."
 	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR) zsh2
 
