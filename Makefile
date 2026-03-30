@@ -3,6 +3,8 @@ TARGET_DIR := $(HOME)
 DRY_RUN := $(if $(DRY_RUN),1)
 STOW_FLAGS := $(if $(DRY_RUN),-n)
 XDG_BIN_HOME := $(TARGET_DIR)/.local/bin
+XDG_DATA_HOME := $(TARGET_DIR)/.local/share
+RUN := $(if $(DRY_RUN),@echo,@)
 
 .PHONY: all install uninstall
 all:
@@ -18,9 +20,12 @@ uninstall: unnvim unconfig unzsh unbin
 .PHONY: zsh unzsh
 
 $(TARGET_DIR)/.config/zsh:
-	mkdir -p $(TARGET_DIR)/.config/zsh
+	$(RUN) mkdir -p $(TARGET_DIR)/.config/zsh
 
-zsh: $(TARGET_DIR)/.config/zsh config
+$(XDG_DATA_HOME)/zsh/completions:
+	$(RUN) mkdir -p $(XDG_DATA_HOME)/zsh/completions
+
+zsh: $(TARGET_DIR)/.config/zsh $(XDG_DATA_HOME)/zsh/completions config
 	@echo " > Stowing zsh configuration..."
 	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR) zsh2
 
@@ -36,18 +41,14 @@ unzsh:
 .PHONY: bin unbin
 
 $(XDG_BIN_HOME):
-ifneq ($(DRY_RUN), 1)
-	mkdir -p "$(XDG_BIN_HOME)"
-endif
+	$(RUN) mkdir -p "$(XDG_BIN_HOME)"
 
 bin:
 	stow -v $(STOW_FLAGS) --target=$(XDG_BIN_HOME) bin
 
 unbin:
 	stow -v -D $(STOW_FLAGS) --target=$(XDG_BIN_HOME) bin
-ifneq ($(DRY_RUN), 1)
-	rmdir "$(XDG_BIN_HOME)"
-endif
+	$(RUN) rmdir "$(XDG_BIN_HOME)"
 
 # }}} /BIN
 
@@ -69,7 +70,7 @@ unconfig:
 .PHONY: nvim unnvim
 
 $(TARGET_DIR)/.config/nvim:
-	mkdir -p $(TARGET_DIR)/.config/nvim
+	$(RUN) mkdir -p $(TARGET_DIR)/.config/nvim
 
 nvim: $(TARGET_DIR)/.config/nvim
 	@echo " > Stowing nvim 0.12"
