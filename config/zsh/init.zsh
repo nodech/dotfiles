@@ -19,6 +19,12 @@ export SHELL=$(command -v zsh)
 # Unique
 typeset -U path PATH fpath
 
+# Audit completions for now
+# Enable/Disable random audits
+ZSH_RUN_COMPAUDIT_RANDOM="${ZSH_RUN_COMPAUDIT_RANDOM:-0}"
+# Audit for now
+ZSH_RUN_COMPAUDIT="${ZSH_RUN_COMPAUDIT:-1}"
+
 source "$ZSH_CFG/ux-title.zsh"
 source "$ZSH_CFG/prompt-theme.zsh"
 source "$ZSH_CFG/keybinds.zsh"
