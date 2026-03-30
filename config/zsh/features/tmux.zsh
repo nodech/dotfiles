@@ -6,13 +6,13 @@
 # alias tkss='tmux kill-session -t'
 
 tmn() {
-  arg=$1
+  local name id
   name=$(echo "$1" | cut -d '-' -f1)
   id=$(echo "$1" | cut -d '-' -f2)
 
   if [[ "$name" == "" ]] || ! [[ "$id" =~ '^[0-9]+$' ]]; then
     echo "Format is name-id. Where name is a string and id is a number."
   else
-    tmux new -A -t "$name" -s "$name-$id" ${@:2}
+    tmux new -A -t "$name" -s "$name-$id" "${@:2}"
   fi
 }

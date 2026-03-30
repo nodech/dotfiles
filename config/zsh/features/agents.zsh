@@ -8,7 +8,7 @@ codex-chat() {
     dev-shell run --skip-git-check \
       --write . \
       --project chat \
-      --codex -- codex $@
+      --codex -- codex "$@"
   )
 
   rmtrash "$dir"
@@ -23,7 +23,7 @@ claude-chat() {
     dev-shell run --skip-git-check \
       --write . \
       --project chat \
-      --claude -- claude $@
+      --claude -- claude "$@"
   )
 
   rmtrash "$dir"

@@ -1,23 +1,25 @@
 watchex() {
-  watchexec -e $1 --clear --restart --stdin-quit ${@:2}
+  local exts=$1
+  shift
+  watchexec -e "$exts" --clear --restart --stdin-quit "$@"
 }
 
 watchjs() {
-  watchex js,jsx,ts,tsx,mjs $@
+  watchex js,jsx,ts,tsx,mjs "$@"
 }
 
 watchgo() {
-  watchex go $@
+  watchex go "$@"
 }
 
 watchrust() {
-  watchex rs $@
+  watchex rs "$@"
 }
 
 watchc() {
-  watchex c,h,cc,hh $@
+  watchex c,h,cc,hh "$@"
 }
 
 watchpy() {
-  watchex py $@
+  watchex py "$@"
 }

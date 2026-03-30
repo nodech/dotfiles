@@ -17,10 +17,10 @@ function find-up-home() {
     return 1
   fi
 
-  find-up-home $(dirname $dir) $name
+  find-up-home "$(dirname -- "$dir")" "$name"
   return $?
 }
 
 function cpv() {
-  rsync -a --no-i-r --info=progress2 $@
+  rsync -a --no-i-r --info=progress2 "$@"
 }
