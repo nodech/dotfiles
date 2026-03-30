@@ -11,6 +11,7 @@ alias gst="git status"
 alias gr="git remote"
 alias gco="git checkout"
 alias gc="git commit --verbose"
+alias gp="git push"
 
 # Worktree
 alias gwt="git worktree"

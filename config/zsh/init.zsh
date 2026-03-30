@@ -32,7 +32,9 @@ source "$ZSH_CFG/keybinds.zsh"
 source "$ZSH_CFG/paths.zsh"
 source "$ZSH_CFG/completions.zsh"
 
+# Features
 source "$ZSH_CFG/features/agents.zsh"
+source "$ZSH_CFG/features/autosuggestions.zsh"
 source "$ZSH_CFG/features/delta.zsh"
 source "$ZSH_CFG/features/docker.zsh"
 source "$ZSH_CFG/features/fzf.zsh"
