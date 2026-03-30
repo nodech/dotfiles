@@ -5,6 +5,7 @@ STOW_FLAGS := $(if $(DRY_RUN),-n)
 XDG_BIN_HOME := $(TARGET_DIR)/.local/bin
 XDG_DATA_HOME := $(TARGET_DIR)/.local/share
 XDG_CACHE_HOME := $(TARGET_DIR)/.cache
+XDG_CONFIG_HOME := $(TARGET_DIR)/.config
 RUN := $(if $(DRY_RUN),@echo,@)
 
 .PHONY: all install uninstall
@@ -20,22 +21,26 @@ uninstall: unnvim unconfig unzsh unbin
 # ZSH {{{
 .PHONY: zsh unzsh
 
-$(TARGET_DIR)/.config/zsh:
-	$(RUN) mkdir -p $(TARGET_DIR)/.config/zsh
+ZSH_CONFIG_DIR := $(TARGET_DIR)/.config/zsh
+ZSH_DATA_DIR := $(XDG_DATA_HOME)/zsh/completions
+ZSH_CACHE_DIR := $(XDG_CACHE_HOME)/zsh
 
-$(XDG_DATA_HOME)/zsh/completions:
-	$(RUN) mkdir -p $(XDG_DATA_HOME)/zsh/completions
+$(ZSH_CONFIG_DIR):
+	$(RUN) mkdir -p "$@"
 
-$(XDG_CACHE_HOME)/zsh:
-	$(RUN) mkdir -p $(XDG_CACHE_HOME)/zsh
+$(ZSH_DATA_DIR):
+	$(RUN) mkdir -p "$@"
 
-zsh: $(XDG_CACHE_HOME)/zsh $(TARGET_DIR)/.config/zsh $(XDG_DATA_HOME)/zsh/completions config
+$(ZSH_CACHE_DIR):
+	$(RUN) mkdir -p "$@"
+
+zsh: $(ZSH_CACHE_DIR) $(ZSH_CONFIG_DIR) $(ZSH_DATA_DIR) config
 	@echo " > Stowing zsh configuration..."
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR) zsh2
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target="$(TARGET_DIR)" zsh2
 
 unzsh:
 	@echo " > Unstowing zsh configurations..."
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR) zsh2
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target="$(TARGET_DIR)" zsh2
 
 
 # }}} /ZSH 
@@ -45,14 +50,13 @@ unzsh:
 .PHONY: bin unbin
 
 $(XDG_BIN_HOME):
-	$(RUN) mkdir -p "$(XDG_BIN_HOME)"
+	$(RUN) mkdir -p "$@"
 
-bin:
-	stow -v $(STOW_FLAGS) --target=$(XDG_BIN_HOME) bin
+bin: $(XDG_BIN_HOME)
+	stow -v $(STOW_FLAGS) --target="$(XDG_BIN_HOME)" bin
 
 unbin:
-	stow -v -D $(STOW_FLAGS) --target=$(XDG_BIN_HOME) bin
-	$(RUN) rmdir "$(XDG_BIN_HOME)"
+	stow -v -D $(STOW_FLAGS) --target="$(XDG_BIN_HOME)" bin
 
 # }}} /BIN
 
@@ -60,39 +64,45 @@ unbin:
 # CONFIG {{{
 .PHONY: config unconfig
 
-config:
+$(XDG_CONFIG_HOME):
+	$(RUN) mkdir -p "$@"
+
+config: $(XDG_CONFIG_HOME)
 	@echo " > Stowing .config"
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config config
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target="$(XDG_CONFIG_HOME)" config
 
 unconfig:
 	@echo " > Unstowing .config"
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config config
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target="$(XDG_CONFIG_HOME)" config
 
 # }}} /.config
 
 # NVIM 0.12 {{{
 .PHONY: nvim unnvim
 
-$(TARGET_DIR)/.config/nvim:
-	$(RUN) mkdir -p $(TARGET_DIR)/.config/nvim
+$(XDG_CONFIG_HOME)/nvim:
+	$(RUN) mkdir -p "$@"
 
-nvim: $(TARGET_DIR)/.config/nvim
+nvim: $(XDG_CONFIG_HOME)/nvim
 	@echo " > Stowing nvim 0.12"
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target="$(XDG_CONFIG_HOME)/nvim" nvim
 
 unnvim:
 	@echo " > Unstowing nvim 0.12"
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.config/nvim nvim
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target="$(XDG_CONFIG_HOME)/nvim" nvim
 
 # }}} /NVIM 0.12
 
 # GPG config.
 .PHONY: gnupg ungnupg
 
-gnupg:
+$(TARGET_DIR)/.gnupg:
+	$(RUN) mkdir -p "$@"
+
+gnupg: $(TARGET_DIR)/.gnupg
 	@echo " > Stowing gnupg..."
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target=$(TARGET_DIR)/.gnupg/ gnupg
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target="$(TARGET_DIR)/.gnupg/" gnupg
 
 ungnupg:
 	@echo " > Unstowing gnupg..."
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target=$(TARGET_DIR)/.gnupg/ gnupg
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target="$(TARGET_DIR)/.gnupg/" gnupg
