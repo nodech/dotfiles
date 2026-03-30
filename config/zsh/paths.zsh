@@ -4,6 +4,7 @@
 #   Maybe PIP is here ?
 #   ... ?
 path+=("$HOME/.local/bin")
+path+=("$HOME/.local/bin/wrappers")
 
 # Custom system installations in userspace / AUR goes here.
 custom_sys() {

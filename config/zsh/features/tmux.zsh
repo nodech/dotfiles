@@ -7,8 +7,8 @@
 
 tmn() {
   arg=$1
-  name=`echo "$1" | cut -d '-' -f1`
-  id=`echo "$1" | cut -d '-' -f2`
+  name=$(echo "$1" | cut -d '-' -f1)
+  id=$(echo "$1" | cut -d '-' -f2)
 
   if [[ "$name" == "" ]] || ! [[ "$id" =~ '^[0-9]+$' ]]; then
     echo "Format is name-id. Where name is a string and id is a number."

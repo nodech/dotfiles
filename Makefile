@@ -2,6 +2,7 @@ STOW_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TARGET_DIR := $(HOME)
 DRY_RUN := $(if $(DRY_RUN),1)
 STOW_FLAGS := $(if $(DRY_RUN),-n)
+XDG_BIN_HOME := $(TARGET_DIR)/.local/bin
 
 OMZ_DIR := $(TARGET_DIR)/.oh-my-zsh
 OMZ_THEMES_DIR := $(OMZ_DIR)/custom/themes
@@ -73,6 +74,26 @@ unzsh2:
 
 
 # }}} /ZSH 
+
+# Local binaries
+# BIN {{{
+.PHONY: bin unbin
+
+$(XDG_BIN_HOME):
+ifneq ($(DRY_RUN), 1)
+	mkdir -p "$(XDG_BIN_HOME)"
+endif
+
+bin:
+	stow -v $(STOW_FLAGS) --target=$(XDG_BIN_HOME) bin
+
+unbin:
+	stow -v -D $(STOW_FLAGS) --target=$(XDG_BIN_HOME) bin
+ifneq ($(DRY_RUN), 1)
+	rmdir "$(XDG_BIN_HOME)"
+endif
+
+# }}} /BIN
 
 # Config directory contains fully linkable things only
 # CONFIG {{{
