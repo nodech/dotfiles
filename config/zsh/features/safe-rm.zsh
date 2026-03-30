@@ -1,7 +1,8 @@
 rm=$(command -v rm)
 
 function rmtrash() {
-  local name mount_dir
+  local name target target_mount target_trash_dir
+  typeset -A created_trash_dirs
   (( $# > 0 )) || return 0
 
   if ! command -v findmnt >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
@@ -10,12 +11,19 @@ function rmtrash() {
   fi
 
   name=$(date +%Y-%m-%d/%H:%M:%S)
-  mount_dir=$(findmnt -T . -J | jq -r '.filesystems[0].target') || return 1
-  TRASH="$mount_dir/.TRASH"
-  TRASH_DIR="$TRASH/$name"
 
-  mkdir -p "$TRASH_DIR" || return 1
-  mv -- "$@" "$TRASH_DIR"
+  for target in "$@"
+  do
+    target_mount=$(findmnt -T "$target" -J | jq -r '.filesystems[0].target') || return 1
+    target_trash_dir="$target_mount/.TRASH/$name"
+
+    if [[ -z "${created_trash_dirs[$target_mount]}" ]]; then
+      mkdir -p "$target_trash_dir" || return 1
+      created_trash_dirs[$target_mount]=1
+    fi
+
+    mv -- "$target" "$target_trash_dir" || return 1
+  done
 }
 
 function cltrash() {
