@@ -4,6 +4,11 @@ fpath+=("$ZSH_CFG/completions/")
 # Dynamic completions
 fpath+=("$HOME/.local/share/zsh/completions")
 
+zmodload zsh/complist
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
 autoload -Uz compinit
 autoload -Uz compaudit
 
