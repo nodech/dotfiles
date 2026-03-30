@@ -36,11 +36,11 @@ $(ZSH_CACHE_DIR):
 
 zsh: $(ZSH_CACHE_DIR) $(ZSH_CONFIG_DIR) $(ZSH_DATA_DIR) config
 	@echo " > Stowing zsh configuration..."
-	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target="$(TARGET_DIR)" zsh2
+	cd $(STOW_DIR) && stow -v $(STOW_FLAGS) --target="$(TARGET_DIR)" zsh
 
 unzsh:
 	@echo " > Unstowing zsh configurations..."
-	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target="$(TARGET_DIR)" zsh2
+	cd $(STOW_DIR) && stow -v -D $(STOW_FLAGS) --target="$(TARGET_DIR)" zsh
 
 
 # }}} /ZSH 
