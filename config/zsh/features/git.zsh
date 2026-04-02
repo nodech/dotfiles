@@ -13,6 +13,7 @@ alias gco="git checkout"
 alias gc="git commit --verbose"
 alias gp="git push"
 alias gl="git pull"
+alias ga="git add"
 alias gsh="git show"
 alias gshps="git show --pretty=short --show-signature"
 
