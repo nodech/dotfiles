@@ -2,6 +2,15 @@ local gh = function(x)
   return 'https://github.com/' .. x
 end
 
+local builtins = {
+  {
+    'nvim.undotree',
+    config_fn = function ()
+      vim.keymap.set('n', '<leader>u', require('undotree').open)
+    end
+  },
+}
+
 local plugins = {
   -- General
   { gh('nodech/nvim-web-devicons') }, -- { gh('nvim-tree/nvim-web-devicons') },
@@ -198,6 +207,20 @@ local plugins = {
   },
 }
 
+local run_config = function (mod)
+  if mod.config then
+    local success, err = pcall(require, mod.config)
+
+    if not success then
+      vim.notify('Failed to load ' .. mod.config .. ': ' .. err, vim.log.levels.WARN)
+    end
+  end
+
+  if mod.config_fn then
+    mod.config_fn()
+  end
+end
+
 local plug2hook = {}
 
 local load_list = vim
@@ -227,16 +250,11 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 vim.pack.add(load_list)
 
+for _, mod in ipairs(builtins) do
+  vim.cmd.packadd(mod[1])
+  run_config(mod)
+end
+
 for _, mod in ipairs(plugins) do
-  if mod.config then
-    local success, err = pcall(require, mod.config)
-
-    if not success then
-      vim.notify('Failed to load ' .. mod.config .. ': ' .. err, vim.log.levels.WARN)
-    end
-  end
-
-  if mod.config_fn then
-    mod.config_fn()
-  end
+  run_config(mod)
 end
