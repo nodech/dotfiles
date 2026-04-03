@@ -3,8 +3,8 @@
 #   my binaries from `~/.local/opt` symlinked
 #   Maybe PIP is here ?
 #   ... ?
-path+=("$HOME/.local/bin")
-path+=("$HOME/.local/bin/wrappers")
+path=("$HOME/.local/bin" $path)
+path=("$HOME/.local/bin/wrappers" $path)
 
 # Custom system installations in userspace / AUR goes here.
 custom_sys() {
