@@ -25,6 +25,9 @@ ZSH_RUN_COMPAUDIT_RANDOM="${ZSH_RUN_COMPAUDIT_RANDOM:-0}"
 # Audit for now
 ZSH_RUN_COMPAUDIT="${ZSH_RUN_COMPAUDIT:-1}"
 
+# Conf (to config.zsh?)
+setopt autocd
+
 source "$ZSH_CFG/util.zsh"
 source "$ZSH_CFG/ux-title.zsh"
 source "$ZSH_CFG/prompt-theme.zsh"
