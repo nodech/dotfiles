@@ -142,6 +142,16 @@ map('n', ']e', function()
   vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR })
 end)
 
+--- Warnings only
+map('n', '[w', function()
+  vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.WARN })
+end)
+
+map('n', ']w', function()
+  vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.WARN })
+end)
+
+
 map('n', 'gl', vim.diagnostic.open_float)
 map('n', '<leader>dq', vim.diagnostic.setloclist)
 map('n', '<leader>dQ', vim.diagnostic.setqflist)
