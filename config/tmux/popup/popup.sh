@@ -8,7 +8,6 @@ SOURCE_KEY="${SOURCE_KEY_RAW//[^A-Za-z0-9_.-]/_}"
 GROUP_SESSION="${GROUP_PREFIX}-${SOURCE_KEY}"
 WINDOW="$SOURCE_KEY"
 
-
 # exec > /tmp/popup_debug.log 2>&1
 # set -x
 

@@ -12,4 +12,4 @@ fi
 
 exec tmux display-popup -c "$CLIENT" -E -w 80% -h 70% \
     -d "$CURRENT_PATH" \
-    "zsh ~/.config/tmux/popup.sh"
+    "zsh ~/.config/tmux/popup/popup.sh"
