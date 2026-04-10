@@ -1,15 +1,16 @@
 #!/usr/bin/env zsh
 set -eu
 
-SESSION_PREFIX="scratch-popup"
+source "$HOME/.config/tmux/popup/common.sh"
+
 CLIENT="$(tmux display-message -p '#{client_name}')"
 CURRENT_SESSION="$(tmux display-message -p '#{session_name}')"
 CURRENT_PATH="$(tmux display-message -p '#{pane_current_path}')"
 
-if [[ "$CURRENT_SESSION" == ${SESSION_PREFIX}* ]]; then
+if [[ "$CURRENT_SESSION" == ${GROUP_PREFIX}-* ]]; then
     exec tmux detach-client
 fi
 
 exec tmux display-popup -c "$CLIENT" -E -w 80% -h 70% \
     -d "$CURRENT_PATH" \
-    "zsh ~/.config/tmux/popup/popup.sh"
+    "zsh $POPUP_SCRIPT"
