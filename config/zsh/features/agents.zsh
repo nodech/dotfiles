@@ -23,6 +23,7 @@ claude-chat() {
     dev-shell run --skip-git-check \
       --write . \
       --project chat \
+      --no-pass \
       --claude -- claude "$@"
   )
 

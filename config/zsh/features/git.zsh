@@ -16,6 +16,7 @@ alias gl="git pull"
 alias ga="git add"
 alias gsh="git show"
 alias gshps="git show --pretty=short --show-signature"
+alias gb="git branch"
 
 # Logs
 alias glo="git log --oneline --decorate"
