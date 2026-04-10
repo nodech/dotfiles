@@ -36,6 +36,10 @@ local languages = {
   {
     name = 'docker',
     config = require 'nod.lsp.docker',
+  },
+  {
+    name = 'c_ls',
+    config = require 'nod.lsp.c_ls',
   }
 }
 
@@ -99,6 +103,54 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = lsp_group,
   callback = lsp_callback,
 })
+
+-- LSP copy type
+local function yank_lsp_hover()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr, method = "textDocument/hover" })
+
+  if vim.tbl_isempty(clients) then
+    vim.notify("No LSP client with hover support", vim.log.levels.WARN)
+    return
+  end
+
+  local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
+
+  vim.lsp.buf_request(bufnr, "textDocument/hover", params, function(err, result)
+    if err then
+      vim.notify(err.message or tostring(err), vim.log.levels.WARN)
+      return
+    end
+
+    if not (result and result.contents) then
+      vim.notify("No hover info", vim.log.levels.WARN)
+      return
+    end
+
+    local lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+    local text = vim.trim(table.concat(lines, "\n"))
+
+    if text == "" then
+      vim.notify("Hover info was empty", vim.log.levels.WARN)
+      return
+    end
+
+    text = text .. "\n"
+
+    vim.fn.setreg('"', text, 'V')
+    vim.fn.setreg('0', text, 'V')
+
+    local clipboard = vim.o.clipboard
+    if clipboard:find("unnamedplus") then
+      vim.fn.setreg('+', text, 'V')
+    elseif clipboard:find("unnamed") then
+      vim.fn.setreg('*', text, 'V')
+    end
+  end)
+end
+
+vim.keymap.set('n', '<leader>yt', yank_lsp_hover, { desc = 'Yank LSP hover text' })
+
 
 -- Diagnostics Keymaps
 local map = vim.keymap.set
