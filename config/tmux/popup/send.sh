@@ -29,7 +29,5 @@ else
 fi
 
 if [[ "$(tmux display-message -p '#{session_name}')" != ${GROUP_PREFIX}-* ]]; then
-    exec tmux display-popup -c "$CLIENT" -E -w 80% -h 70% \
-        -d "$CURRENT_PATH" \
-        "zsh $POPUP_SCRIPT"
+    popup_open "$CLIENT" "$CURRENT_PATH"
 fi

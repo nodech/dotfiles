@@ -3,6 +3,8 @@
 BASE_SESSION="scratch"
 GROUP_PREFIX="scratch-popup"
 POPUP_SCRIPT="$HOME/.config/tmux/popup/popup.sh"
+POPUP_WIDTH="80%"
+POPUP_HEIGHT="70%"
 
 popup_source_key() {
     local source_key_raw
@@ -33,4 +35,15 @@ popup_ensure_target() {
     tmux select-window -t "$BASE_SESSION:$WINDOW" 2>/dev/null || tmux new-window -t "$BASE_SESSION" -n "$WINDOW"
     tmux has-session -t "$GROUP_SESSION" 2>/dev/null || tmux new-session -d -t "$BASE_SESSION" -s "$GROUP_SESSION"
     tmux select-window -t "$GROUP_SESSION:$WINDOW"
+}
+
+popup_open() {
+    local client cpath
+
+    client="$1"
+    cpath="$2"
+
+    exec tmux display-popup -c "$client" -E -w "$POPUP_WIDTH" -h "$POPUP_HEIGHT" \
+        -d "$cpath" \
+        "zsh $POPUP_SCRIPT"
 }

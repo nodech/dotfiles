@@ -11,6 +11,4 @@ if [[ "$CURRENT_SESSION" == ${GROUP_PREFIX}-* ]]; then
     exec tmux detach-client
 fi
 
-exec tmux display-popup -c "$CLIENT" -E -w 80% -h 70% \
-    -d "$CURRENT_PATH" \
-    "zsh $POPUP_SCRIPT"
+popup_open "$CLIENT" "$CURRENT_PATH"
