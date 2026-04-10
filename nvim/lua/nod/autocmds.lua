@@ -41,10 +41,3 @@ autocmd('BufWinLeave', {
   command = 'silent! mkview',
 })
 
--- Git messages
-autocmd('FileType', {
-  pattern = 'gitcommit',
-  callback = function(args)
-    vim.bo[args.buf].omnifunc = 'v:lua.require("nod.gitcommit_completion").omnifunc'
-  end,
-})

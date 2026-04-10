@@ -57,14 +57,6 @@ mod.setup {
   -- elsewhere in your config, without redefining it, due to `opts_extend`
   sources = {
     default = { 'lsp', 'path' }, -- 'omni', 'buffer', 'snippets'
-    per_filetype = {
-      gitcommit = { inherit_defaults = false, 'omni', 'buffer', 'lsp' },
-    },
-    providers = {
-      omni = {
-        score_offset = 10,
-      },
-    },
   },
 
   fuzzy = {
