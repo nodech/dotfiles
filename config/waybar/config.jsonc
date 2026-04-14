@@ -24,7 +24,7 @@
         // "power-profiles-daemon",
 
         "wireplumber",
-        "network",
+        "custom/network",
         "memory",
         "cpu",
         "temperature",
@@ -129,6 +129,15 @@
           "<span color='#2aa9ff'>󰤥</span>",
           "<span color='#69ff94'>󰤨</span>"
         ]
+    },
+    "custom/network": {
+        "interval": 5,
+        "exec": "$XDG_CONFIG_HOME/waybar/scripts/network.sh",
+        "return-type": "json",
+        "format": "{}",
+        "format-alt": "{alt}",
+        "tooltip": true,
+        "on-click": ""
     },
     "wireplumber": {
         "format": "<span color='#c6a0f6'>{icon}</span> {volume}%",

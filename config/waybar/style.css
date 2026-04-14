@@ -40,6 +40,7 @@ button:hover {
 #disk,
 #temperature,
 #network,
+#custom-network,
 #wireplumber,
 #custom-media,
 #custom-tasks,
@@ -143,10 +144,12 @@ button:hover {
   background-color: #eb4d4b;
 }
 
-#network {
+#network,
+#custom-network {
 }
 
-#network.disconnected {
+#network.disconnected,
+#custom-network.disconnected {
   /* background-color: #f53c3c; */
   padding-top: 2px;
   border-bottom: 2px solid #f53c3c;
