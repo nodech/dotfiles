@@ -2,6 +2,7 @@
 
 import argparse
 import codecs
+import hashlib
 import json
 import os
 import re
@@ -12,9 +13,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-MODEM_ID = os.environ.get("MMCLI_MODEM_ID", "0")
+MODEM_ID = os.environ.get("MMCLI_MODEM_ID")
 STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")) / "mmcli-sms"
 STATE_FILE = STATE_DIR / "state.json"
+STATE_VERSION = 2
+MODEM_LIST_RE = re.compile(r"/Modem/(\d+)")
 SMS_ID_RE = re.compile(r"SMS/(\d+)")
 
 
@@ -44,40 +47,115 @@ def ensure_state_dir() -> None:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def get_modem_id() -> str:
+    if MODEM_ID:
+        return MODEM_ID
+
+    output = run_mmcli("-L")
+    modem_ids = sorted(set(MODEM_LIST_RE.findall(output)), key=int)
+    if not modem_ids:
+        die("no modems found")
+    if len(modem_ids) > 1:
+        die(f"multiple modems found ({', '.join(modem_ids)}); set MMCLI_MODEM_ID")
+    return modem_ids[0]
+
+
+def empty_state() -> dict:
+    return {
+        "version": STATE_VERSION,
+        "seen_keys": [],
+        "messages": {},
+        "legacy_seen_ids": [],
+        "legacy_sent_times": {},
+    }
+
+
+def normalize_message_record(record: dict) -> dict[str, str | list[str] | bool]:
+    ids = record.get("ids", [])
+    if not isinstance(ids, list):
+        ids = []
+    return {
+        "direction": str(record.get("direction", "unknown")),
+        "number": str(record.get("number", "unknown")),
+        "text": str(record.get("text", "")),
+        "timestamp": str(record.get("timestamp", "")),
+        "discharge_timestamp": str(record.get("discharge_timestamp", "")),
+        "ids": [str(item) for item in ids],
+        "local": bool(record.get("local", False)),
+    }
+
+
 def load_state() -> dict:
     ensure_state_dir()
     if not STATE_FILE.exists():
-        return {"seen_ids": [], "sent_times": {}}
+        return empty_state()
 
     try:
         data = json.loads(STATE_FILE.read_text())
     except json.JSONDecodeError:
-        return {"seen_ids": [], "sent_times": {}}
+        return empty_state()
 
-    seen_ids = data.get("seen_ids", [])
-    if not isinstance(seen_ids, list):
-        seen_ids = []
-    sent_times = data.get("sent_times", {})
-    if not isinstance(sent_times, dict):
-        sent_times = {}
-    return {
-        "seen_ids": [str(item) for item in seen_ids],
-        "sent_times": {str(key): str(value) for key, value in sent_times.items()},
-    }
+    state = empty_state()
+
+    seen_keys = data.get("seen_keys", [])
+    if isinstance(seen_keys, list):
+        state["seen_keys"] = [str(item) for item in seen_keys]
+
+    messages = data.get("messages", {})
+    if isinstance(messages, dict):
+        state["messages"] = {
+            str(key): normalize_message_record(record)
+            for key, record in messages.items()
+            if isinstance(record, dict)
+        }
+
+    legacy_seen_ids = data.get("seen_ids", [])
+    if isinstance(legacy_seen_ids, list):
+        state["legacy_seen_ids"] = [str(item) for item in legacy_seen_ids]
+
+    legacy_sent_times = data.get("sent_times", {})
+    if isinstance(legacy_sent_times, dict):
+        state["legacy_sent_times"] = {str(key): str(value) for key, value in legacy_sent_times.items()}
+
+    return state
 
 
 def save_state(state: dict) -> None:
     ensure_state_dir()
-    state["seen_ids"] = sorted(set(str(item) for item in state.get("seen_ids", [])), key=int)
-    sent_times = state.get("sent_times", {})
-    if not isinstance(sent_times, dict):
-        sent_times = {}
-    state["sent_times"] = {str(key): str(value) for key, value in sent_times.items()}
-    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+
+    seen_keys = sorted(set(str(item) for item in state.get("seen_keys", [])))
+    messages = state.get("messages", {})
+    if not isinstance(messages, dict):
+        messages = {}
+
+    normalized_messages = {
+        str(key): normalize_message_record(record)
+        for key, record in messages.items()
+        if isinstance(record, dict)
+    }
+
+    sorted_messages = dict(
+        sorted(
+            normalized_messages.items(),
+            key=lambda item: (
+                str(item[1].get("timestamp", "")),
+                str(item[1].get("number", "")),
+                str(item[1].get("text", "")),
+                item[0],
+            ),
+        )
+    )
+
+    payload = {
+        "version": STATE_VERSION,
+        "seen_keys": seen_keys,
+        "messages": sorted_messages,
+    }
+    STATE_FILE.write_text(json.dumps(payload, indent=2) + "\n")
 
 
 def list_sms_ids() -> list[str]:
-    output = run_mmcli("-m", MODEM_ID, "--messaging-list-sms")
+    output = run_mmcli("-m", get_modem_id(), "--messaging-list-sms")
     ids = SMS_ID_RE.findall(output)
     return sorted(set(ids), key=int)
 
@@ -131,22 +209,6 @@ def quote_mmcli_value(value: str) -> str:
     return f'"{escaped}"'
 
 
-def is_seen(state: dict, sms_id: str) -> bool:
-    return sms_id in state.get("seen_ids", [])
-
-
-def mark_seen(state: dict, sms_id: str) -> None:
-    if not is_seen(state, sms_id):
-        state.setdefault("seen_ids", []).append(sms_id)
-        save_state(state)
-
-
-def mark_unseen(state: dict, sms_id: str) -> None:
-    if is_seen(state, sms_id):
-        state["seen_ids"] = [item for item in state["seen_ids"] if item != sms_id]
-        save_state(state)
-
-
 def compact_text(value: str) -> str:
     return " ".join(value.split()) or "<empty>"
 
@@ -176,55 +238,220 @@ def sms_direction(details: dict[str, str]) -> str:
     return pdu_type or "unknown"
 
 
-def sms_when(state: dict, details: dict[str, str]) -> str:
-    timestamp = details.get("timestamp", "")
-    if timestamp and timestamp != "unknown-time":
+def current_time_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def canonical_timestamp(value: str) -> str:
+    if not value or value == "unknown-time":
+        return ""
+    return value
+
+
+def resolve_message_timestamp(details: dict[str, str], fallback_timestamp: str = "") -> str:
+    return canonical_timestamp(details.get("timestamp", "")) or canonical_timestamp(
+        details.get("discharge_timestamp", "")
+    ) or canonical_timestamp(fallback_timestamp)
+
+
+def make_message_key(direction: str, number: str, text: str, timestamp: str) -> str:
+    fingerprint = json.dumps(
+        {
+            "direction": direction,
+            "number": normalize_number(number),
+            "text": text,
+            "timestamp": timestamp,
+        },
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+    return hashlib.sha1(fingerprint.encode("utf-8")).hexdigest()[:16]
+
+
+def find_message_key_by_id(state: dict, sms_id: str) -> str | None:
+    for key, record in state.get("messages", {}).items():
+        ids = record.get("ids", [])
+        if isinstance(ids, list) and sms_id in ids:
+            return str(key)
+    return None
+
+
+def find_matching_message_key(state: dict, details: dict[str, str], sms_id: str = "", fallback_timestamp: str = "") -> str | None:
+    if sms_id:
+        existing_key = find_message_key_by_id(state, sms_id)
+        if existing_key:
+            return existing_key
+
+    direction = sms_direction(details)
+    number = normalize_number(details.get("number", "unknown"))
+    text = details.get("text", "")
+    timestamp = resolve_message_timestamp(details, fallback_timestamp)
+
+    if timestamp:
+        exact_key = make_message_key(direction, number, text, timestamp)
+        if exact_key in state.get("messages", {}):
+            return exact_key
+
+    if direction == "sent":
+        candidates: list[tuple[str, str]] = []
+        for key, record in state.get("messages", {}).items():
+            if record.get("direction") != "sent":
+                continue
+            if normalize_number(str(record.get("number", ""))) != number:
+                continue
+            if str(record.get("text", "")) != text:
+                continue
+            candidates.append((str(record.get("timestamp", "")), str(key)))
+        if len(candidates) == 1:
+            return candidates[0][1]
+        if candidates:
+            candidates.sort()
+            return candidates[-1][1]
+
+    return None
+
+
+def upsert_message(
+    state: dict,
+    details: dict[str, str],
+    *,
+    sms_id: str = "",
+    fallback_timestamp: str = "",
+    local: bool = False,
+) -> tuple[str, dict, bool]:
+    key = find_matching_message_key(state, details, sms_id=sms_id, fallback_timestamp=fallback_timestamp)
+    direction = sms_direction(details)
+    timestamp = resolve_message_timestamp(details, fallback_timestamp)
+    if not key:
+        key = make_message_key(direction, details.get("number", "unknown"), details.get("text", ""), timestamp)
+
+    existing = state.setdefault("messages", {}).get(key, {})
+    record = normalize_message_record(existing if isinstance(existing, dict) else {})
+    changed = False
+
+    updates = {
+        "direction": direction,
+        "number": normalize_number(details.get("number", "unknown")),
+        "text": details.get("text", ""),
+        "timestamp": timestamp,
+        "discharge_timestamp": canonical_timestamp(details.get("discharge_timestamp", "")),
+        "local": bool(record.get("local", False) or local),
+    }
+    for field, value in updates.items():
+        if record.get(field) != value:
+            record[field] = value
+            changed = True
+
+    ids = record.get("ids", [])
+    if not isinstance(ids, list):
+        ids = []
+        changed = True
+    if sms_id and sms_id not in ids:
+        ids.append(sms_id)
+        changed = True
+    record["ids"] = ids
+
+    if state["messages"].get(key) != record:
+        state["messages"][key] = record
+        changed = True
+
+    return key, record, changed
+
+
+def is_seen_key(state: dict, message_key: str) -> bool:
+    return message_key in state.get("seen_keys", [])
+
+
+def mark_seen_key(state: dict, message_key: str) -> bool:
+    seen_keys = state.setdefault("seen_keys", [])
+    if message_key not in seen_keys:
+        seen_keys.append(message_key)
+        return True
+    return False
+
+
+def mark_unseen_key(state: dict, message_key: str) -> bool:
+    seen_keys = state.get("seen_keys", [])
+    if message_key in seen_keys:
+        state["seen_keys"] = [item for item in seen_keys if item != message_key]
+        return True
+    return False
+
+
+def sms_when(record: dict[str, str | list[str] | bool]) -> str:
+    timestamp = str(record.get("timestamp", ""))
+    if timestamp:
         return timestamp
-
-    sms_id = details.get("id", "")
-    if sms_direction(details) == "sent":
-        return state.get("sent_times", {}).get(sms_id, "-")
-
-    discharge_timestamp = details.get("discharge_timestamp", "")
+    discharge_timestamp = str(record.get("discharge_timestamp", ""))
     if discharge_timestamp:
         return discharge_timestamp
     return "-"
 
 
-def remember_sent_time(state: dict, sms_id: str) -> None:
-    sent_times = state.setdefault("sent_times", {})
-    sent_times[sms_id] = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
-    save_state(state)
+def build_row(record: dict, display_id: str, seen: bool) -> dict[str, str]:
+    return {
+        "direction": str(record.get("direction", "unknown")),
+        "status": "read" if seen else "unread",
+        "id": display_id,
+        "timestamp": sms_when(record),
+        "number": str(record.get("number", "unknown")),
+        "text": compact_text(str(record.get("text", ""))),
+    }
+
+
+def include_row(row: dict[str, str], unread_only: bool, status_filter: str) -> bool:
+    if unread_only and row["status"] == "read":
+        return False
+    if status_filter == "read" and row["status"] != "read":
+        return False
+    if status_filter == "unread" and row["status"] != "unread":
+        return False
+    return True
 
 
 def build_summary_rows(
     state: dict, unread_only: bool, reverse_order: bool, status_filter: str = "all"
-) -> list[dict[str, str]]:
+) -> tuple[list[dict[str, str]], bool]:
     rows: list[dict[str, str]] = []
+    state_changed = False
+    current_keys: set[str] = set()
+
     sms_ids = list_sms_ids()
     if not reverse_order:
         sms_ids.reverse()
 
     for sms_id in sms_ids:
-        seen = is_seen(state, sms_id)
-        if unread_only and seen:
-            continue
-        if status_filter == "read" and not seen:
-            continue
-        if status_filter == "unread" and seen:
-            continue
         details = sms_details(sms_id)
-        rows.append(
-            {
-                "direction": sms_direction(details),
-                "status": "read" if seen else "unread",
-                "id": sms_id,
-                "timestamp": sms_when(state, details),
-                "number": details.get("number", "unknown"),
-                "text": compact_text(details.get("text", "")),
-            }
+        fallback_timestamp = state.get("legacy_sent_times", {}).get(sms_id, "") if sms_direction(details) == "sent" else ""
+        message_key, record, changed = upsert_message(
+            state,
+            details,
+            sms_id=sms_id,
+            fallback_timestamp=fallback_timestamp,
         )
-    return rows
+        state_changed = state_changed or changed
+        if sms_id in state.get("legacy_seen_ids", []) and mark_seen_key(state, message_key):
+            state_changed = True
+        current_keys.add(message_key)
+        row = build_row(record, sms_id, is_seen_key(state, message_key))
+        if include_row(row, unread_only, status_filter):
+            rows.append(row)
+
+    archived_sent_rows: list[dict[str, str]] = []
+    for message_key, record in state.get("messages", {}).items():
+        if message_key in current_keys:
+            continue
+        if record.get("direction") != "sent" or not record.get("local", False):
+            continue
+        row = build_row(record, "-", True)
+        if include_row(row, unread_only, status_filter):
+            archived_sent_rows.append(row)
+
+    archived_sent_rows.sort(key=lambda row: row["timestamp"], reverse=not reverse_order)
+    rows.extend(archived_sent_rows)
+
+    return rows, state_changed
 
 
 def print_summary_table(rows: list[dict[str, str]]) -> None:
@@ -292,8 +519,12 @@ def print_summary_table(rows: list[dict[str, str]]) -> None:
 
 def cmd_complete_ids(args: argparse.Namespace) -> None:
     state = load_state()
-    rows = build_summary_rows(state, unread_only=False, reverse_order=False, status_filter=args.status)
+    rows, state_changed = build_summary_rows(state, unread_only=False, reverse_order=False, status_filter=args.status)
+    if state_changed:
+        save_state(state)
     for row in rows:
+        if row["id"] == "-":
+            continue
         preview = truncate_text(row["text"], 10)
         print(
             "\t".join(
@@ -310,7 +541,9 @@ def cmd_complete_ids(args: argparse.Namespace) -> None:
 
 def cmd_list(args: argparse.Namespace) -> None:
     state = load_state()
-    rows = build_summary_rows(state, args.status == "unread", args.reverse, status_filter=args.status)
+    rows, state_changed = build_summary_rows(state, args.status == "unread", args.reverse, status_filter=args.status)
+    if state_changed:
+        save_state(state)
     if not rows:
         if not args.no_header:
             print("No unread SMS." if args.status == "unread" else "No read SMS." if args.status == "read" else "No SMS found.")
@@ -336,36 +569,64 @@ def cmd_list(args: argparse.Namespace) -> None:
 def cmd_read(args: argparse.Namespace) -> None:
     state = load_state()
     details = sms_details(args.id)
-    seen = "yes" if is_seen(state, args.id) else "no"
+    fallback_timestamp = state.get("legacy_sent_times", {}).get(args.id, "") if sms_direction(details) == "sent" else ""
+    message_key, record, changed = upsert_message(
+        state,
+        details,
+        sms_id=args.id,
+        fallback_timestamp=fallback_timestamp,
+    )
+    if args.id in state.get("legacy_seen_ids", []) and mark_seen_key(state, message_key):
+        changed = True
+    seen = "yes" if is_seen_key(state, message_key) else "no"
 
     print(f"SMS {args.id}")
     print(f"Type:  {sms_direction(details)}")
     print(f"State: {details.get('state', 'unknown-state')}")
     print(f"Seen:  {seen}")
     print(f"From:  {details.get('number', 'unknown')}")
-    print(f"When:  {sms_when(state, details)}")
+    print(f"When:  {sms_when(record)}")
     print()
     print(details.get("text", ""))
 
     if args.mark_seen:
-        mark_seen(state, args.id)
+        changed = mark_seen_key(state, message_key) or changed
+    if changed:
+        save_state(state)
+
+
+def resolve_message_key_for_id(state: dict, sms_id: str) -> str:
+    details = sms_details(sms_id)
+    fallback_timestamp = state.get("legacy_sent_times", {}).get(sms_id, "") if sms_direction(details) == "sent" else ""
+    message_key, _, changed = upsert_message(state, details, sms_id=sms_id, fallback_timestamp=fallback_timestamp)
+    if sms_id in state.get("legacy_seen_ids", []) and mark_seen_key(state, message_key):
+        changed = True
+    if changed:
+        save_state(state)
+    return message_key
 
 
 def cmd_seen(args: argparse.Namespace) -> None:
     state = load_state()
-    mark_seen(state, args.id)
+    message_key = resolve_message_key_for_id(state, args.id)
+    if mark_seen_key(state, message_key):
+        save_state(state)
     print(f"Marked SMS {args.id} as seen.")
 
 
 def cmd_unseen(args: argparse.Namespace) -> None:
     state = load_state()
-    mark_unseen(state, args.id)
+    message_key = resolve_message_key_for_id(state, args.id)
+    if mark_unseen_key(state, message_key):
+        save_state(state)
     print(f"Marked SMS {args.id} as unseen.")
 
 
 def cmd_send(args: argparse.Namespace) -> None:
     state = load_state()
+    modem_id = get_modem_id()
     number = normalize_number(args.number)
+    sent_timestamp = current_time_iso()
     properties = ",".join(
         [
             f"text={quote_mmcli_value(args.text)}",
@@ -374,7 +635,7 @@ def cmd_send(args: argparse.Namespace) -> None:
     )
     create_output = run_mmcli(
         "-m",
-        MODEM_ID,
+        modem_id,
         f"--messaging-create-sms={properties}",
     )
     match = SMS_ID_RE.search(create_output)
@@ -382,7 +643,25 @@ def cmd_send(args: argparse.Namespace) -> None:
         die("failed to parse created SMS id")
     sms_id = match.group(1)
     run_mmcli("-s", sms_id, "--send")
-    remember_sent_time(state, sms_id)
+
+    details = {
+        "id": sms_id,
+        "pdu_type": "submit",
+        "state": "sent",
+        "number": number,
+        "text": args.text,
+        "timestamp": sent_timestamp,
+        "discharge_timestamp": "",
+    }
+    message_key, _, _ = upsert_message(
+        state,
+        details,
+        sms_id=sms_id,
+        fallback_timestamp=sent_timestamp,
+        local=True,
+    )
+    mark_seen_key(state, message_key)
+    save_state(state)
     print(f"Sent SMS {sms_id} to {number}.")
 
 
@@ -463,7 +742,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_unseen = sub.add_parser(
         "unseen",
-        help="Mark a message as unseen",
+        help="Mark a message as unread",
         description="Mark an SMS message as unread in local state.",
     )
     p_unseen.add_argument("id", metavar="ID", help="SMS ID")
