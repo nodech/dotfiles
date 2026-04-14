@@ -1,0 +1,128 @@
+#compdef sms
+
+_sms_ids() {
+  local filter="${1:-all}"
+  local -a lines completions
+  local line id seen_state number timestamp preview
+  local seen_col number_col when_col description
+
+  (( $+commands[sms] )) || return 1
+
+  lines=(${(f)"$(sms complete-ids --status "$filter" 2>/dev/null)"})
+  (( ${#lines} )) || return 1
+
+  for line in "${lines[@]}"; do
+    IFS=$'\t' read -r id seen_state number timestamp preview <<< "$line"
+    [[ -n "$id" ]] || continue
+    seen_col=$(printf '%-6s' "${seen_state:-?}")
+    number_col=$(printf '%-16.16s' "${number:-unknown}")
+    when_col=$(printf '%-25.25s' "${timestamp:--}")
+    description="${seen_col} ${number_col} ${when_col} ${preview}"
+    completions+=("${id}:${description}")
+  done
+
+  (( ${#completions} )) || return 1
+  _describe -t sms-ids 'SMS ID' completions
+}
+
+_sms_read_ids() {
+  if (( ${words[(I)--mark-seen]} )); then
+    _sms_ids unread
+  else
+    _sms_ids all
+  fi
+}
+
+_sms_seen_ids() {
+  _sms_ids unread
+}
+
+_sms_unseen_ids() {
+  _sms_ids read
+}
+
+_sms_all_ids() {
+  _sms_ids all
+}
+
+_sms() {
+  local curcontext="$curcontext" ret=1
+  local -a state line cmds args
+  typeset -A opt_args
+
+  _arguments -C -s \
+    '(-h --help)'{-h,--help}'[Show help]' \
+    '1:command:->cmds' \
+    '*::arg:->args' && ret=0
+
+  cmds=(
+    'list:List SMS messages'
+    'ls:List SMS messages'
+    'read:Read a message'
+    'show:Read a message'
+    'seen:Mark a message as seen'
+    'unseen:Mark a message as unseen'
+    'send:Send a message'
+    'raw:Show raw mmcli output'
+  )
+
+  case $state in
+    cmds)
+      _describe -t sms-commands 'sms command' cmds && ret=0
+      ;;
+    args)
+      curcontext="${curcontext%:*}-$words[1]:"
+      case $words[1] in
+        list|ls)
+          args=(
+            '(-h --help)'{-h,--help}'[Show help]'
+            '(--read --unread)--unread[Show only unread SMS messages]'
+            '(--read --unread)--read[Show only read SMS messages]'
+            '--reverse[Reverse the default newest-first order]'
+            '--no-header[Print rows without table headers, using tab-separated columns]'
+          )
+          ;;
+        read|show)
+          args=(
+            '(-h --help)'{-h,--help}'[Show help]'
+            '--mark-seen[Mark the message as seen after reading]'
+            '1:SMS ID:_sms_read_ids'
+          )
+          ;;
+        seen)
+          args=(
+            '(-h --help)'{-h,--help}'[Show help]'
+            '1:SMS ID:_sms_seen_ids'
+          )
+          ;;
+        unseen)
+          args=(
+            '(-h --help)'{-h,--help}'[Show help]'
+            '1:SMS ID:_sms_unseen_ids'
+          )
+          ;;
+        send)
+          args=(
+            '(-h --help)'{-h,--help}'[Show help]'
+            '1:phone number:'
+            '2:message text:'
+          )
+          ;;
+        raw)
+          args=(
+            '(-h --help)'{-h,--help}'[Show help]'
+            '1:SMS ID:_sms_all_ids'
+          )
+          ;;
+        *)
+          return ret
+          ;;
+      esac
+      _arguments -C -s "$args[@]" && ret=0
+      ;;
+  esac
+
+  return ret
+}
+
+_sms "$@"

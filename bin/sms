@@ -1,0 +1,510 @@
+#!/usr/bin/env python3
+
+import argparse
+import codecs
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+MODEM_ID = os.environ.get("MMCLI_MODEM_ID", "0")
+STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")) / "mmcli-sms"
+STATE_FILE = STATE_DIR / "state.json"
+SMS_ID_RE = re.compile(r"SMS/(\d+)")
+
+
+def die(message: str) -> "NoReturn":
+    print(f"error: {message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def run_mmcli(*args: str) -> str:
+    try:
+        proc = subprocess.run(
+            ["mmcli", *args],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        die("missing required command: mmcli")
+    except subprocess.CalledProcessError as exc:
+        stderr = exc.stderr.strip()
+        stdout = exc.stdout.strip()
+        die(stderr or stdout or f"mmcli failed: {' '.join(args)}")
+    return proc.stdout
+
+
+def ensure_state_dir() -> None:
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def load_state() -> dict:
+    ensure_state_dir()
+    if not STATE_FILE.exists():
+        return {"seen_ids": [], "sent_times": {}}
+
+    try:
+        data = json.loads(STATE_FILE.read_text())
+    except json.JSONDecodeError:
+        return {"seen_ids": [], "sent_times": {}}
+
+    seen_ids = data.get("seen_ids", [])
+    if not isinstance(seen_ids, list):
+        seen_ids = []
+    sent_times = data.get("sent_times", {})
+    if not isinstance(sent_times, dict):
+        sent_times = {}
+    return {
+        "seen_ids": [str(item) for item in seen_ids],
+        "sent_times": {str(key): str(value) for key, value in sent_times.items()},
+    }
+
+
+def save_state(state: dict) -> None:
+    ensure_state_dir()
+    state["seen_ids"] = sorted(set(str(item) for item in state.get("seen_ids", [])), key=int)
+    sent_times = state.get("sent_times", {})
+    if not isinstance(sent_times, dict):
+        sent_times = {}
+    state["sent_times"] = {str(key): str(value) for key, value in sent_times.items()}
+    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+
+
+def list_sms_ids() -> list[str]:
+    output = run_mmcli("-m", MODEM_ID, "--messaging-list-sms")
+    ids = SMS_ID_RE.findall(output)
+    return sorted(set(ids), key=int)
+
+
+def parse_kv_fields(output: str) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    for line in output.splitlines():
+        stripped = line.strip()
+        if ":" not in stripped:
+            continue
+        key, value = stripped.split(":", 1)
+        fields[key.strip()] = value.strip()
+    return fields
+
+
+def sms_details(sms_id: str) -> dict[str, str]:
+    output = run_mmcli("-K", "-s", sms_id)
+    data = parse_kv_fields(output)
+    return {
+        "id": sms_id,
+        "pdu_type": data.get("sms.properties.pdu-type", "unknown-type"),
+        "state": data.get("sms.properties.state", "unknown-state"),
+        "number": data.get("sms.content.number", "unknown"),
+        "text": decode_sms_text(data.get("sms.content.text", "")),
+        "timestamp": data.get("sms.properties.timestamp", "unknown-time"),
+        "discharge_timestamp": data.get("sms.properties.discharge-timestamp", ""),
+    }
+
+
+def decode_sms_text(value: str) -> str:
+    if "\\" not in value:
+        return value
+
+    try:
+        unescaped = codecs.decode(value, "unicode_escape")
+    except Exception:
+        return value
+
+    try:
+        return unescaped.encode("latin1").decode("utf-8")
+    except Exception:
+        return unescaped
+
+
+def normalize_number(value: str) -> str:
+    return "".join(value.split())
+
+
+def quote_mmcli_value(value: str) -> str:
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def is_seen(state: dict, sms_id: str) -> bool:
+    return sms_id in state.get("seen_ids", [])
+
+
+def mark_seen(state: dict, sms_id: str) -> None:
+    if not is_seen(state, sms_id):
+        state.setdefault("seen_ids", []).append(sms_id)
+        save_state(state)
+
+
+def mark_unseen(state: dict, sms_id: str) -> None:
+    if is_seen(state, sms_id):
+        state["seen_ids"] = [item for item in state["seen_ids"] if item != sms_id]
+        save_state(state)
+
+
+def compact_text(value: str) -> str:
+    return " ".join(value.split()) or "<empty>"
+
+
+def truncate_text(value: str, width: int) -> str:
+    if width <= 0:
+        return ""
+    if len(value) <= width:
+        return value
+    if width == 1:
+        return value[:1]
+    return value[: width - 1] + "…"
+
+
+def sanitize_completion_field(value: str) -> str:
+    return " ".join(value.split()).replace("\t", " ")
+
+
+def sms_direction(details: dict[str, str]) -> str:
+    pdu_type = details.get("pdu_type", "")
+    if pdu_type == "deliver":
+        return "recv"
+    if pdu_type == "submit":
+        return "sent"
+    if pdu_type == "status-report":
+        return "report"
+    return pdu_type or "unknown"
+
+
+def sms_when(state: dict, details: dict[str, str]) -> str:
+    timestamp = details.get("timestamp", "")
+    if timestamp and timestamp != "unknown-time":
+        return timestamp
+
+    sms_id = details.get("id", "")
+    if sms_direction(details) == "sent":
+        return state.get("sent_times", {}).get(sms_id, "-")
+
+    discharge_timestamp = details.get("discharge_timestamp", "")
+    if discharge_timestamp:
+        return discharge_timestamp
+    return "-"
+
+
+def remember_sent_time(state: dict, sms_id: str) -> None:
+    sent_times = state.setdefault("sent_times", {})
+    sent_times[sms_id] = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    save_state(state)
+
+
+def build_summary_rows(
+    state: dict, unread_only: bool, reverse_order: bool, status_filter: str = "all"
+) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    sms_ids = list_sms_ids()
+    if not reverse_order:
+        sms_ids.reverse()
+
+    for sms_id in sms_ids:
+        seen = is_seen(state, sms_id)
+        if unread_only and seen:
+            continue
+        if status_filter == "read" and not seen:
+            continue
+        if status_filter == "unread" and seen:
+            continue
+        details = sms_details(sms_id)
+        rows.append(
+            {
+                "direction": sms_direction(details),
+                "status": "read" if seen else "unread",
+                "id": sms_id,
+                "timestamp": sms_when(state, details),
+                "number": details.get("number", "unknown"),
+                "text": compact_text(details.get("text", "")),
+            }
+        )
+    return rows
+
+
+def print_summary_table(rows: list[dict[str, str]]) -> None:
+    headers = {
+        "direction": "DIR",
+        "status": "STATUS",
+        "id": "ID",
+        "timestamp": "WHEN",
+        "number": "FROM",
+        "text": "TEXT",
+    }
+    terminal_width = shutil.get_terminal_size(fallback=(120, 24)).columns
+    fixed_widths = {
+        "direction": max(len(headers["direction"]), max((len(row["direction"]) for row in rows), default=0)),
+        "status": max(len(headers["status"]), max((len(row["status"]) for row in rows), default=0)),
+        "id": max(len(headers["id"]), max((len(row["id"]) for row in rows), default=0)),
+        "timestamp": max(len(headers["timestamp"]), max((len(row["timestamp"]) for row in rows), default=0)),
+        "number": max(len(headers["number"]), max((len(row["number"]) for row in rows), default=0)),
+    }
+    spacing = 2
+    fixed_total = sum(fixed_widths.values()) + (spacing * 5)
+    text_width = max(len(headers["text"]), terminal_width - fixed_total)
+
+    print(
+        f"{headers['direction']:<{fixed_widths['direction']}}"
+        f"{' ' * spacing}"
+        f"{headers['status']:<{fixed_widths['status']}}"
+        f"{' ' * spacing}"
+        f"{headers['id']:<{fixed_widths['id']}}"
+        f"{' ' * spacing}"
+        f"{headers['timestamp']:<{fixed_widths['timestamp']}}"
+        f"{' ' * spacing}"
+        f"{headers['number']:<{fixed_widths['number']}}"
+        f"{' ' * spacing}"
+        f"{headers['text']}"
+    )
+    print(
+        f"{'-' * fixed_widths['direction']}"
+        f"{' ' * spacing}"
+        f"{'-' * fixed_widths['status']}"
+        f"{' ' * spacing}"
+        f"{'-' * fixed_widths['id']}"
+        f"{' ' * spacing}"
+        f"{'-' * fixed_widths['timestamp']}"
+        f"{' ' * spacing}"
+        f"{'-' * fixed_widths['number']}"
+        f"{' ' * spacing}"
+        f"{'-' * max(len(headers['text']), min(text_width, 20))}"
+    )
+    for row in rows:
+        print(
+            f"{row['direction']:<{fixed_widths['direction']}}"
+            f"{' ' * spacing}"
+            f"{row['status']:<{fixed_widths['status']}}"
+            f"{' ' * spacing}"
+            f"{row['id']:<{fixed_widths['id']}}"
+            f"{' ' * spacing}"
+            f"{row['timestamp']:<{fixed_widths['timestamp']}}"
+            f"{' ' * spacing}"
+            f"{row['number']:<{fixed_widths['number']}}"
+            f"{' ' * spacing}"
+            f"{truncate_text(row['text'], text_width)}"
+        )
+
+
+def cmd_complete_ids(args: argparse.Namespace) -> None:
+    state = load_state()
+    rows = build_summary_rows(state, unread_only=False, reverse_order=False, status_filter=args.status)
+    for row in rows:
+        preview = truncate_text(row["text"], 10)
+        print(
+            "\t".join(
+                [
+                    sanitize_completion_field(row["id"]),
+                    sanitize_completion_field(row["status"]),
+                    sanitize_completion_field(row["number"]),
+                    sanitize_completion_field(row["timestamp"]),
+                    sanitize_completion_field(preview),
+                ]
+            )
+        )
+
+
+def cmd_list(args: argparse.Namespace) -> None:
+    state = load_state()
+    rows = build_summary_rows(state, args.status == "unread", args.reverse, status_filter=args.status)
+    if not rows:
+        if not args.no_header:
+            print("No unread SMS." if args.status == "unread" else "No read SMS." if args.status == "read" else "No SMS found.")
+        return
+    if args.no_header:
+        for row in rows:
+            print(
+                "\t".join(
+                    [
+                        row["direction"],
+                        row["status"],
+                        row["id"],
+                        row["timestamp"],
+                        row["number"],
+                        row["text"],
+                    ]
+                )
+            )
+        return
+    print_summary_table(rows)
+
+
+def cmd_read(args: argparse.Namespace) -> None:
+    state = load_state()
+    details = sms_details(args.id)
+    seen = "yes" if is_seen(state, args.id) else "no"
+
+    print(f"SMS {args.id}")
+    print(f"Type:  {sms_direction(details)}")
+    print(f"State: {details.get('state', 'unknown-state')}")
+    print(f"Seen:  {seen}")
+    print(f"From:  {details.get('number', 'unknown')}")
+    print(f"When:  {sms_when(state, details)}")
+    print()
+    print(details.get("text", ""))
+
+    if args.mark_seen:
+        mark_seen(state, args.id)
+
+
+def cmd_seen(args: argparse.Namespace) -> None:
+    state = load_state()
+    mark_seen(state, args.id)
+    print(f"Marked SMS {args.id} as seen.")
+
+
+def cmd_unseen(args: argparse.Namespace) -> None:
+    state = load_state()
+    mark_unseen(state, args.id)
+    print(f"Marked SMS {args.id} as unseen.")
+
+
+def cmd_send(args: argparse.Namespace) -> None:
+    state = load_state()
+    number = normalize_number(args.number)
+    properties = ",".join(
+        [
+            f"text={quote_mmcli_value(args.text)}",
+            f"number={quote_mmcli_value(number)}",
+        ]
+    )
+    create_output = run_mmcli(
+        "-m",
+        MODEM_ID,
+        f"--messaging-create-sms={properties}",
+    )
+    match = SMS_ID_RE.search(create_output)
+    if not match:
+        die("failed to parse created SMS id")
+    sms_id = match.group(1)
+    run_mmcli("-s", sms_id, "--send")
+    remember_sent_time(state, sms_id)
+    print(f"Sent SMS {sms_id} to {number}.")
+
+
+def cmd_raw(args: argparse.Namespace) -> None:
+    print(run_mmcli("-s", args.id), end="")
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="sms",
+        description="Inspect and send SMS messages via ModemManager (mmcli).",
+        epilog=(
+            "Examples:\n"
+            "  sms               List SMS messages\n"
+            "  sms list --unread List only unread messages\n"
+            "  sms read 12       Show SMS 12\n"
+            "  sms send +15551234567 'hello'"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sub = parser.add_subparsers(
+        dest="command",
+        required=True,
+        metavar="{list,ls,read,show,seen,unseen,send,raw}",
+    )
+
+    p_list = sub.add_parser(
+        "list",
+        aliases=["ls"],
+        help="List SMS messages",
+        description="List SMS messages known to the modem.",
+    )
+    status_group = p_list.add_mutually_exclusive_group()
+    status_group.add_argument(
+        "--unread",
+        action="store_const",
+        const="unread",
+        dest="status",
+        help="Show only unread SMS messages",
+    )
+    status_group.add_argument(
+        "--read",
+        action="store_const",
+        const="read",
+        dest="status",
+        help="Show only read SMS messages",
+    )
+    p_list.set_defaults(status="all")
+    p_list.add_argument(
+        "--reverse",
+        action="store_true",
+        help="Reverse the default newest-first order",
+    )
+    p_list.add_argument(
+        "--no-header",
+        action="store_true",
+        help="Print rows without table headers, using tab-separated columns",
+    )
+    p_list.set_defaults(func=cmd_list)
+
+    p_read = sub.add_parser(
+        "read",
+        aliases=["show"],
+        help="Read a message",
+        description="Show details for a single SMS message.",
+    )
+    p_read.add_argument("id", metavar="ID", help="SMS ID")
+    p_read.add_argument("--mark-seen", action="store_true", help="Mark the message as seen after reading")
+    p_read.set_defaults(func=cmd_read)
+
+    p_seen = sub.add_parser(
+        "seen",
+        help="Mark a message as seen",
+        description="Mark an SMS message as seen in local state.",
+    )
+    p_seen.add_argument("id", metavar="ID", help="SMS ID")
+    p_seen.set_defaults(func=cmd_seen)
+
+    p_unseen = sub.add_parser(
+        "unseen",
+        help="Mark a message as unseen",
+        description="Mark an SMS message as unread in local state.",
+    )
+    p_unseen.add_argument("id", metavar="ID", help="SMS ID")
+    p_unseen.set_defaults(func=cmd_unseen)
+
+    p_send = sub.add_parser(
+        "send",
+        help="Send a message",
+        description="Create and send an SMS message.",
+    )
+    p_send.add_argument("number", metavar="NUMBER", help="Destination phone number")
+    p_send.add_argument("text", metavar="TEXT", help="Message body")
+    p_send.set_defaults(func=cmd_send)
+
+    p_raw = sub.add_parser(
+        "raw",
+        help="Show raw mmcli output",
+        description="Show the raw mmcli output for a single SMS message.",
+    )
+    p_raw.add_argument("id", metavar="ID", help="SMS ID")
+    p_raw.set_defaults(func=cmd_raw)
+
+    p_complete_ids = sub.add_parser("complete-ids", help=argparse.SUPPRESS)
+    p_complete_ids.add_argument(
+        "--status",
+        choices=["all", "read", "unread"],
+        default="all",
+        help=argparse.SUPPRESS,
+    )
+    p_complete_ids.set_defaults(func=cmd_complete_ids)
+    sub._choices_actions = [action for action in sub._choices_actions if action.dest != "complete-ids"]
+
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
+    argv = sys.argv[1:] or ["list"]
+    args = parser.parse_args(argv)
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()

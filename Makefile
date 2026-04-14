@@ -47,15 +47,21 @@ unzsh:
 
 # Local binaries
 # BIN {{{
-.PHONY: bin unbin
+.PHONY: bin unbin compl uncompl
+
+compl: $(ZSH_DATA_DIR)
+	stow -v $(STOW_FLAGS) --target="$(ZSH_DATA_DIR)" completions
+
+uncompl:
+	stow -v -D $(STOW_FLAGS) --target="$(ZSH_DATA_DIR)" completions
 
 $(XDG_BIN_HOME):
 	$(RUN) mkdir -p "$@"
 
-bin: $(XDG_BIN_HOME)
+bin: compl $(XDG_BIN_HOME)
 	stow -v $(STOW_FLAGS) --target="$(XDG_BIN_HOME)" bin
 
-unbin:
+unbin: uncompl
 	stow -v -D $(STOW_FLAGS) --target="$(XDG_BIN_HOME)" bin
 
 # }}} /BIN
