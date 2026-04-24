@@ -66,3 +66,7 @@ vim.opt.viewoptions = "folds"
 vim.opt.fillchars:append({ diff = " " })
 
 vim.g.mapleader = ','
+
+if os.getenv("NVIM_USE_OSC52") == "1" then
+  vim.g.clipboard = 'osc52'
+end
