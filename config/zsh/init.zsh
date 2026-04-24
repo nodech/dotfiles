@@ -27,6 +27,8 @@ ZSH_RUN_COMPAUDIT="${ZSH_RUN_COMPAUDIT:-1}"
 
 # Conf (to config.zsh?)
 setopt autocd
+setopt AUTO_PUSHD
+# setopt PUSHD_IGNORE_DUPS # Ignore dups ?
 
 source "$ZSH_CFG/util.zsh"
 source "$ZSH_CFG/ux-title.zsh"
