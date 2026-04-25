@@ -39,6 +39,7 @@ source "$ZSH_CFG/completions.zsh"
 
 # Features
 source "$ZSH_CFG/features/agents.zsh"
+source "$ZSH_CFG/features/asdf.zsh"
 source "$ZSH_CFG/features/autosuggestions.zsh"
 source "$ZSH_CFG/features/delta.zsh"
 source "$ZSH_CFG/features/docker.zsh"
